@@ -16,10 +16,10 @@ tokens = ['TkOBlock','TkCBlock','TkSoForth','TkComma','TkOpenPar','TkClosePar','
           'TkSemicolon','TkArrow','TkGuard','TkPlus','TkMinus','TkMult','TkDiv','TkMod',
           'TkOr','TkAnd','TkNot','TkLess','TkLeq','TkGeq','TkGreater','TkEqual','TkNEqual',
           'TkOBracket','TkCBracket','TkTwoPoints','TkConcat','TkAtoi','TkSize','TkMax',
-          'TkMin','TkId','TkNum','TkString'] + list(reserved.values())
+          'TkMin','TkId','TkNum','TkString','TkTrue','TkFalse'] + list(reserved.values())
 
 # Tokens
-t_ignore = ' \t\n#'
+
 t_TkOBlock = r'\|\['
 t_TkCBlock = r'\]\|'
 t_TkSoForth = r'\.\.'
@@ -49,6 +49,8 @@ t_TkCBracket = r'\]'
 t_TkTwoPoints = r':'
 t_TkConcat = r'\|\|'
 t_TkString = r'^".*"$'
+t_TkTrue = r'^true$'
+t_TkFalse = r'^false$'
 
 def t_TkId(t):
      r'[a-zA-Z_][a-zA-Z_0-9]*'
@@ -58,7 +60,9 @@ def t_TkId(t):
 def t_TkNum(t):
      r'\d+'
      t.value = int(t.value)
-     return t
+     return t 
+
+# Faltan los tokens a ignorar
 
 class Lexer(object):
 	def __init__(self, source):
