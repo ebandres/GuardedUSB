@@ -48,9 +48,9 @@ t_TkOBracket = r'\['
 t_TkCBracket = r'\]'
 t_TkTwoPoints = r':'
 t_TkConcat = r'\|\|'
-t_TkString = r'^".*"$'
-t_TkTrue = r'^true$'
-t_TkFalse = r'^false$'
+t_TkString = r'([\"\'])(?:(?=(\\?))\2.)*?\1'
+t_TkTrue = r'\btrue\b'
+t_TkFalse = r'\bfalse\b'
 
 def t_TkId(t):
      r'[a-zA-Z_][a-zA-Z_0-9]*'
