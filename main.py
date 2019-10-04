@@ -14,6 +14,8 @@ def main():
 		content = file.read()
 
 	print(content)
+	print("SENDING TO LEXER")
+	Lexer.tokenize(content)
 
 if __name__ == "__main__":
 	main()

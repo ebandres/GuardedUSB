@@ -4,16 +4,18 @@ import ply.lex as lex
 
 reserved = {
         'declare' : 'TkDeclare',
+        'int' : 'TkInt',
+        'read' : 'TkRead',
         'if' : 'TkIf',
+        'fi' : 'TkFi',
         'do' : 'TkDo',
         'od' : 'TkOd',
-        'while' : 'TkWhile',
         'for' : 'TkFor',
-        'else' : 'TkElse'
+        'rof' : 'TkRof'
         }
 
 tokens = ['TkOBlock','TkCBlock','TkSoForth','TkComma','TkOpenPar','TkClosePar','TkAsig',
-          'TkSemicolon','TkArrow','TkGuard','TkPlus','TkMinus','TkMult','TkDiv','TkMod',
+          'TkSemiColon','TkArrow','TkGuard','TkPlus','TkMinus','TkMult','TkDiv','TkMod',
           'TkOr','TkAnd','TkNot','TkLess','TkLeq','TkGeq','TkGreater','TkEqual','TkNEqual',
           'TkOBracket','TkCBracket','TkTwoPoints','TkConcat','TkAtoi','TkSize','TkMax',
           'TkMin','TkId','TkNum','TkString','TkTrue','TkFalse'] + list(reserved.values())
@@ -48,7 +50,7 @@ t_TkOBracket = r'\['
 t_TkCBracket = r'\]'
 t_TkTwoPoints = r':'
 t_TkConcat = r'\|\|'
-t_TkString = r'([\"\'])(?:(?=(\\?))\2.)*?\1'
+t_TkString = r'\B\".*\"\B'
 t_TkTrue = r'\btrue\b'
 t_TkFalse = r'\bfalse\b'
 
@@ -62,14 +64,29 @@ def t_TkNum(t):
      t.value = int(t.value)
      return t 
 
-# Faltan los tokens a ignorar
+def t_newline(t):
+	r'\n+'
+	t.lexer.lineno += len(t.value)
 
-class Lexer(object):
-	def __init__(self, source):
-		self.source = source
+def t_error(t):
+	print("Illegal character '%s'" % t.value[0])
+	t.lexer.skip(1)
 
-	def t_parse(self):
-		tokens = []
 
-		content = self.source.split()
+
+def t_COMMENT(t):
+    r'//.*| \s'
+    pass
+
+lexer = lex.lex()
+
+def tokenize(content):
+	lexer.input(content)
+ 
+	# Tokenize
+	while True:
+		tok = lexer.token()
+		if not tok: 
+			break      # No more input
+		print(tok)
 		
