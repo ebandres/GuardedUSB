@@ -1,7 +1,9 @@
-# NOT FINISHED
+# Emmanuel Bandres, 14-10071
+# Daniela Caballero, 14-10140
 
 import ply.lex as lex
 
+# Palabras reservadas
 reserved = {
         'declare' : 'TkDeclare',
         'int' : 'TkInt',
@@ -14,6 +16,7 @@ reserved = {
         'rof' : 'TkRof'
         }
 
+# Lista de tokens
 tokens = ['TkOBlock','TkCBlock','TkSoForth','TkComma','TkOpenPar','TkClosePar','TkAsig',
           'TkSemiColon','TkArrow','TkGuard','TkPlus','TkMinus','TkMult','TkDiv','TkMod',
           'TkOr','TkAnd','TkNot','TkLess','TkLeq','TkGeq','TkGreater','TkEqual','TkNEqual',
@@ -21,7 +24,6 @@ tokens = ['TkOBlock','TkCBlock','TkSoForth','TkComma','TkOpenPar','TkClosePar','
           'TkMin','TkId','TkNum','TkString','TkTrue','TkFalse'] + list(reserved.values())
 
 # Tokens
-
 t_TkOBlock = r'\|\['
 t_TkCBlock = r'\]\|'
 t_TkSoForth = r'\.\.'
@@ -72,21 +74,32 @@ def t_error(t):
 	print("Illegal character '%s'" % t.value[0])
 	t.lexer.skip(1)
 
-
-
 def t_COMMENT(t):
+	# Ignoramos los comentarios sin generar un token y aprovechamos
+	# para hacer lo mismo con whitespace
     r'//.*| \s'
     pass
 
+def find_column(input, token):
+	# Encontramos la columna del token
+	line_start = input.rfind('\n', 0, token.lexpos) + 1
+	return (token.lexpos - line_start) + 1
+
+# Lexer
 lexer = lex.lex()
 
+# Generamos los tokens
 def tokenize(content):
 	lexer.input(content)
- 
+
 	# Tokenize
 	while True:
 		tok = lexer.token()
 		if not tok: 
-			break      # No more input
-		print(tok)
+			break
+
+		if tok.type == "TkId" or tok.type == "TkNum":
+			print('%s("%s")' % (tok.type, tok.value), tok.lineno, find_column(content, tok))
+		else: 
+			print(tok.type, tok.lineno, find_column(content, tok))
 		
