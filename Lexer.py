@@ -6,7 +6,11 @@ import ply.lex as lex
 # Palabras reservadas
 reserved = {
         'declare' : 'TkDeclare',
+        'print' : 'TkPrint',
+        'println' : 'TkPrintln',
         'int' : 'TkInt',
+        'in' : 'TkIn',
+        'to' : 'TkTo',
         'read' : 'TkRead',
         'if' : 'TkIf',
         'fi' : 'TkFi',
@@ -52,7 +56,7 @@ t_TkOBracket = r'\['
 t_TkCBracket = r'\]'
 t_TkTwoPoints = r':'
 t_TkConcat = r'\|\|'
-t_TkString = r'\B\".*\"\B'
+t_TkString = r'\".*?\"'
 t_TkTrue = r'\btrue\b'
 t_TkFalse = r'\bfalse\b'
 
@@ -109,7 +113,7 @@ def tokenize(content):
 	if not error_found:
 		# Si no hay ningun error imprimimos todos los tokens
 		for tok in generated_tokens:
-			if tok.type == "TkId" or tok.type == "TkNum":
+			if tok.type == "TkId" or tok.type == "TkNum" or tok.type == "TkString":
 				print('%s("%s")' % (tok.type, tok.value), tok.lineno, find_column(content, tok))
 			else: 
 				print(tok.type, tok.lineno, find_column(content, tok))
