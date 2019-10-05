@@ -62,7 +62,7 @@ def t_TkId(t):
      return t
 
 def t_TkNum(t):
-     r'\d+'
+     r'\d+\b'
      t.value = int(t.value)
      return t 
 
@@ -70,8 +70,11 @@ def t_newline(t):
 	r'\n+'
 	t.lexer.lineno += len(t.value)
 
+error_found = False
 def t_error(t):
-	print("Illegal character '%s'" % t.value[0])
+	global error_found
+	print("Error: Unexpected character '%s' in row %d, column %d" % (t.value[0], t.lineno, find_column(data, t)))
+	error_found = True
 	t.lexer.skip(1)
 
 def t_COMMENT(t):
@@ -90,16 +93,24 @@ lexer = lex.lex()
 
 # Generamos los tokens
 def tokenize(content):
+	global data
+	data = content # Para manejar errores
 	lexer.input(content)
 
 	# Tokenize
+	generated_tokens = []
 	while True:
 		tok = lexer.token()
 		if not tok: 
 			break
-
-		if tok.type == "TkId" or tok.type == "TkNum":
-			print('%s("%s")' % (tok.type, tok.value), tok.lineno, find_column(content, tok))
-		else: 
-			print(tok.type, tok.lineno, find_column(content, tok))
+		generated_tokens.append(tok)
+		
+	# Si encontramos un error no imprimimos los tokens, solo los errores
+	if not error_found:
+		# Si no hay ningun error imprimimos todos los tokens
+		for tok in generated_tokens:
+			if tok.type == "TkId" or tok.type == "TkNum":
+				print('%s("%s")' % (tok.type, tok.value), tok.lineno, find_column(content, tok))
+			else: 
+				print(tok.type, tok.lineno, find_column(content, tok))
 		
