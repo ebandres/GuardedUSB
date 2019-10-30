@@ -121,3 +121,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+*.tar
+*.gz
+declaracion de autenticidad.jpeg
