@@ -24,14 +24,21 @@ precedence = (
 ids = { }
 
 def p_code(p):
-    'block : TkOBlock TkDeclare start TkCBlock'
+    '''block : TkOBlock TkDeclare start TkCBlock
+    	     | TkOBlock body TkCBlock'''
     print("Block\nDeclare")
 
+def p_body(p):
+	'''body : assign body
+			| gfor body
+			| gprint body
+			| gprintln body
+			| empty'''
 
 def p_start(p):
     ''' start : declaration start
-              | assign start
-              | empty'''
+              | body'''
+              
 
 def p_empty(p):
     'empty :'
@@ -52,24 +59,27 @@ def p_assign_expr(p):
     print("Asig")
     ids[p[1]] = p[3]
 
-#def p_assign_str(p):
-#    'assign : TkId TkAsig strexp'
-#    ids[p[1]] = p[3]
+def p_assign_str(p):
+    'assign : TkId TkAsig strexp TkSemiColon'
+    print("String")
+    ids[p[1]] = p[3]
 
-#def p_assign_arr(p):
-#    'assign : TkId TkAsig array TkSemiColon'
-#    ids[p[1]] = p[3]
+def p_assign_arr(p):
+    'assign : TkId TkAsig array TkSemiColon'
+    print("Array")
+    ids[p[1]] = p[3]
 
-#def p_array(p):
-#    '''array : TkOBracket inarray TkCBracket
-#             | TkOBracket TkNum TkSoForth TkNum TkCBracket'''
-#
-#def p_iarray(p):
-#    '''inarray : TkNum TkComma inarray
-#               | TkNum'''
+def p_array(p):
+    '''array : TkOBracket inarray TkCBracket
+             | TkOBracket TkNum TkSoForth TkNum TkCBracket'''
 
-#def p_expression_str(p):
+def p_iarray(p):
+    '''inarray : TkNum TkComma inarray
+               | TkNum'''
 
+def p_expression_str(p):
+	'''strexp : TkString TkConcat strexp
+			  | TkString''' 
 
 def p_expression_bin(p):
     '''expression : expression TkPlus expression
@@ -98,6 +108,12 @@ def p_expression_group(p):
     'expression : TkOpenPar expression TkClosePar'
     p[0] = p[2]
 
+def p_expression_fun(p):
+	'''expression : TkSize TkOpenPar array TkClosePar
+			      | TkMax TkOpenPar array TkClosePar
+			      | TkMin TkOpenPar array TkClosePar
+			      | TkAtoi TkOpenPar array TkClosePar'''
+
 def p_expression_number(p):
     'expression : TkNum'
     print("Literal: %d" % p[1])
@@ -111,6 +127,24 @@ def p_expression_id(p):
     except LookupError:
         print("Undefined id '%s'" % p[1])
         p[0] = 0
+
+def p_cycle_for(p):
+	'gfor : TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon'
+
+# Para agregar el do primero debemos tener los booleanos :(
+#def p_cycle_do(p):
+
+def p_print(p):
+	'gprint : TkPrint strprint TkSemiColon'
+
+def p_println(p):
+	'gprintln : TkPrintln strprint TkSemiColon'
+
+def p_strprint(p):
+	'''strprint : TkString TkConcat strprint
+				| TkId TkConcat strprint
+				| TkString
+				| TkId'''
 
 def p_error(p):
     print("Syntax error at '%s" % p)
