@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'leftTkAsignonassocTkLessTkLeqTkGeqTkGreaterleftTkPlusTkMinusleftTkMultTkDivTkModleftTkEqualTkNEqualleftTkAndTkOrrightTkNotleftTkOBracketTkCBracketleftTkConcatrightTkArrowTkAnd TkArray TkArrow TkAsig TkAtoi TkCBlock TkCBracket TkClosePar TkComma TkConcat TkDeclare TkDiv TkDo TkEqual TkFalse TkFi TkFor TkGeq TkGreater TkGuard TkId TkIf TkIn TkInt TkLeq TkLess TkMax TkMin TkMinus TkMod TkMult TkNEqual TkNot TkNum TkOBlock TkOBracket TkOd TkOpenPar TkOr TkPlus TkPrint TkPrintln TkRead TkRof TkSemiColon TkSize TkSoForth TkString TkTo TkTrue TkTwoPointsblock : TkOBlock TkDeclare start TkCBlock start : declaration start\n              | assign start\n              | emptyempty :declaration : TkId TkTwoPoints TkInt TkSemiColonassign : TkId TkAsig expression TkSemiColonexpression : expression TkPlus expression\n                  | expression TkMinus expression\n                  | expression TkMult expression\n                  | expression TkDiv expression\n                  | expression TkMod expression\n                  | expression TkLess expression\n                  | expression TkLeq expression\n                  | expression TkGeq expression\n                  | expression TkGreater expressionexpression : TkOpenPar expression TkCloseParexpression : TkNumexpression : TkId'
+_lr_signature = 'leftTkAsignonassocTkLessTkLeqTkGeqTkGreaterleftTkPlusTkMinusleftTkMultTkDivTkModleftTkEqualTkNEqualleftTkAndTkOrrightTkNotleftTkOBracketTkCBracketleftTkConcatrightTkArrowTkAnd TkArray TkArrow TkAsig TkAtoi TkCBlock TkCBracket TkClosePar TkComma TkConcat TkDeclare TkDiv TkDo TkEqual TkFalse TkFi TkFor TkGeq TkGreater TkGuard TkId TkIf TkIn TkInt TkLeq TkLess TkMax TkMin TkMinus TkMod TkMult TkNEqual TkNot TkNum TkOBlock TkOBracket TkOd TkOpenPar TkOr TkPlus TkPrint TkPrintln TkRead TkRof TkSemiColon TkSize TkSoForth TkString TkTo TkTrue TkTwoPointsblock : TkOBlock TkDeclare start TkCBlock\n    \t     | TkOBlock body TkCBlockbody : assign body\n\t\t\t| gfor body\n\t\t\t| gprint body\n\t\t\t| gprintln body\n\t\t\t| empty start : declaration start\n              | bodyempty :declaration : TkId TkTwoPoints TkInt TkSemiColon\n                   | TkId TkComma lista TkTwoPoints TkInt TkSemiColonlista : TkId TkComma lista\n             | TkIdassign : TkId TkAsig expression TkSemiColonassign : TkId TkAsig strexp TkSemiColonassign : TkId TkAsig array TkSemiColonarray : TkOBracket inarray TkCBracket\n             | TkOBracket TkNum TkSoForth TkNum TkCBracketinarray : TkNum TkComma inarray\n               | TkNumstrexp : TkString TkConcat strexp\n\t\t\t  | TkStringexpression : expression TkPlus expression\n                  | expression TkMinus expression\n                  | expression TkMult expression\n                  | expression TkDiv expression\n                  | expression TkMod expression\n                  | expression TkLess expression\n                  | expression TkLeq expression\n                  | expression TkGeq expression\n                  | expression TkGreater expressionexpression : TkOpenPar expression TkCloseParexpression : TkSize TkOpenPar array TkClosePar\n\t\t\t      | TkMax TkOpenPar array TkClosePar\n\t\t\t      | TkMin TkOpenPar array TkClosePar\n\t\t\t      | TkAtoi TkOpenPar array TkCloseParexpression : TkNumexpression : TkIdgfor : TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColongprint : TkPrint strprint TkSemiColongprintln : TkPrintln strprint TkSemiColonstrprint : TkString TkConcat strprint\n\t\t\t\t| TkId TkConcat strprint\n\t\t\t\t| TkString\n\t\t\t\t| TkId'
     
-_lr_action_items = {'TkOBlock':([0,],[2,]),'$end':([1,9,],[0,-1,]),'TkDeclare':([2,],[3,]),'TkId':([3,5,6,13,17,19,20,21,22,23,24,25,26,27,28,29,],[8,8,8,15,15,-6,-7,15,15,15,15,15,15,15,15,15,]),'TkCBlock':([3,4,5,6,7,10,11,19,20,],[-5,9,-5,-5,-4,-2,-3,-6,-7,]),'TkTwoPoints':([8,],[12,]),'TkAsig':([8,],[13,]),'TkInt':([12,],[14,]),'TkOpenPar':([13,17,21,22,23,24,25,26,27,28,29,],[17,17,17,17,17,17,17,17,17,17,17,]),'TkNum':([13,17,21,22,23,24,25,26,27,28,29,],[18,18,18,18,18,18,18,18,18,18,18,]),'TkSemiColon':([14,15,16,18,31,32,33,34,35,36,37,38,39,40,],[19,-19,20,-18,-8,-9,-10,-11,-12,-13,-14,-15,-16,-17,]),'TkPlus':([15,16,18,30,31,32,33,34,35,36,37,38,39,40,],[-19,21,-18,21,-8,-9,-10,-11,-12,21,21,21,21,-17,]),'TkMinus':([15,16,18,30,31,32,33,34,35,36,37,38,39,40,],[-19,22,-18,22,-8,-9,-10,-11,-12,22,22,22,22,-17,]),'TkMult':([15,16,18,30,31,32,33,34,35,36,37,38,39,40,],[-19,23,-18,23,23,23,-10,-11,-12,23,23,23,23,-17,]),'TkDiv':([15,16,18,30,31,32,33,34,35,36,37,38,39,40,],[-19,24,-18,24,24,24,-10,-11,-12,24,24,24,24,-17,]),'TkMod':([15,16,18,30,31,32,33,34,35,36,37,38,39,40,],[-19,25,-18,25,25,25,-10,-11,-12,25,25,25,25,-17,]),'TkLess':([15,16,18,30,31,32,33,34,35,36,37,38,39,40,],[-19,26,-18,26,-8,-9,-10,-11,-12,None,None,None,None,-17,]),'TkLeq':([15,16,18,30,31,32,33,34,35,36,37,38,39,40,],[-19,27,-18,27,-8,-9,-10,-11,-12,None,None,None,None,-17,]),'TkGeq':([15,16,18,30,31,32,33,34,35,36,37,38,39,40,],[-19,28,-18,28,-8,-9,-10,-11,-12,None,None,None,None,-17,]),'TkGreater':([15,16,18,30,31,32,33,34,35,36,37,38,39,40,],[-19,29,-18,29,-8,-9,-10,-11,-12,None,None,None,None,-17,]),'TkClosePar':([15,18,30,31,32,33,34,35,36,37,38,39,40,],[-19,-18,40,-8,-9,-10,-11,-12,-13,-14,-15,-16,-17,]),}
+_lr_action_items = {'TkOBlock':([0,110,],[2,2,]),'$end':([1,18,29,],[0,-2,-1,]),'TkDeclare':([2,],[3,]),'TkId':([2,3,5,6,7,8,11,12,13,15,23,32,37,45,46,47,48,49,53,54,55,56,57,58,59,60,61,62,63,64,76,77,97,108,113,],[10,17,10,10,10,10,24,27,27,17,33,51,33,33,-41,27,27,-42,-15,33,33,33,33,33,33,33,33,33,-16,-17,-11,51,33,-12,-40,]),'TkFor':([2,3,5,6,7,8,15,46,49,53,63,64,76,108,113,],[11,11,11,11,11,11,11,-41,-42,-15,-16,-17,-11,-12,-40,]),'TkPrint':([2,3,5,6,7,8,15,46,49,53,63,64,76,108,113,],[12,12,12,12,12,12,12,-41,-42,-15,-16,-17,-11,-12,-40,]),'TkPrintln':([2,3,5,6,7,8,15,46,49,53,63,64,76,108,113,],[13,13,13,13,13,13,13,-41,-42,-15,-16,-17,-11,-12,-40,]),'TkCBlock':([2,3,4,5,6,7,8,9,14,15,16,19,20,21,22,30,46,49,53,63,64,76,108,113,],[-10,-10,18,-10,-10,-10,-10,-7,29,-10,-9,-3,-4,-5,-6,-8,-41,-42,-15,-16,-17,-11,-12,-40,]),'TkAsig':([10,17,],[23,23,]),'TkString':([12,13,23,47,48,70,],[26,26,43,26,26,43,]),'TkTwoPoints':([17,51,52,98,],[31,-14,78,-13,]),'TkComma':([17,51,72,105,],[32,77,96,96,]),'TkRof':([18,29,111,],[-2,-1,112,]),'TkOpenPar':([23,37,38,39,40,41,45,54,55,56,57,58,59,60,61,62,97,],[37,37,66,67,68,69,37,37,37,37,37,37,37,37,37,37,37,]),'TkSize':([23,37,45,54,55,56,57,58,59,60,61,62,97,],[38,38,38,38,38,38,38,38,38,38,38,38,38,]),'TkMax':([23,37,45,54,55,56,57,58,59,60,61,62,97,],[39,39,39,39,39,39,39,39,39,39,39,39,39,]),'TkMin':([23,37,45,54,55,56,57,58,59,60,61,62,97,],[40,40,40,40,40,40,40,40,40,40,40,40,40,]),'TkAtoi':([23,37,45,54,55,56,57,58,59,60,61,62,97,],[41,41,41,41,41,41,41,41,41,41,41,41,41,]),'TkNum':([23,37,44,45,54,55,56,57,58,59,60,61,62,95,96,97,],[42,42,72,42,42,42,42,42,42,42,42,42,42,104,105,42,]),'TkOBracket':([23,66,67,68,69,],[44,44,44,44,44,]),'TkIn':([24,],[45,]),'TkSemiColon':([25,26,27,28,33,34,35,36,42,43,50,74,75,79,80,81,82,83,84,85,86,87,88,93,94,99,100,101,102,103,109,112,],[46,-45,-46,49,-39,53,63,64,-38,-23,76,-43,-44,-24,-25,-26,-27,-28,-29,-30,-31,-32,-33,-22,-18,108,-34,-35,-36,-37,-19,113,]),'TkConcat':([26,27,43,],[47,48,70,]),'TkInt':([31,78,],[50,99,]),'TkPlus':([33,34,42,65,73,79,80,81,82,83,84,85,86,87,88,100,101,102,103,107,],[-39,54,-38,54,54,-24,-25,-26,-27,-28,54,54,54,54,-33,-34,-35,-36,-37,54,]),'TkMinus':([33,34,42,65,73,79,80,81,82,83,84,85,86,87,88,100,101,102,103,107,],[-39,55,-38,55,55,-24,-25,-26,-27,-28,55,55,55,55,-33,-34,-35,-36,-37,55,]),'TkMult':([33,34,42,65,73,79,80,81,82,83,84,85,86,87,88,100,101,102,103,107,],[-39,56,-38,56,56,56,56,-26,-27,-28,56,56,56,56,-33,-34,-35,-36,-37,56,]),'TkDiv':([33,34,42,65,73,79,80,81,82,83,84,85,86,87,88,100,101,102,103,107,],[-39,57,-38,57,57,57,57,-26,-27,-28,57,57,57,57,-33,-34,-35,-36,-37,57,]),'TkMod':([33,34,42,65,73,79,80,81,82,83,84,85,86,87,88,100,101,102,103,107,],[-39,58,-38,58,58,58,58,-26,-27,-28,58,58,58,58,-33,-34,-35,-36,-37,58,]),'TkLess':([33,34,42,65,73,79,80,81,82,83,84,85,86,87,88,100,101,102,103,107,],[-39,59,-38,59,59,-24,-25,-26,-27,-28,None,None,None,None,-33,-34,-35,-36,-37,59,]),'TkLeq':([33,34,42,65,73,79,80,81,82,83,84,85,86,87,88,100,101,102,103,107,],[-39,60,-38,60,60,-24,-25,-26,-27,-28,None,None,None,None,-33,-34,-35,-36,-37,60,]),'TkGeq':([33,34,42,65,73,79,80,81,82,83,84,85,86,87,88,100,101,102,103,107,],[-39,61,-38,61,61,-24,-25,-26,-27,-28,None,None,None,None,-33,-34,-35,-36,-37,61,]),'TkGreater':([33,34,42,65,73,79,80,81,82,83,84,85,86,87,88,100,101,102,103,107,],[-39,62,-38,62,62,-24,-25,-26,-27,-28,None,None,None,None,-33,-34,-35,-36,-37,62,]),'TkClosePar':([33,42,65,79,80,81,82,83,84,85,86,87,88,89,90,91,92,94,100,101,102,103,109,],[-39,-38,88,-24,-25,-26,-27,-28,-29,-30,-31,-32,-33,100,101,102,103,-18,-34,-35,-36,-37,-19,]),'TkTo':([33,42,73,79,80,81,82,83,84,85,86,87,88,100,101,102,103,],[-39,-38,97,-24,-25,-26,-27,-28,-29,-30,-31,-32,-33,-34,-35,-36,-37,]),'TkArrow':([33,42,79,80,81,82,83,84,85,86,87,88,100,101,102,103,107,],[-39,-38,-24,-25,-26,-27,-28,-29,-30,-31,-32,-33,-34,-35,-36,-37,110,]),'TkCBracket':([71,72,104,105,106,],[94,-21,109,-21,-20,]),'TkSoForth':([72,],[95,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'block':([0,],[1,]),'start':([3,5,6,],[4,10,11,]),'declaration':([3,5,6,],[5,5,5,]),'assign':([3,5,6,],[6,6,6,]),'empty':([3,5,6,],[7,7,7,]),'expression':([13,17,21,22,23,24,25,26,27,28,29,],[16,30,31,32,33,34,35,36,37,38,39,]),}
+_lr_goto_items = {'block':([0,110,],[1,111,]),'body':([2,3,5,6,7,8,15,],[4,16,19,20,21,22,16,]),'assign':([2,3,5,6,7,8,15,],[5,5,5,5,5,5,5,]),'gfor':([2,3,5,6,7,8,15,],[6,6,6,6,6,6,6,]),'gprint':([2,3,5,6,7,8,15,],[7,7,7,7,7,7,7,]),'gprintln':([2,3,5,6,7,8,15,],[8,8,8,8,8,8,8,]),'empty':([2,3,5,6,7,8,15,],[9,9,9,9,9,9,9,]),'start':([3,15,],[14,30,]),'declaration':([3,15,],[15,15,]),'strprint':([12,13,47,48,],[25,28,74,75,]),'expression':([23,37,45,54,55,56,57,58,59,60,61,62,97,],[34,65,73,79,80,81,82,83,84,85,86,87,107,]),'strexp':([23,70,],[35,93,]),'array':([23,66,67,68,69,],[36,89,90,91,92,]),'lista':([32,77,],[52,98,]),'inarray':([44,96,],[71,106,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -28,22 +28,49 @@ del _lr_goto_items
 _lr_productions = [
   ("S' -> block","S'",1,None,None,None),
   ('block -> TkOBlock TkDeclare start TkCBlock','block',4,'p_code','parser.py',27),
-  ('start -> declaration start','start',2,'p_start','parser.py',32),
-  ('start -> assign start','start',2,'p_start','parser.py',33),
-  ('start -> empty','start',1,'p_start','parser.py',34),
-  ('empty -> <empty>','empty',0,'p_empty','parser.py',37),
-  ('declaration -> TkId TkTwoPoints TkInt TkSemiColon','declaration',4,'p_declaration','parser.py',41),
-  ('assign -> TkId TkAsig expression TkSemiColon','assign',4,'p_assign_expr','parser.py',51),
-  ('expression -> expression TkPlus expression','expression',3,'p_expression_bin','parser.py',75),
-  ('expression -> expression TkMinus expression','expression',3,'p_expression_bin','parser.py',76),
-  ('expression -> expression TkMult expression','expression',3,'p_expression_bin','parser.py',77),
-  ('expression -> expression TkDiv expression','expression',3,'p_expression_bin','parser.py',78),
-  ('expression -> expression TkMod expression','expression',3,'p_expression_bin','parser.py',79),
-  ('expression -> expression TkLess expression','expression',3,'p_expression_bin','parser.py',80),
-  ('expression -> expression TkLeq expression','expression',3,'p_expression_bin','parser.py',81),
-  ('expression -> expression TkGeq expression','expression',3,'p_expression_bin','parser.py',82),
-  ('expression -> expression TkGreater expression','expression',3,'p_expression_bin','parser.py',83),
-  ('expression -> TkOpenPar expression TkClosePar','expression',3,'p_expression_group','parser.py',97),
-  ('expression -> TkNum','expression',1,'p_expression_number','parser.py',101),
-  ('expression -> TkId','expression',1,'p_expression_id','parser.py',106),
+  ('block -> TkOBlock body TkCBlock','block',3,'p_code','parser.py',28),
+  ('body -> assign body','body',2,'p_body','parser.py',32),
+  ('body -> gfor body','body',2,'p_body','parser.py',33),
+  ('body -> gprint body','body',2,'p_body','parser.py',34),
+  ('body -> gprintln body','body',2,'p_body','parser.py',35),
+  ('body -> empty','body',1,'p_body','parser.py',36),
+  ('start -> declaration start','start',2,'p_start','parser.py',39),
+  ('start -> body','start',1,'p_start','parser.py',40),
+  ('empty -> <empty>','empty',0,'p_empty','parser.py',44),
+  ('declaration -> TkId TkTwoPoints TkInt TkSemiColon','declaration',4,'p_declaration','parser.py',48),
+  ('declaration -> TkId TkComma lista TkTwoPoints TkInt TkSemiColon','declaration',6,'p_declaration','parser.py',49),
+  ('lista -> TkId TkComma lista','lista',3,'p_listint','parser.py',54),
+  ('lista -> TkId','lista',1,'p_listint','parser.py',55),
+  ('assign -> TkId TkAsig expression TkSemiColon','assign',4,'p_assign_expr','parser.py',64),
+  ('assign -> TkId TkAsig strexp TkSemiColon','assign',4,'p_assign_str','parser.py',69),
+  ('assign -> TkId TkAsig array TkSemiColon','assign',4,'p_assign_arr','parser.py',74),
+  ('array -> TkOBracket inarray TkCBracket','array',3,'p_array','parser.py',79),
+  ('array -> TkOBracket TkNum TkSoForth TkNum TkCBracket','array',5,'p_array','parser.py',80),
+  ('inarray -> TkNum TkComma inarray','inarray',3,'p_iarray','parser.py',83),
+  ('inarray -> TkNum','inarray',1,'p_iarray','parser.py',84),
+  ('strexp -> TkString TkConcat strexp','strexp',3,'p_expression_str','parser.py',87),
+  ('strexp -> TkString','strexp',1,'p_expression_str','parser.py',88),
+  ('expression -> expression TkPlus expression','expression',3,'p_expression_bin','parser.py',91),
+  ('expression -> expression TkMinus expression','expression',3,'p_expression_bin','parser.py',92),
+  ('expression -> expression TkMult expression','expression',3,'p_expression_bin','parser.py',93),
+  ('expression -> expression TkDiv expression','expression',3,'p_expression_bin','parser.py',94),
+  ('expression -> expression TkMod expression','expression',3,'p_expression_bin','parser.py',95),
+  ('expression -> expression TkLess expression','expression',3,'p_expression_bin','parser.py',96),
+  ('expression -> expression TkLeq expression','expression',3,'p_expression_bin','parser.py',97),
+  ('expression -> expression TkGeq expression','expression',3,'p_expression_bin','parser.py',98),
+  ('expression -> expression TkGreater expression','expression',3,'p_expression_bin','parser.py',99),
+  ('expression -> TkOpenPar expression TkClosePar','expression',3,'p_expression_group','parser.py',114),
+  ('expression -> TkSize TkOpenPar array TkClosePar','expression',4,'p_expression_fun','parser.py',118),
+  ('expression -> TkMax TkOpenPar array TkClosePar','expression',4,'p_expression_fun','parser.py',119),
+  ('expression -> TkMin TkOpenPar array TkClosePar','expression',4,'p_expression_fun','parser.py',120),
+  ('expression -> TkAtoi TkOpenPar array TkClosePar','expression',4,'p_expression_fun','parser.py',121),
+  ('expression -> TkNum','expression',1,'p_expression_number','parser.py',124),
+  ('expression -> TkId','expression',1,'p_expression_id','parser.py',129),
+  ('gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon','gfor',10,'p_cycle_for','parser.py',138),
+  ('gprint -> TkPrint strprint TkSemiColon','gprint',3,'p_print','parser.py',144),
+  ('gprintln -> TkPrintln strprint TkSemiColon','gprintln',3,'p_println','parser.py',147),
+  ('strprint -> TkString TkConcat strprint','strprint',3,'p_strprint','parser.py',150),
+  ('strprint -> TkId TkConcat strprint','strprint',3,'p_strprint','parser.py',151),
+  ('strprint -> TkString','strprint',1,'p_strprint','parser.py',152),
+  ('strprint -> TkId','strprint',1,'p_strprint','parser.py',153),
 ]

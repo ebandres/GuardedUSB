@@ -4,122 +4,141 @@ Unused terminals:
 
     TkAnd
     TkArray
-    TkArrow
-    TkAtoi
-    TkCBracket
-    TkComma
-    TkConcat
     TkDo
     TkEqual
     TkFalse
     TkFi
-    TkFor
     TkGuard
     TkIf
-    TkIn
-    TkMax
-    TkMin
     TkNEqual
     TkNot
-    TkOBracket
     TkOd
     TkOr
-    TkPrint
-    TkPrintln
     TkRead
-    TkRof
-    TkSize
-    TkSoForth
-    TkString
-    TkTo
     TkTrue
 
 Grammar
 
 Rule 0     S' -> block
 Rule 1     block -> TkOBlock TkDeclare start TkCBlock
-Rule 2     start -> declaration start
-Rule 3     start -> assign start
-Rule 4     start -> empty
-Rule 5     empty -> <empty>
-Rule 6     declaration -> TkId TkTwoPoints TkInt TkSemiColon
-Rule 7     assign -> TkId TkAsig expression TkSemiColon
-Rule 8     expression -> expression TkPlus expression
-Rule 9     expression -> expression TkMinus expression
-Rule 10    expression -> expression TkMult expression
-Rule 11    expression -> expression TkDiv expression
-Rule 12    expression -> expression TkMod expression
-Rule 13    expression -> expression TkLess expression
-Rule 14    expression -> expression TkLeq expression
-Rule 15    expression -> expression TkGeq expression
-Rule 16    expression -> expression TkGreater expression
-Rule 17    expression -> TkOpenPar expression TkClosePar
-Rule 18    expression -> TkNum
-Rule 19    expression -> TkId
+Rule 2     block -> TkOBlock body TkCBlock
+Rule 3     body -> assign body
+Rule 4     body -> gfor body
+Rule 5     body -> gprint body
+Rule 6     body -> gprintln body
+Rule 7     body -> empty
+Rule 8     start -> declaration start
+Rule 9     start -> body
+Rule 10    empty -> <empty>
+Rule 11    declaration -> TkId TkTwoPoints TkInt TkSemiColon
+Rule 12    declaration -> TkId TkComma lista TkTwoPoints TkInt TkSemiColon
+Rule 13    lista -> TkId TkComma lista
+Rule 14    lista -> TkId
+Rule 15    assign -> TkId TkAsig expression TkSemiColon
+Rule 16    assign -> TkId TkAsig strexp TkSemiColon
+Rule 17    assign -> TkId TkAsig array TkSemiColon
+Rule 18    array -> TkOBracket inarray TkCBracket
+Rule 19    array -> TkOBracket TkNum TkSoForth TkNum TkCBracket
+Rule 20    inarray -> TkNum TkComma inarray
+Rule 21    inarray -> TkNum
+Rule 22    strexp -> TkString TkConcat strexp
+Rule 23    strexp -> TkString
+Rule 24    expression -> expression TkPlus expression
+Rule 25    expression -> expression TkMinus expression
+Rule 26    expression -> expression TkMult expression
+Rule 27    expression -> expression TkDiv expression
+Rule 28    expression -> expression TkMod expression
+Rule 29    expression -> expression TkLess expression
+Rule 30    expression -> expression TkLeq expression
+Rule 31    expression -> expression TkGeq expression
+Rule 32    expression -> expression TkGreater expression
+Rule 33    expression -> TkOpenPar expression TkClosePar
+Rule 34    expression -> TkSize TkOpenPar array TkClosePar
+Rule 35    expression -> TkMax TkOpenPar array TkClosePar
+Rule 36    expression -> TkMin TkOpenPar array TkClosePar
+Rule 37    expression -> TkAtoi TkOpenPar array TkClosePar
+Rule 38    expression -> TkNum
+Rule 39    expression -> TkId
+Rule 40    gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon
+Rule 41    gprint -> TkPrint strprint TkSemiColon
+Rule 42    gprintln -> TkPrintln strprint TkSemiColon
+Rule 43    strprint -> TkString TkConcat strprint
+Rule 44    strprint -> TkId TkConcat strprint
+Rule 45    strprint -> TkString
+Rule 46    strprint -> TkId
 
 Terminals, with rules where they appear
 
 TkAnd                : 
 TkArray              : 
-TkArrow              : 
-TkAsig               : 7
-TkAtoi               : 
-TkCBlock             : 1
-TkCBracket           : 
-TkClosePar           : 17
-TkComma              : 
-TkConcat             : 
+TkArrow              : 40
+TkAsig               : 15 16 17
+TkAtoi               : 37
+TkCBlock             : 1 2
+TkCBracket           : 18 19
+TkClosePar           : 33 34 35 36 37
+TkComma              : 12 13 20
+TkConcat             : 22 43 44
 TkDeclare            : 1
-TkDiv                : 11
+TkDiv                : 27
 TkDo                 : 
 TkEqual              : 
 TkFalse              : 
 TkFi                 : 
-TkFor                : 
-TkGeq                : 15
-TkGreater            : 16
+TkFor                : 40
+TkGeq                : 31
+TkGreater            : 32
 TkGuard              : 
-TkId                 : 6 7 19
+TkId                 : 11 12 13 14 15 16 17 39 40 44 46
 TkIf                 : 
-TkIn                 : 
-TkInt                : 6
-TkLeq                : 14
-TkLess               : 13
-TkMax                : 
-TkMin                : 
-TkMinus              : 9
-TkMod                : 12
-TkMult               : 10
+TkIn                 : 40
+TkInt                : 11 12
+TkLeq                : 30
+TkLess               : 29
+TkMax                : 35
+TkMin                : 36
+TkMinus              : 25
+TkMod                : 28
+TkMult               : 26
 TkNEqual             : 
 TkNot                : 
-TkNum                : 18
-TkOBlock             : 1
-TkOBracket           : 
+TkNum                : 19 19 20 21 38
+TkOBlock             : 1 2
+TkOBracket           : 18 19
 TkOd                 : 
-TkOpenPar            : 17
+TkOpenPar            : 33 34 35 36 37
 TkOr                 : 
-TkPlus               : 8
-TkPrint              : 
-TkPrintln            : 
+TkPlus               : 24
+TkPrint              : 41
+TkPrintln            : 42
 TkRead               : 
-TkRof                : 
-TkSemiColon          : 6 7
-TkSize               : 
-TkSoForth            : 
-TkString             : 
-TkTo                 : 
+TkRof                : 40
+TkSemiColon          : 11 12 15 16 17 40 41 42
+TkSize               : 34
+TkSoForth            : 19
+TkString             : 22 23 43 45
+TkTo                 : 40
 TkTrue               : 
-TkTwoPoints          : 6
+TkTwoPoints          : 11 12
 error                : 
 
 Nonterminals, with rules where they appear
 
+array                : 17 34 35 36 37
 assign               : 3
-block                : 0
-declaration          : 2
-empty                : 4
-expression           : 7 8 8 9 9 10 10 11 11 12 12 13 13 14 14 15 15 16 16 17
-start                : 1 2 3
+block                : 40 0
+body                 : 2 3 4 5 6 9
+declaration          : 8
+empty                : 7
+expression           : 15 24 24 25 25 26 26 27 27 28 28 29 29 30 30 31 31 32 32 33 40 40
+gfor                 : 4
+gprint               : 5
+gprintln             : 6
+inarray              : 18 20
+lista                : 12 13
+start                : 1 8
+strexp               : 16 22
+strprint             : 41 42 43 44
 
 Parsing method: LALR
 
@@ -127,6 +146,7 @@ state 0
 
     (0) S' -> . block
     (1) block -> . TkOBlock TkDeclare start TkCBlock
+    (2) block -> . TkOBlock body TkCBlock
 
     TkOBlock        shift and go to state 2
 
@@ -141,801 +161,1808 @@ state 1
 state 2
 
     (1) block -> TkOBlock . TkDeclare start TkCBlock
+    (2) block -> TkOBlock . body TkCBlock
+    (3) body -> . assign body
+    (4) body -> . gfor body
+    (5) body -> . gprint body
+    (6) body -> . gprintln body
+    (7) body -> . empty
+    (15) assign -> . TkId TkAsig expression TkSemiColon
+    (16) assign -> . TkId TkAsig strexp TkSemiColon
+    (17) assign -> . TkId TkAsig array TkSemiColon
+    (40) gfor -> . TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon
+    (41) gprint -> . TkPrint strprint TkSemiColon
+    (42) gprintln -> . TkPrintln strprint TkSemiColon
+    (10) empty -> .
 
     TkDeclare       shift and go to state 3
+    TkId            shift and go to state 10
+    TkFor           shift and go to state 11
+    TkPrint         shift and go to state 12
+    TkPrintln       shift and go to state 13
+    TkCBlock        reduce using rule 10 (empty -> .)
 
+    body                           shift and go to state 4
+    assign                         shift and go to state 5
+    gfor                           shift and go to state 6
+    gprint                         shift and go to state 7
+    gprintln                       shift and go to state 8
+    empty                          shift and go to state 9
 
 state 3
 
     (1) block -> TkOBlock TkDeclare . start TkCBlock
-    (2) start -> . declaration start
-    (3) start -> . assign start
-    (4) start -> . empty
-    (6) declaration -> . TkId TkTwoPoints TkInt TkSemiColon
-    (7) assign -> . TkId TkAsig expression TkSemiColon
-    (5) empty -> .
+    (8) start -> . declaration start
+    (9) start -> . body
+    (11) declaration -> . TkId TkTwoPoints TkInt TkSemiColon
+    (12) declaration -> . TkId TkComma lista TkTwoPoints TkInt TkSemiColon
+    (3) body -> . assign body
+    (4) body -> . gfor body
+    (5) body -> . gprint body
+    (6) body -> . gprintln body
+    (7) body -> . empty
+    (15) assign -> . TkId TkAsig expression TkSemiColon
+    (16) assign -> . TkId TkAsig strexp TkSemiColon
+    (17) assign -> . TkId TkAsig array TkSemiColon
+    (40) gfor -> . TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon
+    (41) gprint -> . TkPrint strprint TkSemiColon
+    (42) gprintln -> . TkPrintln strprint TkSemiColon
+    (10) empty -> .
 
-    TkId            shift and go to state 8
-    TkCBlock        reduce using rule 5 (empty -> .)
+    TkId            shift and go to state 17
+    TkFor           shift and go to state 11
+    TkPrint         shift and go to state 12
+    TkPrintln       shift and go to state 13
+    TkCBlock        reduce using rule 10 (empty -> .)
 
-    start                          shift and go to state 4
-    declaration                    shift and go to state 5
-    assign                         shift and go to state 6
-    empty                          shift and go to state 7
+    start                          shift and go to state 14
+    declaration                    shift and go to state 15
+    body                           shift and go to state 16
+    assign                         shift and go to state 5
+    gfor                           shift and go to state 6
+    gprint                         shift and go to state 7
+    gprintln                       shift and go to state 8
+    empty                          shift and go to state 9
 
 state 4
 
-    (1) block -> TkOBlock TkDeclare start . TkCBlock
+    (2) block -> TkOBlock body . TkCBlock
 
-    TkCBlock        shift and go to state 9
+    TkCBlock        shift and go to state 18
 
 
 state 5
 
-    (2) start -> declaration . start
-    (2) start -> . declaration start
-    (3) start -> . assign start
-    (4) start -> . empty
-    (6) declaration -> . TkId TkTwoPoints TkInt TkSemiColon
-    (7) assign -> . TkId TkAsig expression TkSemiColon
-    (5) empty -> .
+    (3) body -> assign . body
+    (3) body -> . assign body
+    (4) body -> . gfor body
+    (5) body -> . gprint body
+    (6) body -> . gprintln body
+    (7) body -> . empty
+    (15) assign -> . TkId TkAsig expression TkSemiColon
+    (16) assign -> . TkId TkAsig strexp TkSemiColon
+    (17) assign -> . TkId TkAsig array TkSemiColon
+    (40) gfor -> . TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon
+    (41) gprint -> . TkPrint strprint TkSemiColon
+    (42) gprintln -> . TkPrintln strprint TkSemiColon
+    (10) empty -> .
 
-    TkId            shift and go to state 8
-    TkCBlock        reduce using rule 5 (empty -> .)
+    TkId            shift and go to state 10
+    TkFor           shift and go to state 11
+    TkPrint         shift and go to state 12
+    TkPrintln       shift and go to state 13
+    TkCBlock        reduce using rule 10 (empty -> .)
 
-    declaration                    shift and go to state 5
-    start                          shift and go to state 10
-    assign                         shift and go to state 6
-    empty                          shift and go to state 7
+    assign                         shift and go to state 5
+    body                           shift and go to state 19
+    gfor                           shift and go to state 6
+    gprint                         shift and go to state 7
+    gprintln                       shift and go to state 8
+    empty                          shift and go to state 9
 
 state 6
 
-    (3) start -> assign . start
-    (2) start -> . declaration start
-    (3) start -> . assign start
-    (4) start -> . empty
-    (6) declaration -> . TkId TkTwoPoints TkInt TkSemiColon
-    (7) assign -> . TkId TkAsig expression TkSemiColon
-    (5) empty -> .
+    (4) body -> gfor . body
+    (3) body -> . assign body
+    (4) body -> . gfor body
+    (5) body -> . gprint body
+    (6) body -> . gprintln body
+    (7) body -> . empty
+    (15) assign -> . TkId TkAsig expression TkSemiColon
+    (16) assign -> . TkId TkAsig strexp TkSemiColon
+    (17) assign -> . TkId TkAsig array TkSemiColon
+    (40) gfor -> . TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon
+    (41) gprint -> . TkPrint strprint TkSemiColon
+    (42) gprintln -> . TkPrintln strprint TkSemiColon
+    (10) empty -> .
 
-    TkId            shift and go to state 8
-    TkCBlock        reduce using rule 5 (empty -> .)
+    TkId            shift and go to state 10
+    TkFor           shift and go to state 11
+    TkPrint         shift and go to state 12
+    TkPrintln       shift and go to state 13
+    TkCBlock        reduce using rule 10 (empty -> .)
 
-    assign                         shift and go to state 6
-    start                          shift and go to state 11
-    declaration                    shift and go to state 5
-    empty                          shift and go to state 7
+    gfor                           shift and go to state 6
+    body                           shift and go to state 20
+    assign                         shift and go to state 5
+    gprint                         shift and go to state 7
+    gprintln                       shift and go to state 8
+    empty                          shift and go to state 9
 
 state 7
 
-    (4) start -> empty .
+    (5) body -> gprint . body
+    (3) body -> . assign body
+    (4) body -> . gfor body
+    (5) body -> . gprint body
+    (6) body -> . gprintln body
+    (7) body -> . empty
+    (15) assign -> . TkId TkAsig expression TkSemiColon
+    (16) assign -> . TkId TkAsig strexp TkSemiColon
+    (17) assign -> . TkId TkAsig array TkSemiColon
+    (40) gfor -> . TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon
+    (41) gprint -> . TkPrint strprint TkSemiColon
+    (42) gprintln -> . TkPrintln strprint TkSemiColon
+    (10) empty -> .
 
-    TkCBlock        reduce using rule 4 (start -> empty .)
+    TkId            shift and go to state 10
+    TkFor           shift and go to state 11
+    TkPrint         shift and go to state 12
+    TkPrintln       shift and go to state 13
+    TkCBlock        reduce using rule 10 (empty -> .)
 
+    gprint                         shift and go to state 7
+    body                           shift and go to state 21
+    assign                         shift and go to state 5
+    gfor                           shift and go to state 6
+    gprintln                       shift and go to state 8
+    empty                          shift and go to state 9
 
 state 8
 
-    (6) declaration -> TkId . TkTwoPoints TkInt TkSemiColon
-    (7) assign -> TkId . TkAsig expression TkSemiColon
+    (6) body -> gprintln . body
+    (3) body -> . assign body
+    (4) body -> . gfor body
+    (5) body -> . gprint body
+    (6) body -> . gprintln body
+    (7) body -> . empty
+    (15) assign -> . TkId TkAsig expression TkSemiColon
+    (16) assign -> . TkId TkAsig strexp TkSemiColon
+    (17) assign -> . TkId TkAsig array TkSemiColon
+    (40) gfor -> . TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon
+    (41) gprint -> . TkPrint strprint TkSemiColon
+    (42) gprintln -> . TkPrintln strprint TkSemiColon
+    (10) empty -> .
 
-    TkTwoPoints     shift and go to state 12
-    TkAsig          shift and go to state 13
+    TkId            shift and go to state 10
+    TkFor           shift and go to state 11
+    TkPrint         shift and go to state 12
+    TkPrintln       shift and go to state 13
+    TkCBlock        reduce using rule 10 (empty -> .)
 
+    gprintln                       shift and go to state 8
+    body                           shift and go to state 22
+    assign                         shift and go to state 5
+    gfor                           shift and go to state 6
+    gprint                         shift and go to state 7
+    empty                          shift and go to state 9
 
 state 9
 
-    (1) block -> TkOBlock TkDeclare start TkCBlock .
+    (7) body -> empty .
 
-    $end            reduce using rule 1 (block -> TkOBlock TkDeclare start TkCBlock .)
+    TkCBlock        reduce using rule 7 (body -> empty .)
 
 
 state 10
 
-    (2) start -> declaration start .
+    (15) assign -> TkId . TkAsig expression TkSemiColon
+    (16) assign -> TkId . TkAsig strexp TkSemiColon
+    (17) assign -> TkId . TkAsig array TkSemiColon
 
-    TkCBlock        reduce using rule 2 (start -> declaration start .)
+    TkAsig          shift and go to state 23
 
 
 state 11
 
-    (3) start -> assign start .
+    (40) gfor -> TkFor . TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon
 
-    TkCBlock        reduce using rule 3 (start -> assign start .)
+    TkId            shift and go to state 24
 
 
 state 12
 
-    (6) declaration -> TkId TkTwoPoints . TkInt TkSemiColon
+    (41) gprint -> TkPrint . strprint TkSemiColon
+    (43) strprint -> . TkString TkConcat strprint
+    (44) strprint -> . TkId TkConcat strprint
+    (45) strprint -> . TkString
+    (46) strprint -> . TkId
 
-    TkInt           shift and go to state 14
+    TkString        shift and go to state 26
+    TkId            shift and go to state 27
 
+    strprint                       shift and go to state 25
 
 state 13
 
-    (7) assign -> TkId TkAsig . expression TkSemiColon
-    (8) expression -> . expression TkPlus expression
-    (9) expression -> . expression TkMinus expression
-    (10) expression -> . expression TkMult expression
-    (11) expression -> . expression TkDiv expression
-    (12) expression -> . expression TkMod expression
-    (13) expression -> . expression TkLess expression
-    (14) expression -> . expression TkLeq expression
-    (15) expression -> . expression TkGeq expression
-    (16) expression -> . expression TkGreater expression
-    (17) expression -> . TkOpenPar expression TkClosePar
-    (18) expression -> . TkNum
-    (19) expression -> . TkId
+    (42) gprintln -> TkPrintln . strprint TkSemiColon
+    (43) strprint -> . TkString TkConcat strprint
+    (44) strprint -> . TkId TkConcat strprint
+    (45) strprint -> . TkString
+    (46) strprint -> . TkId
 
-    TkOpenPar       shift and go to state 17
-    TkNum           shift and go to state 18
-    TkId            shift and go to state 15
+    TkString        shift and go to state 26
+    TkId            shift and go to state 27
 
-    expression                     shift and go to state 16
+    strprint                       shift and go to state 28
 
 state 14
 
-    (6) declaration -> TkId TkTwoPoints TkInt . TkSemiColon
+    (1) block -> TkOBlock TkDeclare start . TkCBlock
 
-    TkSemiColon     shift and go to state 19
+    TkCBlock        shift and go to state 29
 
 
 state 15
 
-    (19) expression -> TkId .
+    (8) start -> declaration . start
+    (8) start -> . declaration start
+    (9) start -> . body
+    (11) declaration -> . TkId TkTwoPoints TkInt TkSemiColon
+    (12) declaration -> . TkId TkComma lista TkTwoPoints TkInt TkSemiColon
+    (3) body -> . assign body
+    (4) body -> . gfor body
+    (5) body -> . gprint body
+    (6) body -> . gprintln body
+    (7) body -> . empty
+    (15) assign -> . TkId TkAsig expression TkSemiColon
+    (16) assign -> . TkId TkAsig strexp TkSemiColon
+    (17) assign -> . TkId TkAsig array TkSemiColon
+    (40) gfor -> . TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon
+    (41) gprint -> . TkPrint strprint TkSemiColon
+    (42) gprintln -> . TkPrintln strprint TkSemiColon
+    (10) empty -> .
 
-    TkSemiColon     reduce using rule 19 (expression -> TkId .)
-    TkPlus          reduce using rule 19 (expression -> TkId .)
-    TkMinus         reduce using rule 19 (expression -> TkId .)
-    TkMult          reduce using rule 19 (expression -> TkId .)
-    TkDiv           reduce using rule 19 (expression -> TkId .)
-    TkMod           reduce using rule 19 (expression -> TkId .)
-    TkLess          reduce using rule 19 (expression -> TkId .)
-    TkLeq           reduce using rule 19 (expression -> TkId .)
-    TkGeq           reduce using rule 19 (expression -> TkId .)
-    TkGreater       reduce using rule 19 (expression -> TkId .)
-    TkClosePar      reduce using rule 19 (expression -> TkId .)
+    TkId            shift and go to state 17
+    TkFor           shift and go to state 11
+    TkPrint         shift and go to state 12
+    TkPrintln       shift and go to state 13
+    TkCBlock        reduce using rule 10 (empty -> .)
 
+    declaration                    shift and go to state 15
+    start                          shift and go to state 30
+    body                           shift and go to state 16
+    assign                         shift and go to state 5
+    gfor                           shift and go to state 6
+    gprint                         shift and go to state 7
+    gprintln                       shift and go to state 8
+    empty                          shift and go to state 9
 
 state 16
 
-    (7) assign -> TkId TkAsig expression . TkSemiColon
-    (8) expression -> expression . TkPlus expression
-    (9) expression -> expression . TkMinus expression
-    (10) expression -> expression . TkMult expression
-    (11) expression -> expression . TkDiv expression
-    (12) expression -> expression . TkMod expression
-    (13) expression -> expression . TkLess expression
-    (14) expression -> expression . TkLeq expression
-    (15) expression -> expression . TkGeq expression
-    (16) expression -> expression . TkGreater expression
+    (9) start -> body .
 
-    TkSemiColon     shift and go to state 20
-    TkPlus          shift and go to state 21
-    TkMinus         shift and go to state 22
-    TkMult          shift and go to state 23
-    TkDiv           shift and go to state 24
-    TkMod           shift and go to state 25
-    TkLess          shift and go to state 26
-    TkLeq           shift and go to state 27
-    TkGeq           shift and go to state 28
-    TkGreater       shift and go to state 29
+    TkCBlock        reduce using rule 9 (start -> body .)
 
 
 state 17
 
-    (17) expression -> TkOpenPar . expression TkClosePar
-    (8) expression -> . expression TkPlus expression
-    (9) expression -> . expression TkMinus expression
-    (10) expression -> . expression TkMult expression
-    (11) expression -> . expression TkDiv expression
-    (12) expression -> . expression TkMod expression
-    (13) expression -> . expression TkLess expression
-    (14) expression -> . expression TkLeq expression
-    (15) expression -> . expression TkGeq expression
-    (16) expression -> . expression TkGreater expression
-    (17) expression -> . TkOpenPar expression TkClosePar
-    (18) expression -> . TkNum
-    (19) expression -> . TkId
+    (11) declaration -> TkId . TkTwoPoints TkInt TkSemiColon
+    (12) declaration -> TkId . TkComma lista TkTwoPoints TkInt TkSemiColon
+    (15) assign -> TkId . TkAsig expression TkSemiColon
+    (16) assign -> TkId . TkAsig strexp TkSemiColon
+    (17) assign -> TkId . TkAsig array TkSemiColon
 
-    TkOpenPar       shift and go to state 17
-    TkNum           shift and go to state 18
-    TkId            shift and go to state 15
+    TkTwoPoints     shift and go to state 31
+    TkComma         shift and go to state 32
+    TkAsig          shift and go to state 23
 
-    expression                     shift and go to state 30
 
 state 18
 
-    (18) expression -> TkNum .
+    (2) block -> TkOBlock body TkCBlock .
 
-    TkSemiColon     reduce using rule 18 (expression -> TkNum .)
-    TkPlus          reduce using rule 18 (expression -> TkNum .)
-    TkMinus         reduce using rule 18 (expression -> TkNum .)
-    TkMult          reduce using rule 18 (expression -> TkNum .)
-    TkDiv           reduce using rule 18 (expression -> TkNum .)
-    TkMod           reduce using rule 18 (expression -> TkNum .)
-    TkLess          reduce using rule 18 (expression -> TkNum .)
-    TkLeq           reduce using rule 18 (expression -> TkNum .)
-    TkGeq           reduce using rule 18 (expression -> TkNum .)
-    TkGreater       reduce using rule 18 (expression -> TkNum .)
-    TkClosePar      reduce using rule 18 (expression -> TkNum .)
+    $end            reduce using rule 2 (block -> TkOBlock body TkCBlock .)
+    TkRof           reduce using rule 2 (block -> TkOBlock body TkCBlock .)
 
 
 state 19
 
-    (6) declaration -> TkId TkTwoPoints TkInt TkSemiColon .
+    (3) body -> assign body .
 
-    TkId            reduce using rule 6 (declaration -> TkId TkTwoPoints TkInt TkSemiColon .)
-    TkCBlock        reduce using rule 6 (declaration -> TkId TkTwoPoints TkInt TkSemiColon .)
+    TkCBlock        reduce using rule 3 (body -> assign body .)
 
 
 state 20
 
-    (7) assign -> TkId TkAsig expression TkSemiColon .
+    (4) body -> gfor body .
 
-    TkId            reduce using rule 7 (assign -> TkId TkAsig expression TkSemiColon .)
-    TkCBlock        reduce using rule 7 (assign -> TkId TkAsig expression TkSemiColon .)
+    TkCBlock        reduce using rule 4 (body -> gfor body .)
 
 
 state 21
 
-    (8) expression -> expression TkPlus . expression
-    (8) expression -> . expression TkPlus expression
-    (9) expression -> . expression TkMinus expression
-    (10) expression -> . expression TkMult expression
-    (11) expression -> . expression TkDiv expression
-    (12) expression -> . expression TkMod expression
-    (13) expression -> . expression TkLess expression
-    (14) expression -> . expression TkLeq expression
-    (15) expression -> . expression TkGeq expression
-    (16) expression -> . expression TkGreater expression
-    (17) expression -> . TkOpenPar expression TkClosePar
-    (18) expression -> . TkNum
-    (19) expression -> . TkId
+    (5) body -> gprint body .
 
-    TkOpenPar       shift and go to state 17
-    TkNum           shift and go to state 18
-    TkId            shift and go to state 15
+    TkCBlock        reduce using rule 5 (body -> gprint body .)
 
-    expression                     shift and go to state 31
 
 state 22
 
-    (9) expression -> expression TkMinus . expression
-    (8) expression -> . expression TkPlus expression
-    (9) expression -> . expression TkMinus expression
-    (10) expression -> . expression TkMult expression
-    (11) expression -> . expression TkDiv expression
-    (12) expression -> . expression TkMod expression
-    (13) expression -> . expression TkLess expression
-    (14) expression -> . expression TkLeq expression
-    (15) expression -> . expression TkGeq expression
-    (16) expression -> . expression TkGreater expression
-    (17) expression -> . TkOpenPar expression TkClosePar
-    (18) expression -> . TkNum
-    (19) expression -> . TkId
+    (6) body -> gprintln body .
 
-    TkOpenPar       shift and go to state 17
-    TkNum           shift and go to state 18
-    TkId            shift and go to state 15
+    TkCBlock        reduce using rule 6 (body -> gprintln body .)
 
-    expression                     shift and go to state 32
 
 state 23
 
-    (10) expression -> expression TkMult . expression
-    (8) expression -> . expression TkPlus expression
-    (9) expression -> . expression TkMinus expression
-    (10) expression -> . expression TkMult expression
-    (11) expression -> . expression TkDiv expression
-    (12) expression -> . expression TkMod expression
-    (13) expression -> . expression TkLess expression
-    (14) expression -> . expression TkLeq expression
-    (15) expression -> . expression TkGeq expression
-    (16) expression -> . expression TkGreater expression
-    (17) expression -> . TkOpenPar expression TkClosePar
-    (18) expression -> . TkNum
-    (19) expression -> . TkId
+    (15) assign -> TkId TkAsig . expression TkSemiColon
+    (16) assign -> TkId TkAsig . strexp TkSemiColon
+    (17) assign -> TkId TkAsig . array TkSemiColon
+    (24) expression -> . expression TkPlus expression
+    (25) expression -> . expression TkMinus expression
+    (26) expression -> . expression TkMult expression
+    (27) expression -> . expression TkDiv expression
+    (28) expression -> . expression TkMod expression
+    (29) expression -> . expression TkLess expression
+    (30) expression -> . expression TkLeq expression
+    (31) expression -> . expression TkGeq expression
+    (32) expression -> . expression TkGreater expression
+    (33) expression -> . TkOpenPar expression TkClosePar
+    (34) expression -> . TkSize TkOpenPar array TkClosePar
+    (35) expression -> . TkMax TkOpenPar array TkClosePar
+    (36) expression -> . TkMin TkOpenPar array TkClosePar
+    (37) expression -> . TkAtoi TkOpenPar array TkClosePar
+    (38) expression -> . TkNum
+    (39) expression -> . TkId
+    (22) strexp -> . TkString TkConcat strexp
+    (23) strexp -> . TkString
+    (18) array -> . TkOBracket inarray TkCBracket
+    (19) array -> . TkOBracket TkNum TkSoForth TkNum TkCBracket
 
-    TkOpenPar       shift and go to state 17
-    TkNum           shift and go to state 18
-    TkId            shift and go to state 15
+    TkOpenPar       shift and go to state 37
+    TkSize          shift and go to state 38
+    TkMax           shift and go to state 39
+    TkMin           shift and go to state 40
+    TkAtoi          shift and go to state 41
+    TkNum           shift and go to state 42
+    TkId            shift and go to state 33
+    TkString        shift and go to state 43
+    TkOBracket      shift and go to state 44
 
-    expression                     shift and go to state 33
+    expression                     shift and go to state 34
+    strexp                         shift and go to state 35
+    array                          shift and go to state 36
 
 state 24
 
-    (11) expression -> expression TkDiv . expression
-    (8) expression -> . expression TkPlus expression
-    (9) expression -> . expression TkMinus expression
-    (10) expression -> . expression TkMult expression
-    (11) expression -> . expression TkDiv expression
-    (12) expression -> . expression TkMod expression
-    (13) expression -> . expression TkLess expression
-    (14) expression -> . expression TkLeq expression
-    (15) expression -> . expression TkGeq expression
-    (16) expression -> . expression TkGreater expression
-    (17) expression -> . TkOpenPar expression TkClosePar
-    (18) expression -> . TkNum
-    (19) expression -> . TkId
+    (40) gfor -> TkFor TkId . TkIn expression TkTo expression TkArrow block TkRof TkSemiColon
 
-    TkOpenPar       shift and go to state 17
-    TkNum           shift and go to state 18
-    TkId            shift and go to state 15
+    TkIn            shift and go to state 45
 
-    expression                     shift and go to state 34
 
 state 25
 
-    (12) expression -> expression TkMod . expression
-    (8) expression -> . expression TkPlus expression
-    (9) expression -> . expression TkMinus expression
-    (10) expression -> . expression TkMult expression
-    (11) expression -> . expression TkDiv expression
-    (12) expression -> . expression TkMod expression
-    (13) expression -> . expression TkLess expression
-    (14) expression -> . expression TkLeq expression
-    (15) expression -> . expression TkGeq expression
-    (16) expression -> . expression TkGreater expression
-    (17) expression -> . TkOpenPar expression TkClosePar
-    (18) expression -> . TkNum
-    (19) expression -> . TkId
+    (41) gprint -> TkPrint strprint . TkSemiColon
 
-    TkOpenPar       shift and go to state 17
-    TkNum           shift and go to state 18
-    TkId            shift and go to state 15
+    TkSemiColon     shift and go to state 46
 
-    expression                     shift and go to state 35
 
 state 26
 
-    (13) expression -> expression TkLess . expression
-    (8) expression -> . expression TkPlus expression
-    (9) expression -> . expression TkMinus expression
-    (10) expression -> . expression TkMult expression
-    (11) expression -> . expression TkDiv expression
-    (12) expression -> . expression TkMod expression
-    (13) expression -> . expression TkLess expression
-    (14) expression -> . expression TkLeq expression
-    (15) expression -> . expression TkGeq expression
-    (16) expression -> . expression TkGreater expression
-    (17) expression -> . TkOpenPar expression TkClosePar
-    (18) expression -> . TkNum
-    (19) expression -> . TkId
+    (43) strprint -> TkString . TkConcat strprint
+    (45) strprint -> TkString .
 
-    TkOpenPar       shift and go to state 17
-    TkNum           shift and go to state 18
-    TkId            shift and go to state 15
+    TkConcat        shift and go to state 47
+    TkSemiColon     reduce using rule 45 (strprint -> TkString .)
 
-    expression                     shift and go to state 36
 
 state 27
 
-    (14) expression -> expression TkLeq . expression
-    (8) expression -> . expression TkPlus expression
-    (9) expression -> . expression TkMinus expression
-    (10) expression -> . expression TkMult expression
-    (11) expression -> . expression TkDiv expression
-    (12) expression -> . expression TkMod expression
-    (13) expression -> . expression TkLess expression
-    (14) expression -> . expression TkLeq expression
-    (15) expression -> . expression TkGeq expression
-    (16) expression -> . expression TkGreater expression
-    (17) expression -> . TkOpenPar expression TkClosePar
-    (18) expression -> . TkNum
-    (19) expression -> . TkId
+    (44) strprint -> TkId . TkConcat strprint
+    (46) strprint -> TkId .
 
-    TkOpenPar       shift and go to state 17
-    TkNum           shift and go to state 18
-    TkId            shift and go to state 15
+    TkConcat        shift and go to state 48
+    TkSemiColon     reduce using rule 46 (strprint -> TkId .)
 
-    expression                     shift and go to state 37
 
 state 28
 
-    (15) expression -> expression TkGeq . expression
-    (8) expression -> . expression TkPlus expression
-    (9) expression -> . expression TkMinus expression
-    (10) expression -> . expression TkMult expression
-    (11) expression -> . expression TkDiv expression
-    (12) expression -> . expression TkMod expression
-    (13) expression -> . expression TkLess expression
-    (14) expression -> . expression TkLeq expression
-    (15) expression -> . expression TkGeq expression
-    (16) expression -> . expression TkGreater expression
-    (17) expression -> . TkOpenPar expression TkClosePar
-    (18) expression -> . TkNum
-    (19) expression -> . TkId
+    (42) gprintln -> TkPrintln strprint . TkSemiColon
 
-    TkOpenPar       shift and go to state 17
-    TkNum           shift and go to state 18
-    TkId            shift and go to state 15
+    TkSemiColon     shift and go to state 49
 
-    expression                     shift and go to state 38
 
 state 29
 
-    (16) expression -> expression TkGreater . expression
-    (8) expression -> . expression TkPlus expression
-    (9) expression -> . expression TkMinus expression
-    (10) expression -> . expression TkMult expression
-    (11) expression -> . expression TkDiv expression
-    (12) expression -> . expression TkMod expression
-    (13) expression -> . expression TkLess expression
-    (14) expression -> . expression TkLeq expression
-    (15) expression -> . expression TkGeq expression
-    (16) expression -> . expression TkGreater expression
-    (17) expression -> . TkOpenPar expression TkClosePar
-    (18) expression -> . TkNum
-    (19) expression -> . TkId
+    (1) block -> TkOBlock TkDeclare start TkCBlock .
 
-    TkOpenPar       shift and go to state 17
-    TkNum           shift and go to state 18
-    TkId            shift and go to state 15
+    $end            reduce using rule 1 (block -> TkOBlock TkDeclare start TkCBlock .)
+    TkRof           reduce using rule 1 (block -> TkOBlock TkDeclare start TkCBlock .)
 
-    expression                     shift and go to state 39
 
 state 30
 
-    (17) expression -> TkOpenPar expression . TkClosePar
-    (8) expression -> expression . TkPlus expression
-    (9) expression -> expression . TkMinus expression
-    (10) expression -> expression . TkMult expression
-    (11) expression -> expression . TkDiv expression
-    (12) expression -> expression . TkMod expression
-    (13) expression -> expression . TkLess expression
-    (14) expression -> expression . TkLeq expression
-    (15) expression -> expression . TkGeq expression
-    (16) expression -> expression . TkGreater expression
+    (8) start -> declaration start .
 
-    TkClosePar      shift and go to state 40
-    TkPlus          shift and go to state 21
-    TkMinus         shift and go to state 22
-    TkMult          shift and go to state 23
-    TkDiv           shift and go to state 24
-    TkMod           shift and go to state 25
-    TkLess          shift and go to state 26
-    TkLeq           shift and go to state 27
-    TkGeq           shift and go to state 28
-    TkGreater       shift and go to state 29
+    TkCBlock        reduce using rule 8 (start -> declaration start .)
 
 
 state 31
 
-    (8) expression -> expression TkPlus expression .
-    (8) expression -> expression . TkPlus expression
-    (9) expression -> expression . TkMinus expression
-    (10) expression -> expression . TkMult expression
-    (11) expression -> expression . TkDiv expression
-    (12) expression -> expression . TkMod expression
-    (13) expression -> expression . TkLess expression
-    (14) expression -> expression . TkLeq expression
-    (15) expression -> expression . TkGeq expression
-    (16) expression -> expression . TkGreater expression
+    (11) declaration -> TkId TkTwoPoints . TkInt TkSemiColon
 
-    TkSemiColon     reduce using rule 8 (expression -> expression TkPlus expression .)
-    TkPlus          reduce using rule 8 (expression -> expression TkPlus expression .)
-    TkMinus         reduce using rule 8 (expression -> expression TkPlus expression .)
-    TkLess          reduce using rule 8 (expression -> expression TkPlus expression .)
-    TkLeq           reduce using rule 8 (expression -> expression TkPlus expression .)
-    TkGeq           reduce using rule 8 (expression -> expression TkPlus expression .)
-    TkGreater       reduce using rule 8 (expression -> expression TkPlus expression .)
-    TkClosePar      reduce using rule 8 (expression -> expression TkPlus expression .)
-    TkMult          shift and go to state 23
-    TkDiv           shift and go to state 24
-    TkMod           shift and go to state 25
-
-  ! TkMult          [ reduce using rule 8 (expression -> expression TkPlus expression .) ]
-  ! TkDiv           [ reduce using rule 8 (expression -> expression TkPlus expression .) ]
-  ! TkMod           [ reduce using rule 8 (expression -> expression TkPlus expression .) ]
-  ! TkPlus          [ shift and go to state 21 ]
-  ! TkMinus         [ shift and go to state 22 ]
-  ! TkLess          [ shift and go to state 26 ]
-  ! TkLeq           [ shift and go to state 27 ]
-  ! TkGeq           [ shift and go to state 28 ]
-  ! TkGreater       [ shift and go to state 29 ]
+    TkInt           shift and go to state 50
 
 
 state 32
 
-    (9) expression -> expression TkMinus expression .
-    (8) expression -> expression . TkPlus expression
-    (9) expression -> expression . TkMinus expression
-    (10) expression -> expression . TkMult expression
-    (11) expression -> expression . TkDiv expression
-    (12) expression -> expression . TkMod expression
-    (13) expression -> expression . TkLess expression
-    (14) expression -> expression . TkLeq expression
-    (15) expression -> expression . TkGeq expression
-    (16) expression -> expression . TkGreater expression
+    (12) declaration -> TkId TkComma . lista TkTwoPoints TkInt TkSemiColon
+    (13) lista -> . TkId TkComma lista
+    (14) lista -> . TkId
 
-    TkSemiColon     reduce using rule 9 (expression -> expression TkMinus expression .)
-    TkPlus          reduce using rule 9 (expression -> expression TkMinus expression .)
-    TkMinus         reduce using rule 9 (expression -> expression TkMinus expression .)
-    TkLess          reduce using rule 9 (expression -> expression TkMinus expression .)
-    TkLeq           reduce using rule 9 (expression -> expression TkMinus expression .)
-    TkGeq           reduce using rule 9 (expression -> expression TkMinus expression .)
-    TkGreater       reduce using rule 9 (expression -> expression TkMinus expression .)
-    TkClosePar      reduce using rule 9 (expression -> expression TkMinus expression .)
-    TkMult          shift and go to state 23
-    TkDiv           shift and go to state 24
-    TkMod           shift and go to state 25
+    TkId            shift and go to state 51
 
-  ! TkMult          [ reduce using rule 9 (expression -> expression TkMinus expression .) ]
-  ! TkDiv           [ reduce using rule 9 (expression -> expression TkMinus expression .) ]
-  ! TkMod           [ reduce using rule 9 (expression -> expression TkMinus expression .) ]
-  ! TkPlus          [ shift and go to state 21 ]
-  ! TkMinus         [ shift and go to state 22 ]
-  ! TkLess          [ shift and go to state 26 ]
-  ! TkLeq           [ shift and go to state 27 ]
-  ! TkGeq           [ shift and go to state 28 ]
-  ! TkGreater       [ shift and go to state 29 ]
-
+    lista                          shift and go to state 52
 
 state 33
 
-    (10) expression -> expression TkMult expression .
-    (8) expression -> expression . TkPlus expression
-    (9) expression -> expression . TkMinus expression
-    (10) expression -> expression . TkMult expression
-    (11) expression -> expression . TkDiv expression
-    (12) expression -> expression . TkMod expression
-    (13) expression -> expression . TkLess expression
-    (14) expression -> expression . TkLeq expression
-    (15) expression -> expression . TkGeq expression
-    (16) expression -> expression . TkGreater expression
+    (39) expression -> TkId .
 
-    TkSemiColon     reduce using rule 10 (expression -> expression TkMult expression .)
-    TkPlus          reduce using rule 10 (expression -> expression TkMult expression .)
-    TkMinus         reduce using rule 10 (expression -> expression TkMult expression .)
-    TkMult          reduce using rule 10 (expression -> expression TkMult expression .)
-    TkDiv           reduce using rule 10 (expression -> expression TkMult expression .)
-    TkMod           reduce using rule 10 (expression -> expression TkMult expression .)
-    TkLess          reduce using rule 10 (expression -> expression TkMult expression .)
-    TkLeq           reduce using rule 10 (expression -> expression TkMult expression .)
-    TkGeq           reduce using rule 10 (expression -> expression TkMult expression .)
-    TkGreater       reduce using rule 10 (expression -> expression TkMult expression .)
-    TkClosePar      reduce using rule 10 (expression -> expression TkMult expression .)
-
-  ! TkPlus          [ shift and go to state 21 ]
-  ! TkMinus         [ shift and go to state 22 ]
-  ! TkMult          [ shift and go to state 23 ]
-  ! TkDiv           [ shift and go to state 24 ]
-  ! TkMod           [ shift and go to state 25 ]
-  ! TkLess          [ shift and go to state 26 ]
-  ! TkLeq           [ shift and go to state 27 ]
-  ! TkGeq           [ shift and go to state 28 ]
-  ! TkGreater       [ shift and go to state 29 ]
+    TkSemiColon     reduce using rule 39 (expression -> TkId .)
+    TkPlus          reduce using rule 39 (expression -> TkId .)
+    TkMinus         reduce using rule 39 (expression -> TkId .)
+    TkMult          reduce using rule 39 (expression -> TkId .)
+    TkDiv           reduce using rule 39 (expression -> TkId .)
+    TkMod           reduce using rule 39 (expression -> TkId .)
+    TkLess          reduce using rule 39 (expression -> TkId .)
+    TkLeq           reduce using rule 39 (expression -> TkId .)
+    TkGeq           reduce using rule 39 (expression -> TkId .)
+    TkGreater       reduce using rule 39 (expression -> TkId .)
+    TkClosePar      reduce using rule 39 (expression -> TkId .)
+    TkTo            reduce using rule 39 (expression -> TkId .)
+    TkArrow         reduce using rule 39 (expression -> TkId .)
 
 
 state 34
 
-    (11) expression -> expression TkDiv expression .
-    (8) expression -> expression . TkPlus expression
-    (9) expression -> expression . TkMinus expression
-    (10) expression -> expression . TkMult expression
-    (11) expression -> expression . TkDiv expression
-    (12) expression -> expression . TkMod expression
-    (13) expression -> expression . TkLess expression
-    (14) expression -> expression . TkLeq expression
-    (15) expression -> expression . TkGeq expression
-    (16) expression -> expression . TkGreater expression
+    (15) assign -> TkId TkAsig expression . TkSemiColon
+    (24) expression -> expression . TkPlus expression
+    (25) expression -> expression . TkMinus expression
+    (26) expression -> expression . TkMult expression
+    (27) expression -> expression . TkDiv expression
+    (28) expression -> expression . TkMod expression
+    (29) expression -> expression . TkLess expression
+    (30) expression -> expression . TkLeq expression
+    (31) expression -> expression . TkGeq expression
+    (32) expression -> expression . TkGreater expression
 
-    TkSemiColon     reduce using rule 11 (expression -> expression TkDiv expression .)
-    TkPlus          reduce using rule 11 (expression -> expression TkDiv expression .)
-    TkMinus         reduce using rule 11 (expression -> expression TkDiv expression .)
-    TkMult          reduce using rule 11 (expression -> expression TkDiv expression .)
-    TkDiv           reduce using rule 11 (expression -> expression TkDiv expression .)
-    TkMod           reduce using rule 11 (expression -> expression TkDiv expression .)
-    TkLess          reduce using rule 11 (expression -> expression TkDiv expression .)
-    TkLeq           reduce using rule 11 (expression -> expression TkDiv expression .)
-    TkGeq           reduce using rule 11 (expression -> expression TkDiv expression .)
-    TkGreater       reduce using rule 11 (expression -> expression TkDiv expression .)
-    TkClosePar      reduce using rule 11 (expression -> expression TkDiv expression .)
-
-  ! TkPlus          [ shift and go to state 21 ]
-  ! TkMinus         [ shift and go to state 22 ]
-  ! TkMult          [ shift and go to state 23 ]
-  ! TkDiv           [ shift and go to state 24 ]
-  ! TkMod           [ shift and go to state 25 ]
-  ! TkLess          [ shift and go to state 26 ]
-  ! TkLeq           [ shift and go to state 27 ]
-  ! TkGeq           [ shift and go to state 28 ]
-  ! TkGreater       [ shift and go to state 29 ]
+    TkSemiColon     shift and go to state 53
+    TkPlus          shift and go to state 54
+    TkMinus         shift and go to state 55
+    TkMult          shift and go to state 56
+    TkDiv           shift and go to state 57
+    TkMod           shift and go to state 58
+    TkLess          shift and go to state 59
+    TkLeq           shift and go to state 60
+    TkGeq           shift and go to state 61
+    TkGreater       shift and go to state 62
 
 
 state 35
 
-    (12) expression -> expression TkMod expression .
-    (8) expression -> expression . TkPlus expression
-    (9) expression -> expression . TkMinus expression
-    (10) expression -> expression . TkMult expression
-    (11) expression -> expression . TkDiv expression
-    (12) expression -> expression . TkMod expression
-    (13) expression -> expression . TkLess expression
-    (14) expression -> expression . TkLeq expression
-    (15) expression -> expression . TkGeq expression
-    (16) expression -> expression . TkGreater expression
+    (16) assign -> TkId TkAsig strexp . TkSemiColon
 
-    TkSemiColon     reduce using rule 12 (expression -> expression TkMod expression .)
-    TkPlus          reduce using rule 12 (expression -> expression TkMod expression .)
-    TkMinus         reduce using rule 12 (expression -> expression TkMod expression .)
-    TkMult          reduce using rule 12 (expression -> expression TkMod expression .)
-    TkDiv           reduce using rule 12 (expression -> expression TkMod expression .)
-    TkMod           reduce using rule 12 (expression -> expression TkMod expression .)
-    TkLess          reduce using rule 12 (expression -> expression TkMod expression .)
-    TkLeq           reduce using rule 12 (expression -> expression TkMod expression .)
-    TkGeq           reduce using rule 12 (expression -> expression TkMod expression .)
-    TkGreater       reduce using rule 12 (expression -> expression TkMod expression .)
-    TkClosePar      reduce using rule 12 (expression -> expression TkMod expression .)
-
-  ! TkPlus          [ shift and go to state 21 ]
-  ! TkMinus         [ shift and go to state 22 ]
-  ! TkMult          [ shift and go to state 23 ]
-  ! TkDiv           [ shift and go to state 24 ]
-  ! TkMod           [ shift and go to state 25 ]
-  ! TkLess          [ shift and go to state 26 ]
-  ! TkLeq           [ shift and go to state 27 ]
-  ! TkGeq           [ shift and go to state 28 ]
-  ! TkGreater       [ shift and go to state 29 ]
+    TkSemiColon     shift and go to state 63
 
 
 state 36
 
-    (13) expression -> expression TkLess expression .
-    (8) expression -> expression . TkPlus expression
-    (9) expression -> expression . TkMinus expression
-    (10) expression -> expression . TkMult expression
-    (11) expression -> expression . TkDiv expression
-    (12) expression -> expression . TkMod expression
-    (13) expression -> expression . TkLess expression
-    (14) expression -> expression . TkLeq expression
-    (15) expression -> expression . TkGeq expression
-    (16) expression -> expression . TkGreater expression
+    (17) assign -> TkId TkAsig array . TkSemiColon
 
-    TkSemiColon     reduce using rule 13 (expression -> expression TkLess expression .)
-    TkLess          reduce using rule 13 (expression -> expression TkLess expression .)
-    TkLeq           reduce using rule 13 (expression -> expression TkLess expression .)
-    TkGeq           reduce using rule 13 (expression -> expression TkLess expression .)
-    TkGreater       reduce using rule 13 (expression -> expression TkLess expression .)
-    TkClosePar      reduce using rule 13 (expression -> expression TkLess expression .)
-    TkPlus          shift and go to state 21
-    TkMinus         shift and go to state 22
-    TkMult          shift and go to state 23
-    TkDiv           shift and go to state 24
-    TkMod           shift and go to state 25
-
-  ! TkPlus          [ reduce using rule 13 (expression -> expression TkLess expression .) ]
-  ! TkMinus         [ reduce using rule 13 (expression -> expression TkLess expression .) ]
-  ! TkMult          [ reduce using rule 13 (expression -> expression TkLess expression .) ]
-  ! TkDiv           [ reduce using rule 13 (expression -> expression TkLess expression .) ]
-  ! TkMod           [ reduce using rule 13 (expression -> expression TkLess expression .) ]
-  ! TkLess          [ shift and go to state 26 ]
-  ! TkLeq           [ shift and go to state 27 ]
-  ! TkGeq           [ shift and go to state 28 ]
-  ! TkGreater       [ shift and go to state 29 ]
+    TkSemiColon     shift and go to state 64
 
 
 state 37
 
-    (14) expression -> expression TkLeq expression .
-    (8) expression -> expression . TkPlus expression
-    (9) expression -> expression . TkMinus expression
-    (10) expression -> expression . TkMult expression
-    (11) expression -> expression . TkDiv expression
-    (12) expression -> expression . TkMod expression
-    (13) expression -> expression . TkLess expression
-    (14) expression -> expression . TkLeq expression
-    (15) expression -> expression . TkGeq expression
-    (16) expression -> expression . TkGreater expression
+    (33) expression -> TkOpenPar . expression TkClosePar
+    (24) expression -> . expression TkPlus expression
+    (25) expression -> . expression TkMinus expression
+    (26) expression -> . expression TkMult expression
+    (27) expression -> . expression TkDiv expression
+    (28) expression -> . expression TkMod expression
+    (29) expression -> . expression TkLess expression
+    (30) expression -> . expression TkLeq expression
+    (31) expression -> . expression TkGeq expression
+    (32) expression -> . expression TkGreater expression
+    (33) expression -> . TkOpenPar expression TkClosePar
+    (34) expression -> . TkSize TkOpenPar array TkClosePar
+    (35) expression -> . TkMax TkOpenPar array TkClosePar
+    (36) expression -> . TkMin TkOpenPar array TkClosePar
+    (37) expression -> . TkAtoi TkOpenPar array TkClosePar
+    (38) expression -> . TkNum
+    (39) expression -> . TkId
 
-    TkSemiColon     reduce using rule 14 (expression -> expression TkLeq expression .)
-    TkLess          reduce using rule 14 (expression -> expression TkLeq expression .)
-    TkLeq           reduce using rule 14 (expression -> expression TkLeq expression .)
-    TkGeq           reduce using rule 14 (expression -> expression TkLeq expression .)
-    TkGreater       reduce using rule 14 (expression -> expression TkLeq expression .)
-    TkClosePar      reduce using rule 14 (expression -> expression TkLeq expression .)
-    TkPlus          shift and go to state 21
-    TkMinus         shift and go to state 22
-    TkMult          shift and go to state 23
-    TkDiv           shift and go to state 24
-    TkMod           shift and go to state 25
+    TkOpenPar       shift and go to state 37
+    TkSize          shift and go to state 38
+    TkMax           shift and go to state 39
+    TkMin           shift and go to state 40
+    TkAtoi          shift and go to state 41
+    TkNum           shift and go to state 42
+    TkId            shift and go to state 33
 
-  ! TkPlus          [ reduce using rule 14 (expression -> expression TkLeq expression .) ]
-  ! TkMinus         [ reduce using rule 14 (expression -> expression TkLeq expression .) ]
-  ! TkMult          [ reduce using rule 14 (expression -> expression TkLeq expression .) ]
-  ! TkDiv           [ reduce using rule 14 (expression -> expression TkLeq expression .) ]
-  ! TkMod           [ reduce using rule 14 (expression -> expression TkLeq expression .) ]
-  ! TkLess          [ shift and go to state 26 ]
-  ! TkLeq           [ shift and go to state 27 ]
-  ! TkGeq           [ shift and go to state 28 ]
-  ! TkGreater       [ shift and go to state 29 ]
-
+    expression                     shift and go to state 65
 
 state 38
 
-    (15) expression -> expression TkGeq expression .
-    (8) expression -> expression . TkPlus expression
-    (9) expression -> expression . TkMinus expression
-    (10) expression -> expression . TkMult expression
-    (11) expression -> expression . TkDiv expression
-    (12) expression -> expression . TkMod expression
-    (13) expression -> expression . TkLess expression
-    (14) expression -> expression . TkLeq expression
-    (15) expression -> expression . TkGeq expression
-    (16) expression -> expression . TkGreater expression
+    (34) expression -> TkSize . TkOpenPar array TkClosePar
 
-    TkSemiColon     reduce using rule 15 (expression -> expression TkGeq expression .)
-    TkLess          reduce using rule 15 (expression -> expression TkGeq expression .)
-    TkLeq           reduce using rule 15 (expression -> expression TkGeq expression .)
-    TkGeq           reduce using rule 15 (expression -> expression TkGeq expression .)
-    TkGreater       reduce using rule 15 (expression -> expression TkGeq expression .)
-    TkClosePar      reduce using rule 15 (expression -> expression TkGeq expression .)
-    TkPlus          shift and go to state 21
-    TkMinus         shift and go to state 22
-    TkMult          shift and go to state 23
-    TkDiv           shift and go to state 24
-    TkMod           shift and go to state 25
-
-  ! TkPlus          [ reduce using rule 15 (expression -> expression TkGeq expression .) ]
-  ! TkMinus         [ reduce using rule 15 (expression -> expression TkGeq expression .) ]
-  ! TkMult          [ reduce using rule 15 (expression -> expression TkGeq expression .) ]
-  ! TkDiv           [ reduce using rule 15 (expression -> expression TkGeq expression .) ]
-  ! TkMod           [ reduce using rule 15 (expression -> expression TkGeq expression .) ]
-  ! TkLess          [ shift and go to state 26 ]
-  ! TkLeq           [ shift and go to state 27 ]
-  ! TkGeq           [ shift and go to state 28 ]
-  ! TkGreater       [ shift and go to state 29 ]
+    TkOpenPar       shift and go to state 66
 
 
 state 39
 
-    (16) expression -> expression TkGreater expression .
-    (8) expression -> expression . TkPlus expression
-    (9) expression -> expression . TkMinus expression
-    (10) expression -> expression . TkMult expression
-    (11) expression -> expression . TkDiv expression
-    (12) expression -> expression . TkMod expression
-    (13) expression -> expression . TkLess expression
-    (14) expression -> expression . TkLeq expression
-    (15) expression -> expression . TkGeq expression
-    (16) expression -> expression . TkGreater expression
+    (35) expression -> TkMax . TkOpenPar array TkClosePar
 
-    TkSemiColon     reduce using rule 16 (expression -> expression TkGreater expression .)
-    TkLess          reduce using rule 16 (expression -> expression TkGreater expression .)
-    TkLeq           reduce using rule 16 (expression -> expression TkGreater expression .)
-    TkGeq           reduce using rule 16 (expression -> expression TkGreater expression .)
-    TkGreater       reduce using rule 16 (expression -> expression TkGreater expression .)
-    TkClosePar      reduce using rule 16 (expression -> expression TkGreater expression .)
-    TkPlus          shift and go to state 21
-    TkMinus         shift and go to state 22
-    TkMult          shift and go to state 23
-    TkDiv           shift and go to state 24
-    TkMod           shift and go to state 25
-
-  ! TkPlus          [ reduce using rule 16 (expression -> expression TkGreater expression .) ]
-  ! TkMinus         [ reduce using rule 16 (expression -> expression TkGreater expression .) ]
-  ! TkMult          [ reduce using rule 16 (expression -> expression TkGreater expression .) ]
-  ! TkDiv           [ reduce using rule 16 (expression -> expression TkGreater expression .) ]
-  ! TkMod           [ reduce using rule 16 (expression -> expression TkGreater expression .) ]
-  ! TkLess          [ shift and go to state 26 ]
-  ! TkLeq           [ shift and go to state 27 ]
-  ! TkGeq           [ shift and go to state 28 ]
-  ! TkGreater       [ shift and go to state 29 ]
+    TkOpenPar       shift and go to state 67
 
 
 state 40
 
-    (17) expression -> TkOpenPar expression TkClosePar .
+    (36) expression -> TkMin . TkOpenPar array TkClosePar
 
-    TkSemiColon     reduce using rule 17 (expression -> TkOpenPar expression TkClosePar .)
-    TkPlus          reduce using rule 17 (expression -> TkOpenPar expression TkClosePar .)
-    TkMinus         reduce using rule 17 (expression -> TkOpenPar expression TkClosePar .)
-    TkMult          reduce using rule 17 (expression -> TkOpenPar expression TkClosePar .)
-    TkDiv           reduce using rule 17 (expression -> TkOpenPar expression TkClosePar .)
-    TkMod           reduce using rule 17 (expression -> TkOpenPar expression TkClosePar .)
-    TkLess          reduce using rule 17 (expression -> TkOpenPar expression TkClosePar .)
-    TkLeq           reduce using rule 17 (expression -> TkOpenPar expression TkClosePar .)
-    TkGeq           reduce using rule 17 (expression -> TkOpenPar expression TkClosePar .)
-    TkGreater       reduce using rule 17 (expression -> TkOpenPar expression TkClosePar .)
-    TkClosePar      reduce using rule 17 (expression -> TkOpenPar expression TkClosePar .)
+    TkOpenPar       shift and go to state 68
+
+
+state 41
+
+    (37) expression -> TkAtoi . TkOpenPar array TkClosePar
+
+    TkOpenPar       shift and go to state 69
+
+
+state 42
+
+    (38) expression -> TkNum .
+
+    TkSemiColon     reduce using rule 38 (expression -> TkNum .)
+    TkPlus          reduce using rule 38 (expression -> TkNum .)
+    TkMinus         reduce using rule 38 (expression -> TkNum .)
+    TkMult          reduce using rule 38 (expression -> TkNum .)
+    TkDiv           reduce using rule 38 (expression -> TkNum .)
+    TkMod           reduce using rule 38 (expression -> TkNum .)
+    TkLess          reduce using rule 38 (expression -> TkNum .)
+    TkLeq           reduce using rule 38 (expression -> TkNum .)
+    TkGeq           reduce using rule 38 (expression -> TkNum .)
+    TkGreater       reduce using rule 38 (expression -> TkNum .)
+    TkClosePar      reduce using rule 38 (expression -> TkNum .)
+    TkTo            reduce using rule 38 (expression -> TkNum .)
+    TkArrow         reduce using rule 38 (expression -> TkNum .)
+
+
+state 43
+
+    (22) strexp -> TkString . TkConcat strexp
+    (23) strexp -> TkString .
+
+    TkConcat        shift and go to state 70
+    TkSemiColon     reduce using rule 23 (strexp -> TkString .)
+
+
+state 44
+
+    (18) array -> TkOBracket . inarray TkCBracket
+    (19) array -> TkOBracket . TkNum TkSoForth TkNum TkCBracket
+    (20) inarray -> . TkNum TkComma inarray
+    (21) inarray -> . TkNum
+
+    TkNum           shift and go to state 72
+
+    inarray                        shift and go to state 71
+
+state 45
+
+    (40) gfor -> TkFor TkId TkIn . expression TkTo expression TkArrow block TkRof TkSemiColon
+    (24) expression -> . expression TkPlus expression
+    (25) expression -> . expression TkMinus expression
+    (26) expression -> . expression TkMult expression
+    (27) expression -> . expression TkDiv expression
+    (28) expression -> . expression TkMod expression
+    (29) expression -> . expression TkLess expression
+    (30) expression -> . expression TkLeq expression
+    (31) expression -> . expression TkGeq expression
+    (32) expression -> . expression TkGreater expression
+    (33) expression -> . TkOpenPar expression TkClosePar
+    (34) expression -> . TkSize TkOpenPar array TkClosePar
+    (35) expression -> . TkMax TkOpenPar array TkClosePar
+    (36) expression -> . TkMin TkOpenPar array TkClosePar
+    (37) expression -> . TkAtoi TkOpenPar array TkClosePar
+    (38) expression -> . TkNum
+    (39) expression -> . TkId
+
+    TkOpenPar       shift and go to state 37
+    TkSize          shift and go to state 38
+    TkMax           shift and go to state 39
+    TkMin           shift and go to state 40
+    TkAtoi          shift and go to state 41
+    TkNum           shift and go to state 42
+    TkId            shift and go to state 33
+
+    expression                     shift and go to state 73
+
+state 46
+
+    (41) gprint -> TkPrint strprint TkSemiColon .
+
+    TkId            reduce using rule 41 (gprint -> TkPrint strprint TkSemiColon .)
+    TkFor           reduce using rule 41 (gprint -> TkPrint strprint TkSemiColon .)
+    TkPrint         reduce using rule 41 (gprint -> TkPrint strprint TkSemiColon .)
+    TkPrintln       reduce using rule 41 (gprint -> TkPrint strprint TkSemiColon .)
+    TkCBlock        reduce using rule 41 (gprint -> TkPrint strprint TkSemiColon .)
+
+
+state 47
+
+    (43) strprint -> TkString TkConcat . strprint
+    (43) strprint -> . TkString TkConcat strprint
+    (44) strprint -> . TkId TkConcat strprint
+    (45) strprint -> . TkString
+    (46) strprint -> . TkId
+
+    TkString        shift and go to state 26
+    TkId            shift and go to state 27
+
+    strprint                       shift and go to state 74
+
+state 48
+
+    (44) strprint -> TkId TkConcat . strprint
+    (43) strprint -> . TkString TkConcat strprint
+    (44) strprint -> . TkId TkConcat strprint
+    (45) strprint -> . TkString
+    (46) strprint -> . TkId
+
+    TkString        shift and go to state 26
+    TkId            shift and go to state 27
+
+    strprint                       shift and go to state 75
+
+state 49
+
+    (42) gprintln -> TkPrintln strprint TkSemiColon .
+
+    TkId            reduce using rule 42 (gprintln -> TkPrintln strprint TkSemiColon .)
+    TkFor           reduce using rule 42 (gprintln -> TkPrintln strprint TkSemiColon .)
+    TkPrint         reduce using rule 42 (gprintln -> TkPrintln strprint TkSemiColon .)
+    TkPrintln       reduce using rule 42 (gprintln -> TkPrintln strprint TkSemiColon .)
+    TkCBlock        reduce using rule 42 (gprintln -> TkPrintln strprint TkSemiColon .)
+
+
+state 50
+
+    (11) declaration -> TkId TkTwoPoints TkInt . TkSemiColon
+
+    TkSemiColon     shift and go to state 76
+
+
+state 51
+
+    (13) lista -> TkId . TkComma lista
+    (14) lista -> TkId .
+
+    TkComma         shift and go to state 77
+    TkTwoPoints     reduce using rule 14 (lista -> TkId .)
+
+
+state 52
+
+    (12) declaration -> TkId TkComma lista . TkTwoPoints TkInt TkSemiColon
+
+    TkTwoPoints     shift and go to state 78
+
+
+state 53
+
+    (15) assign -> TkId TkAsig expression TkSemiColon .
+
+    TkId            reduce using rule 15 (assign -> TkId TkAsig expression TkSemiColon .)
+    TkFor           reduce using rule 15 (assign -> TkId TkAsig expression TkSemiColon .)
+    TkPrint         reduce using rule 15 (assign -> TkId TkAsig expression TkSemiColon .)
+    TkPrintln       reduce using rule 15 (assign -> TkId TkAsig expression TkSemiColon .)
+    TkCBlock        reduce using rule 15 (assign -> TkId TkAsig expression TkSemiColon .)
+
+
+state 54
+
+    (24) expression -> expression TkPlus . expression
+    (24) expression -> . expression TkPlus expression
+    (25) expression -> . expression TkMinus expression
+    (26) expression -> . expression TkMult expression
+    (27) expression -> . expression TkDiv expression
+    (28) expression -> . expression TkMod expression
+    (29) expression -> . expression TkLess expression
+    (30) expression -> . expression TkLeq expression
+    (31) expression -> . expression TkGeq expression
+    (32) expression -> . expression TkGreater expression
+    (33) expression -> . TkOpenPar expression TkClosePar
+    (34) expression -> . TkSize TkOpenPar array TkClosePar
+    (35) expression -> . TkMax TkOpenPar array TkClosePar
+    (36) expression -> . TkMin TkOpenPar array TkClosePar
+    (37) expression -> . TkAtoi TkOpenPar array TkClosePar
+    (38) expression -> . TkNum
+    (39) expression -> . TkId
+
+    TkOpenPar       shift and go to state 37
+    TkSize          shift and go to state 38
+    TkMax           shift and go to state 39
+    TkMin           shift and go to state 40
+    TkAtoi          shift and go to state 41
+    TkNum           shift and go to state 42
+    TkId            shift and go to state 33
+
+    expression                     shift and go to state 79
+
+state 55
+
+    (25) expression -> expression TkMinus . expression
+    (24) expression -> . expression TkPlus expression
+    (25) expression -> . expression TkMinus expression
+    (26) expression -> . expression TkMult expression
+    (27) expression -> . expression TkDiv expression
+    (28) expression -> . expression TkMod expression
+    (29) expression -> . expression TkLess expression
+    (30) expression -> . expression TkLeq expression
+    (31) expression -> . expression TkGeq expression
+    (32) expression -> . expression TkGreater expression
+    (33) expression -> . TkOpenPar expression TkClosePar
+    (34) expression -> . TkSize TkOpenPar array TkClosePar
+    (35) expression -> . TkMax TkOpenPar array TkClosePar
+    (36) expression -> . TkMin TkOpenPar array TkClosePar
+    (37) expression -> . TkAtoi TkOpenPar array TkClosePar
+    (38) expression -> . TkNum
+    (39) expression -> . TkId
+
+    TkOpenPar       shift and go to state 37
+    TkSize          shift and go to state 38
+    TkMax           shift and go to state 39
+    TkMin           shift and go to state 40
+    TkAtoi          shift and go to state 41
+    TkNum           shift and go to state 42
+    TkId            shift and go to state 33
+
+    expression                     shift and go to state 80
+
+state 56
+
+    (26) expression -> expression TkMult . expression
+    (24) expression -> . expression TkPlus expression
+    (25) expression -> . expression TkMinus expression
+    (26) expression -> . expression TkMult expression
+    (27) expression -> . expression TkDiv expression
+    (28) expression -> . expression TkMod expression
+    (29) expression -> . expression TkLess expression
+    (30) expression -> . expression TkLeq expression
+    (31) expression -> . expression TkGeq expression
+    (32) expression -> . expression TkGreater expression
+    (33) expression -> . TkOpenPar expression TkClosePar
+    (34) expression -> . TkSize TkOpenPar array TkClosePar
+    (35) expression -> . TkMax TkOpenPar array TkClosePar
+    (36) expression -> . TkMin TkOpenPar array TkClosePar
+    (37) expression -> . TkAtoi TkOpenPar array TkClosePar
+    (38) expression -> . TkNum
+    (39) expression -> . TkId
+
+    TkOpenPar       shift and go to state 37
+    TkSize          shift and go to state 38
+    TkMax           shift and go to state 39
+    TkMin           shift and go to state 40
+    TkAtoi          shift and go to state 41
+    TkNum           shift and go to state 42
+    TkId            shift and go to state 33
+
+    expression                     shift and go to state 81
+
+state 57
+
+    (27) expression -> expression TkDiv . expression
+    (24) expression -> . expression TkPlus expression
+    (25) expression -> . expression TkMinus expression
+    (26) expression -> . expression TkMult expression
+    (27) expression -> . expression TkDiv expression
+    (28) expression -> . expression TkMod expression
+    (29) expression -> . expression TkLess expression
+    (30) expression -> . expression TkLeq expression
+    (31) expression -> . expression TkGeq expression
+    (32) expression -> . expression TkGreater expression
+    (33) expression -> . TkOpenPar expression TkClosePar
+    (34) expression -> . TkSize TkOpenPar array TkClosePar
+    (35) expression -> . TkMax TkOpenPar array TkClosePar
+    (36) expression -> . TkMin TkOpenPar array TkClosePar
+    (37) expression -> . TkAtoi TkOpenPar array TkClosePar
+    (38) expression -> . TkNum
+    (39) expression -> . TkId
+
+    TkOpenPar       shift and go to state 37
+    TkSize          shift and go to state 38
+    TkMax           shift and go to state 39
+    TkMin           shift and go to state 40
+    TkAtoi          shift and go to state 41
+    TkNum           shift and go to state 42
+    TkId            shift and go to state 33
+
+    expression                     shift and go to state 82
+
+state 58
+
+    (28) expression -> expression TkMod . expression
+    (24) expression -> . expression TkPlus expression
+    (25) expression -> . expression TkMinus expression
+    (26) expression -> . expression TkMult expression
+    (27) expression -> . expression TkDiv expression
+    (28) expression -> . expression TkMod expression
+    (29) expression -> . expression TkLess expression
+    (30) expression -> . expression TkLeq expression
+    (31) expression -> . expression TkGeq expression
+    (32) expression -> . expression TkGreater expression
+    (33) expression -> . TkOpenPar expression TkClosePar
+    (34) expression -> . TkSize TkOpenPar array TkClosePar
+    (35) expression -> . TkMax TkOpenPar array TkClosePar
+    (36) expression -> . TkMin TkOpenPar array TkClosePar
+    (37) expression -> . TkAtoi TkOpenPar array TkClosePar
+    (38) expression -> . TkNum
+    (39) expression -> . TkId
+
+    TkOpenPar       shift and go to state 37
+    TkSize          shift and go to state 38
+    TkMax           shift and go to state 39
+    TkMin           shift and go to state 40
+    TkAtoi          shift and go to state 41
+    TkNum           shift and go to state 42
+    TkId            shift and go to state 33
+
+    expression                     shift and go to state 83
+
+state 59
+
+    (29) expression -> expression TkLess . expression
+    (24) expression -> . expression TkPlus expression
+    (25) expression -> . expression TkMinus expression
+    (26) expression -> . expression TkMult expression
+    (27) expression -> . expression TkDiv expression
+    (28) expression -> . expression TkMod expression
+    (29) expression -> . expression TkLess expression
+    (30) expression -> . expression TkLeq expression
+    (31) expression -> . expression TkGeq expression
+    (32) expression -> . expression TkGreater expression
+    (33) expression -> . TkOpenPar expression TkClosePar
+    (34) expression -> . TkSize TkOpenPar array TkClosePar
+    (35) expression -> . TkMax TkOpenPar array TkClosePar
+    (36) expression -> . TkMin TkOpenPar array TkClosePar
+    (37) expression -> . TkAtoi TkOpenPar array TkClosePar
+    (38) expression -> . TkNum
+    (39) expression -> . TkId
+
+    TkOpenPar       shift and go to state 37
+    TkSize          shift and go to state 38
+    TkMax           shift and go to state 39
+    TkMin           shift and go to state 40
+    TkAtoi          shift and go to state 41
+    TkNum           shift and go to state 42
+    TkId            shift and go to state 33
+
+    expression                     shift and go to state 84
+
+state 60
+
+    (30) expression -> expression TkLeq . expression
+    (24) expression -> . expression TkPlus expression
+    (25) expression -> . expression TkMinus expression
+    (26) expression -> . expression TkMult expression
+    (27) expression -> . expression TkDiv expression
+    (28) expression -> . expression TkMod expression
+    (29) expression -> . expression TkLess expression
+    (30) expression -> . expression TkLeq expression
+    (31) expression -> . expression TkGeq expression
+    (32) expression -> . expression TkGreater expression
+    (33) expression -> . TkOpenPar expression TkClosePar
+    (34) expression -> . TkSize TkOpenPar array TkClosePar
+    (35) expression -> . TkMax TkOpenPar array TkClosePar
+    (36) expression -> . TkMin TkOpenPar array TkClosePar
+    (37) expression -> . TkAtoi TkOpenPar array TkClosePar
+    (38) expression -> . TkNum
+    (39) expression -> . TkId
+
+    TkOpenPar       shift and go to state 37
+    TkSize          shift and go to state 38
+    TkMax           shift and go to state 39
+    TkMin           shift and go to state 40
+    TkAtoi          shift and go to state 41
+    TkNum           shift and go to state 42
+    TkId            shift and go to state 33
+
+    expression                     shift and go to state 85
+
+state 61
+
+    (31) expression -> expression TkGeq . expression
+    (24) expression -> . expression TkPlus expression
+    (25) expression -> . expression TkMinus expression
+    (26) expression -> . expression TkMult expression
+    (27) expression -> . expression TkDiv expression
+    (28) expression -> . expression TkMod expression
+    (29) expression -> . expression TkLess expression
+    (30) expression -> . expression TkLeq expression
+    (31) expression -> . expression TkGeq expression
+    (32) expression -> . expression TkGreater expression
+    (33) expression -> . TkOpenPar expression TkClosePar
+    (34) expression -> . TkSize TkOpenPar array TkClosePar
+    (35) expression -> . TkMax TkOpenPar array TkClosePar
+    (36) expression -> . TkMin TkOpenPar array TkClosePar
+    (37) expression -> . TkAtoi TkOpenPar array TkClosePar
+    (38) expression -> . TkNum
+    (39) expression -> . TkId
+
+    TkOpenPar       shift and go to state 37
+    TkSize          shift and go to state 38
+    TkMax           shift and go to state 39
+    TkMin           shift and go to state 40
+    TkAtoi          shift and go to state 41
+    TkNum           shift and go to state 42
+    TkId            shift and go to state 33
+
+    expression                     shift and go to state 86
+
+state 62
+
+    (32) expression -> expression TkGreater . expression
+    (24) expression -> . expression TkPlus expression
+    (25) expression -> . expression TkMinus expression
+    (26) expression -> . expression TkMult expression
+    (27) expression -> . expression TkDiv expression
+    (28) expression -> . expression TkMod expression
+    (29) expression -> . expression TkLess expression
+    (30) expression -> . expression TkLeq expression
+    (31) expression -> . expression TkGeq expression
+    (32) expression -> . expression TkGreater expression
+    (33) expression -> . TkOpenPar expression TkClosePar
+    (34) expression -> . TkSize TkOpenPar array TkClosePar
+    (35) expression -> . TkMax TkOpenPar array TkClosePar
+    (36) expression -> . TkMin TkOpenPar array TkClosePar
+    (37) expression -> . TkAtoi TkOpenPar array TkClosePar
+    (38) expression -> . TkNum
+    (39) expression -> . TkId
+
+    TkOpenPar       shift and go to state 37
+    TkSize          shift and go to state 38
+    TkMax           shift and go to state 39
+    TkMin           shift and go to state 40
+    TkAtoi          shift and go to state 41
+    TkNum           shift and go to state 42
+    TkId            shift and go to state 33
+
+    expression                     shift and go to state 87
+
+state 63
+
+    (16) assign -> TkId TkAsig strexp TkSemiColon .
+
+    TkId            reduce using rule 16 (assign -> TkId TkAsig strexp TkSemiColon .)
+    TkFor           reduce using rule 16 (assign -> TkId TkAsig strexp TkSemiColon .)
+    TkPrint         reduce using rule 16 (assign -> TkId TkAsig strexp TkSemiColon .)
+    TkPrintln       reduce using rule 16 (assign -> TkId TkAsig strexp TkSemiColon .)
+    TkCBlock        reduce using rule 16 (assign -> TkId TkAsig strexp TkSemiColon .)
+
+
+state 64
+
+    (17) assign -> TkId TkAsig array TkSemiColon .
+
+    TkId            reduce using rule 17 (assign -> TkId TkAsig array TkSemiColon .)
+    TkFor           reduce using rule 17 (assign -> TkId TkAsig array TkSemiColon .)
+    TkPrint         reduce using rule 17 (assign -> TkId TkAsig array TkSemiColon .)
+    TkPrintln       reduce using rule 17 (assign -> TkId TkAsig array TkSemiColon .)
+    TkCBlock        reduce using rule 17 (assign -> TkId TkAsig array TkSemiColon .)
+
+
+state 65
+
+    (33) expression -> TkOpenPar expression . TkClosePar
+    (24) expression -> expression . TkPlus expression
+    (25) expression -> expression . TkMinus expression
+    (26) expression -> expression . TkMult expression
+    (27) expression -> expression . TkDiv expression
+    (28) expression -> expression . TkMod expression
+    (29) expression -> expression . TkLess expression
+    (30) expression -> expression . TkLeq expression
+    (31) expression -> expression . TkGeq expression
+    (32) expression -> expression . TkGreater expression
+
+    TkClosePar      shift and go to state 88
+    TkPlus          shift and go to state 54
+    TkMinus         shift and go to state 55
+    TkMult          shift and go to state 56
+    TkDiv           shift and go to state 57
+    TkMod           shift and go to state 58
+    TkLess          shift and go to state 59
+    TkLeq           shift and go to state 60
+    TkGeq           shift and go to state 61
+    TkGreater       shift and go to state 62
+
+
+state 66
+
+    (34) expression -> TkSize TkOpenPar . array TkClosePar
+    (18) array -> . TkOBracket inarray TkCBracket
+    (19) array -> . TkOBracket TkNum TkSoForth TkNum TkCBracket
+
+    TkOBracket      shift and go to state 44
+
+    array                          shift and go to state 89
+
+state 67
+
+    (35) expression -> TkMax TkOpenPar . array TkClosePar
+    (18) array -> . TkOBracket inarray TkCBracket
+    (19) array -> . TkOBracket TkNum TkSoForth TkNum TkCBracket
+
+    TkOBracket      shift and go to state 44
+
+    array                          shift and go to state 90
+
+state 68
+
+    (36) expression -> TkMin TkOpenPar . array TkClosePar
+    (18) array -> . TkOBracket inarray TkCBracket
+    (19) array -> . TkOBracket TkNum TkSoForth TkNum TkCBracket
+
+    TkOBracket      shift and go to state 44
+
+    array                          shift and go to state 91
+
+state 69
+
+    (37) expression -> TkAtoi TkOpenPar . array TkClosePar
+    (18) array -> . TkOBracket inarray TkCBracket
+    (19) array -> . TkOBracket TkNum TkSoForth TkNum TkCBracket
+
+    TkOBracket      shift and go to state 44
+
+    array                          shift and go to state 92
+
+state 70
+
+    (22) strexp -> TkString TkConcat . strexp
+    (22) strexp -> . TkString TkConcat strexp
+    (23) strexp -> . TkString
+
+    TkString        shift and go to state 43
+
+    strexp                         shift and go to state 93
+
+state 71
+
+    (18) array -> TkOBracket inarray . TkCBracket
+
+    TkCBracket      shift and go to state 94
+
+
+state 72
+
+    (19) array -> TkOBracket TkNum . TkSoForth TkNum TkCBracket
+    (20) inarray -> TkNum . TkComma inarray
+    (21) inarray -> TkNum .
+
+    TkSoForth       shift and go to state 95
+    TkComma         shift and go to state 96
+    TkCBracket      reduce using rule 21 (inarray -> TkNum .)
+
+
+state 73
+
+    (40) gfor -> TkFor TkId TkIn expression . TkTo expression TkArrow block TkRof TkSemiColon
+    (24) expression -> expression . TkPlus expression
+    (25) expression -> expression . TkMinus expression
+    (26) expression -> expression . TkMult expression
+    (27) expression -> expression . TkDiv expression
+    (28) expression -> expression . TkMod expression
+    (29) expression -> expression . TkLess expression
+    (30) expression -> expression . TkLeq expression
+    (31) expression -> expression . TkGeq expression
+    (32) expression -> expression . TkGreater expression
+
+    TkTo            shift and go to state 97
+    TkPlus          shift and go to state 54
+    TkMinus         shift and go to state 55
+    TkMult          shift and go to state 56
+    TkDiv           shift and go to state 57
+    TkMod           shift and go to state 58
+    TkLess          shift and go to state 59
+    TkLeq           shift and go to state 60
+    TkGeq           shift and go to state 61
+    TkGreater       shift and go to state 62
+
+
+state 74
+
+    (43) strprint -> TkString TkConcat strprint .
+
+    TkSemiColon     reduce using rule 43 (strprint -> TkString TkConcat strprint .)
+
+
+state 75
+
+    (44) strprint -> TkId TkConcat strprint .
+
+    TkSemiColon     reduce using rule 44 (strprint -> TkId TkConcat strprint .)
+
+
+state 76
+
+    (11) declaration -> TkId TkTwoPoints TkInt TkSemiColon .
+
+    TkId            reduce using rule 11 (declaration -> TkId TkTwoPoints TkInt TkSemiColon .)
+    TkFor           reduce using rule 11 (declaration -> TkId TkTwoPoints TkInt TkSemiColon .)
+    TkPrint         reduce using rule 11 (declaration -> TkId TkTwoPoints TkInt TkSemiColon .)
+    TkPrintln       reduce using rule 11 (declaration -> TkId TkTwoPoints TkInt TkSemiColon .)
+    TkCBlock        reduce using rule 11 (declaration -> TkId TkTwoPoints TkInt TkSemiColon .)
+
+
+state 77
+
+    (13) lista -> TkId TkComma . lista
+    (13) lista -> . TkId TkComma lista
+    (14) lista -> . TkId
+
+    TkId            shift and go to state 51
+
+    lista                          shift and go to state 98
+
+state 78
+
+    (12) declaration -> TkId TkComma lista TkTwoPoints . TkInt TkSemiColon
+
+    TkInt           shift and go to state 99
+
+
+state 79
+
+    (24) expression -> expression TkPlus expression .
+    (24) expression -> expression . TkPlus expression
+    (25) expression -> expression . TkMinus expression
+    (26) expression -> expression . TkMult expression
+    (27) expression -> expression . TkDiv expression
+    (28) expression -> expression . TkMod expression
+    (29) expression -> expression . TkLess expression
+    (30) expression -> expression . TkLeq expression
+    (31) expression -> expression . TkGeq expression
+    (32) expression -> expression . TkGreater expression
+
+    TkSemiColon     reduce using rule 24 (expression -> expression TkPlus expression .)
+    TkPlus          reduce using rule 24 (expression -> expression TkPlus expression .)
+    TkMinus         reduce using rule 24 (expression -> expression TkPlus expression .)
+    TkLess          reduce using rule 24 (expression -> expression TkPlus expression .)
+    TkLeq           reduce using rule 24 (expression -> expression TkPlus expression .)
+    TkGeq           reduce using rule 24 (expression -> expression TkPlus expression .)
+    TkGreater       reduce using rule 24 (expression -> expression TkPlus expression .)
+    TkClosePar      reduce using rule 24 (expression -> expression TkPlus expression .)
+    TkTo            reduce using rule 24 (expression -> expression TkPlus expression .)
+    TkArrow         reduce using rule 24 (expression -> expression TkPlus expression .)
+    TkMult          shift and go to state 56
+    TkDiv           shift and go to state 57
+    TkMod           shift and go to state 58
+
+  ! TkMult          [ reduce using rule 24 (expression -> expression TkPlus expression .) ]
+  ! TkDiv           [ reduce using rule 24 (expression -> expression TkPlus expression .) ]
+  ! TkMod           [ reduce using rule 24 (expression -> expression TkPlus expression .) ]
+  ! TkPlus          [ shift and go to state 54 ]
+  ! TkMinus         [ shift and go to state 55 ]
+  ! TkLess          [ shift and go to state 59 ]
+  ! TkLeq           [ shift and go to state 60 ]
+  ! TkGeq           [ shift and go to state 61 ]
+  ! TkGreater       [ shift and go to state 62 ]
+
+
+state 80
+
+    (25) expression -> expression TkMinus expression .
+    (24) expression -> expression . TkPlus expression
+    (25) expression -> expression . TkMinus expression
+    (26) expression -> expression . TkMult expression
+    (27) expression -> expression . TkDiv expression
+    (28) expression -> expression . TkMod expression
+    (29) expression -> expression . TkLess expression
+    (30) expression -> expression . TkLeq expression
+    (31) expression -> expression . TkGeq expression
+    (32) expression -> expression . TkGreater expression
+
+    TkSemiColon     reduce using rule 25 (expression -> expression TkMinus expression .)
+    TkPlus          reduce using rule 25 (expression -> expression TkMinus expression .)
+    TkMinus         reduce using rule 25 (expression -> expression TkMinus expression .)
+    TkLess          reduce using rule 25 (expression -> expression TkMinus expression .)
+    TkLeq           reduce using rule 25 (expression -> expression TkMinus expression .)
+    TkGeq           reduce using rule 25 (expression -> expression TkMinus expression .)
+    TkGreater       reduce using rule 25 (expression -> expression TkMinus expression .)
+    TkClosePar      reduce using rule 25 (expression -> expression TkMinus expression .)
+    TkTo            reduce using rule 25 (expression -> expression TkMinus expression .)
+    TkArrow         reduce using rule 25 (expression -> expression TkMinus expression .)
+    TkMult          shift and go to state 56
+    TkDiv           shift and go to state 57
+    TkMod           shift and go to state 58
+
+  ! TkMult          [ reduce using rule 25 (expression -> expression TkMinus expression .) ]
+  ! TkDiv           [ reduce using rule 25 (expression -> expression TkMinus expression .) ]
+  ! TkMod           [ reduce using rule 25 (expression -> expression TkMinus expression .) ]
+  ! TkPlus          [ shift and go to state 54 ]
+  ! TkMinus         [ shift and go to state 55 ]
+  ! TkLess          [ shift and go to state 59 ]
+  ! TkLeq           [ shift and go to state 60 ]
+  ! TkGeq           [ shift and go to state 61 ]
+  ! TkGreater       [ shift and go to state 62 ]
+
+
+state 81
+
+    (26) expression -> expression TkMult expression .
+    (24) expression -> expression . TkPlus expression
+    (25) expression -> expression . TkMinus expression
+    (26) expression -> expression . TkMult expression
+    (27) expression -> expression . TkDiv expression
+    (28) expression -> expression . TkMod expression
+    (29) expression -> expression . TkLess expression
+    (30) expression -> expression . TkLeq expression
+    (31) expression -> expression . TkGeq expression
+    (32) expression -> expression . TkGreater expression
+
+    TkSemiColon     reduce using rule 26 (expression -> expression TkMult expression .)
+    TkPlus          reduce using rule 26 (expression -> expression TkMult expression .)
+    TkMinus         reduce using rule 26 (expression -> expression TkMult expression .)
+    TkMult          reduce using rule 26 (expression -> expression TkMult expression .)
+    TkDiv           reduce using rule 26 (expression -> expression TkMult expression .)
+    TkMod           reduce using rule 26 (expression -> expression TkMult expression .)
+    TkLess          reduce using rule 26 (expression -> expression TkMult expression .)
+    TkLeq           reduce using rule 26 (expression -> expression TkMult expression .)
+    TkGeq           reduce using rule 26 (expression -> expression TkMult expression .)
+    TkGreater       reduce using rule 26 (expression -> expression TkMult expression .)
+    TkClosePar      reduce using rule 26 (expression -> expression TkMult expression .)
+    TkTo            reduce using rule 26 (expression -> expression TkMult expression .)
+    TkArrow         reduce using rule 26 (expression -> expression TkMult expression .)
+
+  ! TkPlus          [ shift and go to state 54 ]
+  ! TkMinus         [ shift and go to state 55 ]
+  ! TkMult          [ shift and go to state 56 ]
+  ! TkDiv           [ shift and go to state 57 ]
+  ! TkMod           [ shift and go to state 58 ]
+  ! TkLess          [ shift and go to state 59 ]
+  ! TkLeq           [ shift and go to state 60 ]
+  ! TkGeq           [ shift and go to state 61 ]
+  ! TkGreater       [ shift and go to state 62 ]
+
+
+state 82
+
+    (27) expression -> expression TkDiv expression .
+    (24) expression -> expression . TkPlus expression
+    (25) expression -> expression . TkMinus expression
+    (26) expression -> expression . TkMult expression
+    (27) expression -> expression . TkDiv expression
+    (28) expression -> expression . TkMod expression
+    (29) expression -> expression . TkLess expression
+    (30) expression -> expression . TkLeq expression
+    (31) expression -> expression . TkGeq expression
+    (32) expression -> expression . TkGreater expression
+
+    TkSemiColon     reduce using rule 27 (expression -> expression TkDiv expression .)
+    TkPlus          reduce using rule 27 (expression -> expression TkDiv expression .)
+    TkMinus         reduce using rule 27 (expression -> expression TkDiv expression .)
+    TkMult          reduce using rule 27 (expression -> expression TkDiv expression .)
+    TkDiv           reduce using rule 27 (expression -> expression TkDiv expression .)
+    TkMod           reduce using rule 27 (expression -> expression TkDiv expression .)
+    TkLess          reduce using rule 27 (expression -> expression TkDiv expression .)
+    TkLeq           reduce using rule 27 (expression -> expression TkDiv expression .)
+    TkGeq           reduce using rule 27 (expression -> expression TkDiv expression .)
+    TkGreater       reduce using rule 27 (expression -> expression TkDiv expression .)
+    TkClosePar      reduce using rule 27 (expression -> expression TkDiv expression .)
+    TkTo            reduce using rule 27 (expression -> expression TkDiv expression .)
+    TkArrow         reduce using rule 27 (expression -> expression TkDiv expression .)
+
+  ! TkPlus          [ shift and go to state 54 ]
+  ! TkMinus         [ shift and go to state 55 ]
+  ! TkMult          [ shift and go to state 56 ]
+  ! TkDiv           [ shift and go to state 57 ]
+  ! TkMod           [ shift and go to state 58 ]
+  ! TkLess          [ shift and go to state 59 ]
+  ! TkLeq           [ shift and go to state 60 ]
+  ! TkGeq           [ shift and go to state 61 ]
+  ! TkGreater       [ shift and go to state 62 ]
+
+
+state 83
+
+    (28) expression -> expression TkMod expression .
+    (24) expression -> expression . TkPlus expression
+    (25) expression -> expression . TkMinus expression
+    (26) expression -> expression . TkMult expression
+    (27) expression -> expression . TkDiv expression
+    (28) expression -> expression . TkMod expression
+    (29) expression -> expression . TkLess expression
+    (30) expression -> expression . TkLeq expression
+    (31) expression -> expression . TkGeq expression
+    (32) expression -> expression . TkGreater expression
+
+    TkSemiColon     reduce using rule 28 (expression -> expression TkMod expression .)
+    TkPlus          reduce using rule 28 (expression -> expression TkMod expression .)
+    TkMinus         reduce using rule 28 (expression -> expression TkMod expression .)
+    TkMult          reduce using rule 28 (expression -> expression TkMod expression .)
+    TkDiv           reduce using rule 28 (expression -> expression TkMod expression .)
+    TkMod           reduce using rule 28 (expression -> expression TkMod expression .)
+    TkLess          reduce using rule 28 (expression -> expression TkMod expression .)
+    TkLeq           reduce using rule 28 (expression -> expression TkMod expression .)
+    TkGeq           reduce using rule 28 (expression -> expression TkMod expression .)
+    TkGreater       reduce using rule 28 (expression -> expression TkMod expression .)
+    TkClosePar      reduce using rule 28 (expression -> expression TkMod expression .)
+    TkTo            reduce using rule 28 (expression -> expression TkMod expression .)
+    TkArrow         reduce using rule 28 (expression -> expression TkMod expression .)
+
+  ! TkPlus          [ shift and go to state 54 ]
+  ! TkMinus         [ shift and go to state 55 ]
+  ! TkMult          [ shift and go to state 56 ]
+  ! TkDiv           [ shift and go to state 57 ]
+  ! TkMod           [ shift and go to state 58 ]
+  ! TkLess          [ shift and go to state 59 ]
+  ! TkLeq           [ shift and go to state 60 ]
+  ! TkGeq           [ shift and go to state 61 ]
+  ! TkGreater       [ shift and go to state 62 ]
+
+
+state 84
+
+    (29) expression -> expression TkLess expression .
+    (24) expression -> expression . TkPlus expression
+    (25) expression -> expression . TkMinus expression
+    (26) expression -> expression . TkMult expression
+    (27) expression -> expression . TkDiv expression
+    (28) expression -> expression . TkMod expression
+    (29) expression -> expression . TkLess expression
+    (30) expression -> expression . TkLeq expression
+    (31) expression -> expression . TkGeq expression
+    (32) expression -> expression . TkGreater expression
+
+    TkSemiColon     reduce using rule 29 (expression -> expression TkLess expression .)
+    TkLess          reduce using rule 29 (expression -> expression TkLess expression .)
+    TkLeq           reduce using rule 29 (expression -> expression TkLess expression .)
+    TkGeq           reduce using rule 29 (expression -> expression TkLess expression .)
+    TkGreater       reduce using rule 29 (expression -> expression TkLess expression .)
+    TkClosePar      reduce using rule 29 (expression -> expression TkLess expression .)
+    TkTo            reduce using rule 29 (expression -> expression TkLess expression .)
+    TkArrow         reduce using rule 29 (expression -> expression TkLess expression .)
+    TkPlus          shift and go to state 54
+    TkMinus         shift and go to state 55
+    TkMult          shift and go to state 56
+    TkDiv           shift and go to state 57
+    TkMod           shift and go to state 58
+
+  ! TkPlus          [ reduce using rule 29 (expression -> expression TkLess expression .) ]
+  ! TkMinus         [ reduce using rule 29 (expression -> expression TkLess expression .) ]
+  ! TkMult          [ reduce using rule 29 (expression -> expression TkLess expression .) ]
+  ! TkDiv           [ reduce using rule 29 (expression -> expression TkLess expression .) ]
+  ! TkMod           [ reduce using rule 29 (expression -> expression TkLess expression .) ]
+  ! TkLess          [ shift and go to state 59 ]
+  ! TkLeq           [ shift and go to state 60 ]
+  ! TkGeq           [ shift and go to state 61 ]
+  ! TkGreater       [ shift and go to state 62 ]
+
+
+state 85
+
+    (30) expression -> expression TkLeq expression .
+    (24) expression -> expression . TkPlus expression
+    (25) expression -> expression . TkMinus expression
+    (26) expression -> expression . TkMult expression
+    (27) expression -> expression . TkDiv expression
+    (28) expression -> expression . TkMod expression
+    (29) expression -> expression . TkLess expression
+    (30) expression -> expression . TkLeq expression
+    (31) expression -> expression . TkGeq expression
+    (32) expression -> expression . TkGreater expression
+
+    TkSemiColon     reduce using rule 30 (expression -> expression TkLeq expression .)
+    TkLess          reduce using rule 30 (expression -> expression TkLeq expression .)
+    TkLeq           reduce using rule 30 (expression -> expression TkLeq expression .)
+    TkGeq           reduce using rule 30 (expression -> expression TkLeq expression .)
+    TkGreater       reduce using rule 30 (expression -> expression TkLeq expression .)
+    TkClosePar      reduce using rule 30 (expression -> expression TkLeq expression .)
+    TkTo            reduce using rule 30 (expression -> expression TkLeq expression .)
+    TkArrow         reduce using rule 30 (expression -> expression TkLeq expression .)
+    TkPlus          shift and go to state 54
+    TkMinus         shift and go to state 55
+    TkMult          shift and go to state 56
+    TkDiv           shift and go to state 57
+    TkMod           shift and go to state 58
+
+  ! TkPlus          [ reduce using rule 30 (expression -> expression TkLeq expression .) ]
+  ! TkMinus         [ reduce using rule 30 (expression -> expression TkLeq expression .) ]
+  ! TkMult          [ reduce using rule 30 (expression -> expression TkLeq expression .) ]
+  ! TkDiv           [ reduce using rule 30 (expression -> expression TkLeq expression .) ]
+  ! TkMod           [ reduce using rule 30 (expression -> expression TkLeq expression .) ]
+  ! TkLess          [ shift and go to state 59 ]
+  ! TkLeq           [ shift and go to state 60 ]
+  ! TkGeq           [ shift and go to state 61 ]
+  ! TkGreater       [ shift and go to state 62 ]
+
+
+state 86
+
+    (31) expression -> expression TkGeq expression .
+    (24) expression -> expression . TkPlus expression
+    (25) expression -> expression . TkMinus expression
+    (26) expression -> expression . TkMult expression
+    (27) expression -> expression . TkDiv expression
+    (28) expression -> expression . TkMod expression
+    (29) expression -> expression . TkLess expression
+    (30) expression -> expression . TkLeq expression
+    (31) expression -> expression . TkGeq expression
+    (32) expression -> expression . TkGreater expression
+
+    TkSemiColon     reduce using rule 31 (expression -> expression TkGeq expression .)
+    TkLess          reduce using rule 31 (expression -> expression TkGeq expression .)
+    TkLeq           reduce using rule 31 (expression -> expression TkGeq expression .)
+    TkGeq           reduce using rule 31 (expression -> expression TkGeq expression .)
+    TkGreater       reduce using rule 31 (expression -> expression TkGeq expression .)
+    TkClosePar      reduce using rule 31 (expression -> expression TkGeq expression .)
+    TkTo            reduce using rule 31 (expression -> expression TkGeq expression .)
+    TkArrow         reduce using rule 31 (expression -> expression TkGeq expression .)
+    TkPlus          shift and go to state 54
+    TkMinus         shift and go to state 55
+    TkMult          shift and go to state 56
+    TkDiv           shift and go to state 57
+    TkMod           shift and go to state 58
+
+  ! TkPlus          [ reduce using rule 31 (expression -> expression TkGeq expression .) ]
+  ! TkMinus         [ reduce using rule 31 (expression -> expression TkGeq expression .) ]
+  ! TkMult          [ reduce using rule 31 (expression -> expression TkGeq expression .) ]
+  ! TkDiv           [ reduce using rule 31 (expression -> expression TkGeq expression .) ]
+  ! TkMod           [ reduce using rule 31 (expression -> expression TkGeq expression .) ]
+  ! TkLess          [ shift and go to state 59 ]
+  ! TkLeq           [ shift and go to state 60 ]
+  ! TkGeq           [ shift and go to state 61 ]
+  ! TkGreater       [ shift and go to state 62 ]
+
+
+state 87
+
+    (32) expression -> expression TkGreater expression .
+    (24) expression -> expression . TkPlus expression
+    (25) expression -> expression . TkMinus expression
+    (26) expression -> expression . TkMult expression
+    (27) expression -> expression . TkDiv expression
+    (28) expression -> expression . TkMod expression
+    (29) expression -> expression . TkLess expression
+    (30) expression -> expression . TkLeq expression
+    (31) expression -> expression . TkGeq expression
+    (32) expression -> expression . TkGreater expression
+
+    TkSemiColon     reduce using rule 32 (expression -> expression TkGreater expression .)
+    TkLess          reduce using rule 32 (expression -> expression TkGreater expression .)
+    TkLeq           reduce using rule 32 (expression -> expression TkGreater expression .)
+    TkGeq           reduce using rule 32 (expression -> expression TkGreater expression .)
+    TkGreater       reduce using rule 32 (expression -> expression TkGreater expression .)
+    TkClosePar      reduce using rule 32 (expression -> expression TkGreater expression .)
+    TkTo            reduce using rule 32 (expression -> expression TkGreater expression .)
+    TkArrow         reduce using rule 32 (expression -> expression TkGreater expression .)
+    TkPlus          shift and go to state 54
+    TkMinus         shift and go to state 55
+    TkMult          shift and go to state 56
+    TkDiv           shift and go to state 57
+    TkMod           shift and go to state 58
+
+  ! TkPlus          [ reduce using rule 32 (expression -> expression TkGreater expression .) ]
+  ! TkMinus         [ reduce using rule 32 (expression -> expression TkGreater expression .) ]
+  ! TkMult          [ reduce using rule 32 (expression -> expression TkGreater expression .) ]
+  ! TkDiv           [ reduce using rule 32 (expression -> expression TkGreater expression .) ]
+  ! TkMod           [ reduce using rule 32 (expression -> expression TkGreater expression .) ]
+  ! TkLess          [ shift and go to state 59 ]
+  ! TkLeq           [ shift and go to state 60 ]
+  ! TkGeq           [ shift and go to state 61 ]
+  ! TkGreater       [ shift and go to state 62 ]
+
+
+state 88
+
+    (33) expression -> TkOpenPar expression TkClosePar .
+
+    TkSemiColon     reduce using rule 33 (expression -> TkOpenPar expression TkClosePar .)
+    TkPlus          reduce using rule 33 (expression -> TkOpenPar expression TkClosePar .)
+    TkMinus         reduce using rule 33 (expression -> TkOpenPar expression TkClosePar .)
+    TkMult          reduce using rule 33 (expression -> TkOpenPar expression TkClosePar .)
+    TkDiv           reduce using rule 33 (expression -> TkOpenPar expression TkClosePar .)
+    TkMod           reduce using rule 33 (expression -> TkOpenPar expression TkClosePar .)
+    TkLess          reduce using rule 33 (expression -> TkOpenPar expression TkClosePar .)
+    TkLeq           reduce using rule 33 (expression -> TkOpenPar expression TkClosePar .)
+    TkGeq           reduce using rule 33 (expression -> TkOpenPar expression TkClosePar .)
+    TkGreater       reduce using rule 33 (expression -> TkOpenPar expression TkClosePar .)
+    TkClosePar      reduce using rule 33 (expression -> TkOpenPar expression TkClosePar .)
+    TkTo            reduce using rule 33 (expression -> TkOpenPar expression TkClosePar .)
+    TkArrow         reduce using rule 33 (expression -> TkOpenPar expression TkClosePar .)
+
+
+state 89
+
+    (34) expression -> TkSize TkOpenPar array . TkClosePar
+
+    TkClosePar      shift and go to state 100
+
+
+state 90
+
+    (35) expression -> TkMax TkOpenPar array . TkClosePar
+
+    TkClosePar      shift and go to state 101
+
+
+state 91
+
+    (36) expression -> TkMin TkOpenPar array . TkClosePar
+
+    TkClosePar      shift and go to state 102
+
+
+state 92
+
+    (37) expression -> TkAtoi TkOpenPar array . TkClosePar
+
+    TkClosePar      shift and go to state 103
+
+
+state 93
+
+    (22) strexp -> TkString TkConcat strexp .
+
+    TkSemiColon     reduce using rule 22 (strexp -> TkString TkConcat strexp .)
+
+
+state 94
+
+    (18) array -> TkOBracket inarray TkCBracket .
+
+    TkSemiColon     reduce using rule 18 (array -> TkOBracket inarray TkCBracket .)
+    TkClosePar      reduce using rule 18 (array -> TkOBracket inarray TkCBracket .)
+
+
+state 95
+
+    (19) array -> TkOBracket TkNum TkSoForth . TkNum TkCBracket
+
+    TkNum           shift and go to state 104
+
+
+state 96
+
+    (20) inarray -> TkNum TkComma . inarray
+    (20) inarray -> . TkNum TkComma inarray
+    (21) inarray -> . TkNum
+
+    TkNum           shift and go to state 105
+
+    inarray                        shift and go to state 106
+
+state 97
+
+    (40) gfor -> TkFor TkId TkIn expression TkTo . expression TkArrow block TkRof TkSemiColon
+    (24) expression -> . expression TkPlus expression
+    (25) expression -> . expression TkMinus expression
+    (26) expression -> . expression TkMult expression
+    (27) expression -> . expression TkDiv expression
+    (28) expression -> . expression TkMod expression
+    (29) expression -> . expression TkLess expression
+    (30) expression -> . expression TkLeq expression
+    (31) expression -> . expression TkGeq expression
+    (32) expression -> . expression TkGreater expression
+    (33) expression -> . TkOpenPar expression TkClosePar
+    (34) expression -> . TkSize TkOpenPar array TkClosePar
+    (35) expression -> . TkMax TkOpenPar array TkClosePar
+    (36) expression -> . TkMin TkOpenPar array TkClosePar
+    (37) expression -> . TkAtoi TkOpenPar array TkClosePar
+    (38) expression -> . TkNum
+    (39) expression -> . TkId
+
+    TkOpenPar       shift and go to state 37
+    TkSize          shift and go to state 38
+    TkMax           shift and go to state 39
+    TkMin           shift and go to state 40
+    TkAtoi          shift and go to state 41
+    TkNum           shift and go to state 42
+    TkId            shift and go to state 33
+
+    expression                     shift and go to state 107
+
+state 98
+
+    (13) lista -> TkId TkComma lista .
+
+    TkTwoPoints     reduce using rule 13 (lista -> TkId TkComma lista .)
+
+
+state 99
+
+    (12) declaration -> TkId TkComma lista TkTwoPoints TkInt . TkSemiColon
+
+    TkSemiColon     shift and go to state 108
+
+
+state 100
+
+    (34) expression -> TkSize TkOpenPar array TkClosePar .
+
+    TkSemiColon     reduce using rule 34 (expression -> TkSize TkOpenPar array TkClosePar .)
+    TkPlus          reduce using rule 34 (expression -> TkSize TkOpenPar array TkClosePar .)
+    TkMinus         reduce using rule 34 (expression -> TkSize TkOpenPar array TkClosePar .)
+    TkMult          reduce using rule 34 (expression -> TkSize TkOpenPar array TkClosePar .)
+    TkDiv           reduce using rule 34 (expression -> TkSize TkOpenPar array TkClosePar .)
+    TkMod           reduce using rule 34 (expression -> TkSize TkOpenPar array TkClosePar .)
+    TkLess          reduce using rule 34 (expression -> TkSize TkOpenPar array TkClosePar .)
+    TkLeq           reduce using rule 34 (expression -> TkSize TkOpenPar array TkClosePar .)
+    TkGeq           reduce using rule 34 (expression -> TkSize TkOpenPar array TkClosePar .)
+    TkGreater       reduce using rule 34 (expression -> TkSize TkOpenPar array TkClosePar .)
+    TkClosePar      reduce using rule 34 (expression -> TkSize TkOpenPar array TkClosePar .)
+    TkTo            reduce using rule 34 (expression -> TkSize TkOpenPar array TkClosePar .)
+    TkArrow         reduce using rule 34 (expression -> TkSize TkOpenPar array TkClosePar .)
+
+
+state 101
+
+    (35) expression -> TkMax TkOpenPar array TkClosePar .
+
+    TkSemiColon     reduce using rule 35 (expression -> TkMax TkOpenPar array TkClosePar .)
+    TkPlus          reduce using rule 35 (expression -> TkMax TkOpenPar array TkClosePar .)
+    TkMinus         reduce using rule 35 (expression -> TkMax TkOpenPar array TkClosePar .)
+    TkMult          reduce using rule 35 (expression -> TkMax TkOpenPar array TkClosePar .)
+    TkDiv           reduce using rule 35 (expression -> TkMax TkOpenPar array TkClosePar .)
+    TkMod           reduce using rule 35 (expression -> TkMax TkOpenPar array TkClosePar .)
+    TkLess          reduce using rule 35 (expression -> TkMax TkOpenPar array TkClosePar .)
+    TkLeq           reduce using rule 35 (expression -> TkMax TkOpenPar array TkClosePar .)
+    TkGeq           reduce using rule 35 (expression -> TkMax TkOpenPar array TkClosePar .)
+    TkGreater       reduce using rule 35 (expression -> TkMax TkOpenPar array TkClosePar .)
+    TkClosePar      reduce using rule 35 (expression -> TkMax TkOpenPar array TkClosePar .)
+    TkTo            reduce using rule 35 (expression -> TkMax TkOpenPar array TkClosePar .)
+    TkArrow         reduce using rule 35 (expression -> TkMax TkOpenPar array TkClosePar .)
+
+
+state 102
+
+    (36) expression -> TkMin TkOpenPar array TkClosePar .
+
+    TkSemiColon     reduce using rule 36 (expression -> TkMin TkOpenPar array TkClosePar .)
+    TkPlus          reduce using rule 36 (expression -> TkMin TkOpenPar array TkClosePar .)
+    TkMinus         reduce using rule 36 (expression -> TkMin TkOpenPar array TkClosePar .)
+    TkMult          reduce using rule 36 (expression -> TkMin TkOpenPar array TkClosePar .)
+    TkDiv           reduce using rule 36 (expression -> TkMin TkOpenPar array TkClosePar .)
+    TkMod           reduce using rule 36 (expression -> TkMin TkOpenPar array TkClosePar .)
+    TkLess          reduce using rule 36 (expression -> TkMin TkOpenPar array TkClosePar .)
+    TkLeq           reduce using rule 36 (expression -> TkMin TkOpenPar array TkClosePar .)
+    TkGeq           reduce using rule 36 (expression -> TkMin TkOpenPar array TkClosePar .)
+    TkGreater       reduce using rule 36 (expression -> TkMin TkOpenPar array TkClosePar .)
+    TkClosePar      reduce using rule 36 (expression -> TkMin TkOpenPar array TkClosePar .)
+    TkTo            reduce using rule 36 (expression -> TkMin TkOpenPar array TkClosePar .)
+    TkArrow         reduce using rule 36 (expression -> TkMin TkOpenPar array TkClosePar .)
+
+
+state 103
+
+    (37) expression -> TkAtoi TkOpenPar array TkClosePar .
+
+    TkSemiColon     reduce using rule 37 (expression -> TkAtoi TkOpenPar array TkClosePar .)
+    TkPlus          reduce using rule 37 (expression -> TkAtoi TkOpenPar array TkClosePar .)
+    TkMinus         reduce using rule 37 (expression -> TkAtoi TkOpenPar array TkClosePar .)
+    TkMult          reduce using rule 37 (expression -> TkAtoi TkOpenPar array TkClosePar .)
+    TkDiv           reduce using rule 37 (expression -> TkAtoi TkOpenPar array TkClosePar .)
+    TkMod           reduce using rule 37 (expression -> TkAtoi TkOpenPar array TkClosePar .)
+    TkLess          reduce using rule 37 (expression -> TkAtoi TkOpenPar array TkClosePar .)
+    TkLeq           reduce using rule 37 (expression -> TkAtoi TkOpenPar array TkClosePar .)
+    TkGeq           reduce using rule 37 (expression -> TkAtoi TkOpenPar array TkClosePar .)
+    TkGreater       reduce using rule 37 (expression -> TkAtoi TkOpenPar array TkClosePar .)
+    TkClosePar      reduce using rule 37 (expression -> TkAtoi TkOpenPar array TkClosePar .)
+    TkTo            reduce using rule 37 (expression -> TkAtoi TkOpenPar array TkClosePar .)
+    TkArrow         reduce using rule 37 (expression -> TkAtoi TkOpenPar array TkClosePar .)
+
+
+state 104
+
+    (19) array -> TkOBracket TkNum TkSoForth TkNum . TkCBracket
+
+    TkCBracket      shift and go to state 109
+
+
+state 105
+
+    (20) inarray -> TkNum . TkComma inarray
+    (21) inarray -> TkNum .
+
+    TkComma         shift and go to state 96
+    TkCBracket      reduce using rule 21 (inarray -> TkNum .)
+
+
+state 106
+
+    (20) inarray -> TkNum TkComma inarray .
+
+    TkCBracket      reduce using rule 20 (inarray -> TkNum TkComma inarray .)
+
+
+state 107
+
+    (40) gfor -> TkFor TkId TkIn expression TkTo expression . TkArrow block TkRof TkSemiColon
+    (24) expression -> expression . TkPlus expression
+    (25) expression -> expression . TkMinus expression
+    (26) expression -> expression . TkMult expression
+    (27) expression -> expression . TkDiv expression
+    (28) expression -> expression . TkMod expression
+    (29) expression -> expression . TkLess expression
+    (30) expression -> expression . TkLeq expression
+    (31) expression -> expression . TkGeq expression
+    (32) expression -> expression . TkGreater expression
+
+    TkArrow         shift and go to state 110
+    TkPlus          shift and go to state 54
+    TkMinus         shift and go to state 55
+    TkMult          shift and go to state 56
+    TkDiv           shift and go to state 57
+    TkMod           shift and go to state 58
+    TkLess          shift and go to state 59
+    TkLeq           shift and go to state 60
+    TkGeq           shift and go to state 61
+    TkGreater       shift and go to state 62
+
+
+state 108
+
+    (12) declaration -> TkId TkComma lista TkTwoPoints TkInt TkSemiColon .
+
+    TkId            reduce using rule 12 (declaration -> TkId TkComma lista TkTwoPoints TkInt TkSemiColon .)
+    TkFor           reduce using rule 12 (declaration -> TkId TkComma lista TkTwoPoints TkInt TkSemiColon .)
+    TkPrint         reduce using rule 12 (declaration -> TkId TkComma lista TkTwoPoints TkInt TkSemiColon .)
+    TkPrintln       reduce using rule 12 (declaration -> TkId TkComma lista TkTwoPoints TkInt TkSemiColon .)
+    TkCBlock        reduce using rule 12 (declaration -> TkId TkComma lista TkTwoPoints TkInt TkSemiColon .)
+
+
+state 109
+
+    (19) array -> TkOBracket TkNum TkSoForth TkNum TkCBracket .
+
+    TkSemiColon     reduce using rule 19 (array -> TkOBracket TkNum TkSoForth TkNum TkCBracket .)
+    TkClosePar      reduce using rule 19 (array -> TkOBracket TkNum TkSoForth TkNum TkCBracket .)
+
+
+state 110
+
+    (40) gfor -> TkFor TkId TkIn expression TkTo expression TkArrow . block TkRof TkSemiColon
+    (1) block -> . TkOBlock TkDeclare start TkCBlock
+    (2) block -> . TkOBlock body TkCBlock
+
+    TkOBlock        shift and go to state 2
+
+    block                          shift and go to state 111
+
+state 111
+
+    (40) gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block . TkRof TkSemiColon
+
+    TkRof           shift and go to state 112
+
+
+state 112
+
+    (40) gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof . TkSemiColon
+
+    TkSemiColon     shift and go to state 113
+
+
+state 113
+
+    (40) gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon .
+
+    TkId            reduce using rule 40 (gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon .)
+    TkFor           reduce using rule 40 (gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon .)
+    TkPrint         reduce using rule 40 (gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon .)
+    TkPrintln       reduce using rule 40 (gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon .)
+    TkCBlock        reduce using rule 40 (gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon .)
 

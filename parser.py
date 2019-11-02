@@ -45,10 +45,16 @@ def p_empty(p):
     pass
 
 def p_declaration(p):
-    'declaration : TkId TkTwoPoints TkInt TkSemiColon'
+    '''declaration : TkId TkTwoPoints TkInt TkSemiColon
+                   | TkId TkComma lista TkTwoPoints TkInt TkSemiColon'''
     ids[p[1]] = 0
     print("Ident: %s" % p[1])
 
+def p_listint(p):
+    '''lista : TkId TkComma lista
+             | TkId'''
+    ids[p[1]] = 0
+    print("Ident: %s" % p[1])
 
 #def p_tipo(p):
 #    '''tipo : TkInt
