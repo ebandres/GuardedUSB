@@ -39,26 +39,25 @@ def p_start(p):
     ''' start : declaration start
               | body'''
               
-
 def p_empty(p):
     'empty :'
     pass
 
 def p_declaration(p):
-    '''declaration : TkId TkTwoPoints TkInt TkSemiColon
-                   | TkId TkComma lista TkTwoPoints TkInt TkSemiColon'''
+    '''declaration : TkId TkTwoPoints tipo TkSemiColon
+                   | TkId TkComma listaid TkTwoPoints tipo TkSemiColon'''
     ids[p[1]] = 0
     print("Ident: %s" % p[1])
 
-def p_listint(p):
-    '''lista : TkId TkComma lista
-             | TkId'''
+def p_listid(p):
+    '''listaid : TkId TkComma listaid
+               | TkId'''
     ids[p[1]] = 0
     print("Ident: %s" % p[1])
 
-#def p_tipo(p):
-#    '''tipo : TkInt
-#            | TkArray lo demas'''
+def p_tipo(p):
+    '''tipo : TkInt
+            | TkArray TkOBracket TkNum TkSoForth TkNum TkCBracket'''
 
 def p_assign_expr(p):
     'assign : TkId TkAsig expression TkSemiColon'
@@ -153,7 +152,7 @@ def p_strprint(p):
 				| TkId'''
 
 def p_error(p):
-    print("Syntax error at '%s" % p)
+    print("Syntax error at '%s'" % p.value)
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
