@@ -71,15 +71,15 @@ def p_assign_expr(p):
 
 
 def p_expression_bin(p):
-    '''expression : expression TkPlus expression TkSemiColon
-                  | expression TkMinus expression TkSemiColon
-                  | expression TkMult expression TkSemiColon
-                  | expression TkDiv expression TkSemiColon
-                  | expression TkMod expression TkSemiColon
-                  | expression TkLess expression TkSemiColon
-                  | expression TkLeq expression TkSemiColon
-                  | expression TkGeq expression TkSemiColon
-                  | expression TkGreater expression TkSemiColon'''
+    '''expression : expression TkPlus expression
+                  | expression TkMinus expression
+                  | expression TkMult expression
+                  | expression TkDiv expression
+                  | expression TkMod expression
+                  | expression TkLess expression
+                  | expression TkLeq expression
+                  | expression TkGeq expression
+                  | expression TkGreater expression'''
     if p[2] == '+'   :
         p[0] = p[1] + p[3]
         print("suma")
@@ -97,12 +97,12 @@ def p_expression_group(p):
     p[0] = p[2]
 
 def p_expression_number(p):
-    'expression : TkNum TkSemiColon'
+    'expression : TkNum'
     p[0] = p[1]
     print(p[1])
 
 def p_expression_id(p):
-    'expression : TkId TkSemiColon'
+    'expression : TkId'
     try:
         p[0] = ids[p[1]]
     except LookupError:
