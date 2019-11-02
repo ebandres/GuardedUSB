@@ -27,6 +27,15 @@ ids = { }
 #    '''block : TkOBlock TkDeclare declaration TkCBlock
 #             | TkOBlock TkDeclare declaration body TkCBlock'''
 
+def p_start(p):
+    ''' start : declaration start
+              | assign start
+              | empty'''
+
+def p_empty(p):
+    'empty :'
+    pass
+
 def p_declaration(p):
     'declaration : TkId TkTwoPoints TkInt TkSemiColon'
     ids[p[1]] = 0
@@ -39,8 +48,8 @@ def p_declaration(p):
 
 def p_assign_expr(p):
     'assign : TkId TkAsig expression TkSemiColon'
-    ids[p[1]] = p[3]
     print("Asig")
+    ids[p[1]] = p[3]
 
 #def p_assign_str(p):
 #    'assign : TkId TkAsig strexp'
@@ -101,7 +110,7 @@ def p_expression_id(p):
         p[0] = 0
 
 def p_error(p):
-    print("Syntax error at '%s" % p.value)
+    print("Syntax error at '%s" % p)
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:

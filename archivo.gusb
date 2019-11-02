@@ -3,7 +3,8 @@
 //    a, b, c : int;
 //    d, e, f : array[0..2]
 	ba : int;
-	c : int;
+	a : int;
+	d : int;
 //    b := 1;
     a := 1;
 //    read e
