@@ -29,8 +29,9 @@ ids = { }
 
 def p_declaration(p):
     'declaration : TkId TkTwoPoints TkInt TkSemiColon'
-    ids[p[0]] = 0
-    print("Declare")
+    ids[p[1]] = 0
+    print("Declare %s" % p[1])
+
 
 #def p_tipo(p):
 #    '''tipo : TkInt
@@ -45,17 +46,17 @@ def p_assign_expr(p):
 #    'assign : TkId TkAsig strexp'
 #    ids[p[1]] = p[3]
 
-def p_assign_arr(p):
-    'assign : TkId TkAsig array TkSemiColon'
-    ids[p[1]] = p[3]
+#def p_assign_arr(p):
+#    'assign : TkId TkAsig array TkSemiColon'
+#    ids[p[1]] = p[3]
 
-def p_array(p):
-    '''array : TkOBracket inarray TkCBracket
-             | TkOBracket TkNum TkSoForth TkNum TkCBracket'''
-
-def p_iarray(p):
-    '''inarray : TkNum TkComma inarray
-               | TkNum'''
+#def p_array(p):
+#    '''array : TkOBracket inarray TkCBracket
+#             | TkOBracket TkNum TkSoForth TkNum TkCBracket'''
+#
+#def p_iarray(p):
+#    '''inarray : TkNum TkComma inarray
+#               | TkNum'''
 
 #def p_expression_str(p):
 
@@ -70,7 +71,9 @@ def p_expression_bin(p):
                   | expression TkLeq expression TkSemiColon
                   | expression TkGeq expression TkSemiColon
                   | expression TkGreater expression TkSemiColon'''
-    if p[2] == '+'   : p[0] = p[1] + p[3]
+    if p[2] == '+'   :
+        p[0] = p[1] + p[3]
+        print("suma")
     elif p[2] == '-' : p[0] = p[1] - p[3]
     elif p[2] == '*' : p[0] = p[1] * p[3]
     elif p[2] == '/' : p[0] = p[1] / p[3]

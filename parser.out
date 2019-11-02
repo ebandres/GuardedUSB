@@ -7,6 +7,8 @@ Unused terminals:
     TkArrow
     TkAtoi
     TkCBlock
+    TkCBracket
+    TkComma
     TkConcat
     TkDeclare
     TkDo
@@ -22,6 +24,7 @@ Unused terminals:
     TkNEqual
     TkNot
     TkOBlock
+    TkOBracket
     TkOd
     TkOr
     TkPrint
@@ -29,6 +32,7 @@ Unused terminals:
     TkRead
     TkRof
     TkSize
+    TkSoForth
     TkString
     TkTo
     TkTrue
@@ -38,73 +42,68 @@ Grammar
 Rule 0     S' -> declaration
 Rule 1     declaration -> TkId TkTwoPoints TkInt TkSemiColon
 Rule 2     assign -> TkId TkAsig expression TkSemiColon
-Rule 3     assign -> TkId TkAsig array TkSemiColon
-Rule 4     array -> TkOBracket inarray TkCBracket
-Rule 5     array -> TkOBracket TkNum TkSoForth TkNum TkCBracket
-Rule 6     inarray -> TkNum TkComma inarray
-Rule 7     inarray -> TkNum
-Rule 8     expression -> expression TkPlus expression TkSemiColon
-Rule 9     expression -> expression TkMinus expression TkSemiColon
-Rule 10    expression -> expression TkMult expression TkSemiColon
-Rule 11    expression -> expression TkDiv expression TkSemiColon
-Rule 12    expression -> expression TkMod expression TkSemiColon
-Rule 13    expression -> expression TkLess expression TkSemiColon
-Rule 14    expression -> expression TkLeq expression TkSemiColon
-Rule 15    expression -> expression TkGeq expression TkSemiColon
-Rule 16    expression -> expression TkGreater expression TkSemiColon
-Rule 17    expression -> TkOpenPar expression TkClosePar
-Rule 18    expression -> TkNum TkSemiColon
-Rule 19    expression -> TkId TkSemiColon
+Rule 3     expression -> expression TkPlus expression TkSemiColon
+Rule 4     expression -> expression TkMinus expression TkSemiColon
+Rule 5     expression -> expression TkMult expression TkSemiColon
+Rule 6     expression -> expression TkDiv expression TkSemiColon
+Rule 7     expression -> expression TkMod expression TkSemiColon
+Rule 8     expression -> expression TkLess expression TkSemiColon
+Rule 9     expression -> expression TkLeq expression TkSemiColon
+Rule 10    expression -> expression TkGeq expression TkSemiColon
+Rule 11    expression -> expression TkGreater expression TkSemiColon
+Rule 12    expression -> TkOpenPar expression TkClosePar
+Rule 13    expression -> TkNum TkSemiColon
+Rule 14    expression -> TkId TkSemiColon
 
 Terminals, with rules where they appear
 
 TkAnd                : 
 TkArray              : 
 TkArrow              : 
-TkAsig               : 2 3
+TkAsig               : 2
 TkAtoi               : 
 TkCBlock             : 
-TkCBracket           : 4 5
-TkClosePar           : 17
-TkComma              : 6
+TkCBracket           : 
+TkClosePar           : 12
+TkComma              : 
 TkConcat             : 
 TkDeclare            : 
-TkDiv                : 11
+TkDiv                : 6
 TkDo                 : 
 TkEqual              : 
 TkFalse              : 
 TkFi                 : 
 TkFor                : 
-TkGeq                : 15
-TkGreater            : 16
+TkGeq                : 10
+TkGreater            : 11
 TkGuard              : 
-TkId                 : 1 2 3 19
+TkId                 : 1 2 14
 TkIf                 : 
 TkIn                 : 
 TkInt                : 1
-TkLeq                : 14
-TkLess               : 13
+TkLeq                : 9
+TkLess               : 8
 TkMax                : 
 TkMin                : 
-TkMinus              : 9
-TkMod                : 12
-TkMult               : 10
+TkMinus              : 4
+TkMod                : 7
+TkMult               : 5
 TkNEqual             : 
 TkNot                : 
-TkNum                : 5 5 6 7 18
+TkNum                : 13
 TkOBlock             : 
-TkOBracket           : 4 5
+TkOBracket           : 
 TkOd                 : 
-TkOpenPar            : 17
+TkOpenPar            : 12
 TkOr                 : 
-TkPlus               : 8
+TkPlus               : 3
 TkPrint              : 
 TkPrintln            : 
 TkRead               : 
 TkRof                : 
-TkSemiColon          : 1 2 3 8 9 10 11 12 13 14 15 16 18 19
+TkSemiColon          : 1 2 3 4 5 6 7 8 9 10 11 13 14
 TkSize               : 
-TkSoForth            : 5
+TkSoForth            : 
 TkString             : 
 TkTo                 : 
 TkTrue               : 
@@ -113,11 +112,9 @@ error                :
 
 Nonterminals, with rules where they appear
 
-array                : 3
 assign               : 
 declaration          : 0
-expression           : 2 8 8 9 9 10 10 11 11 12 12 13 13 14 14 15 15 16 16 17
-inarray              : 4 6
+expression           : 2 3 3 4 4 5 5 6 6 7 7 8 8 9 9 10 10 11 11 12
 
 Parsing method: LALR
 

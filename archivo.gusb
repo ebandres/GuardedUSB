@@ -2,10 +2,10 @@
 //  declare
 //    a, b, c : int;
 //    d, e, f : array[0..2]
-	b : int;
-	a : int;
+	ba : int;
+	c : int;
 //    b := 1;
-    a := c;
+    a := 1;
 //    read e
     // Esto es un comentario. Debe ser ignorado.
 //]|
