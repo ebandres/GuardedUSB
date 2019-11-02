@@ -1,12 +1,12 @@
-//|[
-//  declare
+|[
+  declare
 //    a, b, c : int;
 //    d, e, f : array[0..2]
 	ba : int;
 	a : int;
 	d : int;
 //    b := 1;
-    a := 3 + 2;
+    a := d + 2 + 5;
 //    read e
     // Esto es un comentario. Debe ser ignorado.
-//]|
+]|

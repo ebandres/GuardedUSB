@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'leftTkAsignonassocTkLessTkLeqTkGeqTkGreaterleftTkPlusTkMinusleftTkMultTkDivTkModleftTkEqualTkNEqualleftTkAndTkOrrightTkNotleftTkOBracketTkCBracketleftTkConcatrightTkArrowTkAnd TkArray TkArrow TkAsig TkAtoi TkCBlock TkCBracket TkClosePar TkComma TkConcat TkDeclare TkDiv TkDo TkEqual TkFalse TkFi TkFor TkGeq TkGreater TkGuard TkId TkIf TkIn TkInt TkLeq TkLess TkMax TkMin TkMinus TkMod TkMult TkNEqual TkNot TkNum TkOBlock TkOBracket TkOd TkOpenPar TkOr TkPlus TkPrint TkPrintln TkRead TkRof TkSemiColon TkSize TkSoForth TkString TkTo TkTrue TkTwoPoints start : declaration start\n              | assign start\n              | emptyempty :declaration : TkId TkTwoPoints TkInt TkSemiColonassign : TkId TkAsig expression TkSemiColonexpression : expression TkPlus expression\n                  | expression TkMinus expression\n                  | expression TkMult expression\n                  | expression TkDiv expression\n                  | expression TkMod expression\n                  | expression TkLess expression\n                  | expression TkLeq expression\n                  | expression TkGeq expression\n                  | expression TkGreater expressionexpression : TkOpenPar expression TkCloseParexpression : TkNumexpression : TkId'
+_lr_signature = 'leftTkAsignonassocTkLessTkLeqTkGeqTkGreaterleftTkPlusTkMinusleftTkMultTkDivTkModleftTkEqualTkNEqualleftTkAndTkOrrightTkNotleftTkOBracketTkCBracketleftTkConcatrightTkArrowTkAnd TkArray TkArrow TkAsig TkAtoi TkCBlock TkCBracket TkClosePar TkComma TkConcat TkDeclare TkDiv TkDo TkEqual TkFalse TkFi TkFor TkGeq TkGreater TkGuard TkId TkIf TkIn TkInt TkLeq TkLess TkMax TkMin TkMinus TkMod TkMult TkNEqual TkNot TkNum TkOBlock TkOBracket TkOd TkOpenPar TkOr TkPlus TkPrint TkPrintln TkRead TkRof TkSemiColon TkSize TkSoForth TkString TkTo TkTrue TkTwoPointsblock : TkOBlock TkDeclare start TkCBlock start : declaration start\n              | assign start\n              | emptyempty :declaration : TkId TkTwoPoints TkInt TkSemiColonassign : TkId TkAsig expression TkSemiColonexpression : expression TkPlus expression\n                  | expression TkMinus expression\n                  | expression TkMult expression\n                  | expression TkDiv expression\n                  | expression TkMod expression\n                  | expression TkLess expression\n                  | expression TkLeq expression\n                  | expression TkGeq expression\n                  | expression TkGreater expressionexpression : TkOpenPar expression TkCloseParexpression : TkNumexpression : TkId'
     
-_lr_action_items = {'TkId':([0,2,3,9,13,15,16,17,18,19,20,21,22,23,24,25,],[5,5,5,11,11,-5,-6,11,11,11,11,11,11,11,11,11,]),'$end':([0,1,2,3,4,6,7,15,16,],[-4,0,-4,-4,-3,-1,-2,-5,-6,]),'TkTwoPoints':([5,],[8,]),'TkAsig':([5,],[9,]),'TkInt':([8,],[10,]),'TkOpenPar':([9,13,17,18,19,20,21,22,23,24,25,],[13,13,13,13,13,13,13,13,13,13,13,]),'TkNum':([9,13,17,18,19,20,21,22,23,24,25,],[14,14,14,14,14,14,14,14,14,14,14,]),'TkSemiColon':([10,11,12,14,27,28,29,30,31,32,33,34,35,36,],[15,-18,16,-17,-7,-8,-9,-10,-11,-12,-13,-14,-15,-16,]),'TkPlus':([11,12,14,26,27,28,29,30,31,32,33,34,35,36,],[-18,17,-17,17,-7,-8,-9,-10,-11,17,17,17,17,-16,]),'TkMinus':([11,12,14,26,27,28,29,30,31,32,33,34,35,36,],[-18,18,-17,18,-7,-8,-9,-10,-11,18,18,18,18,-16,]),'TkMult':([11,12,14,26,27,28,29,30,31,32,33,34,35,36,],[-18,19,-17,19,19,19,-9,-10,-11,19,19,19,19,-16,]),'TkDiv':([11,12,14,26,27,28,29,30,31,32,33,34,35,36,],[-18,20,-17,20,20,20,-9,-10,-11,20,20,20,20,-16,]),'TkMod':([11,12,14,26,27,28,29,30,31,32,33,34,35,36,],[-18,21,-17,21,21,21,-9,-10,-11,21,21,21,21,-16,]),'TkLess':([11,12,14,26,27,28,29,30,31,32,33,34,35,36,],[-18,22,-17,22,-7,-8,-9,-10,-11,None,None,None,None,-16,]),'TkLeq':([11,12,14,26,27,28,29,30,31,32,33,34,35,36,],[-18,23,-17,23,-7,-8,-9,-10,-11,None,None,None,None,-16,]),'TkGeq':([11,12,14,26,27,28,29,30,31,32,33,34,35,36,],[-18,24,-17,24,-7,-8,-9,-10,-11,None,None,None,None,-16,]),'TkGreater':([11,12,14,26,27,28,29,30,31,32,33,34,35,36,],[-18,25,-17,25,-7,-8,-9,-10,-11,None,None,None,None,-16,]),'TkClosePar':([11,14,26,27,28,29,30,31,32,33,34,35,36,],[-18,-17,36,-7,-8,-9,-10,-11,-12,-13,-14,-15,-16,]),}
+_lr_action_items = {'TkOBlock':([0,],[2,]),'$end':([1,9,],[0,-1,]),'TkDeclare':([2,],[3,]),'TkId':([3,5,6,13,17,19,20,21,22,23,24,25,26,27,28,29,],[8,8,8,15,15,-6,-7,15,15,15,15,15,15,15,15,15,]),'TkCBlock':([3,4,5,6,7,10,11,19,20,],[-5,9,-5,-5,-4,-2,-3,-6,-7,]),'TkTwoPoints':([8,],[12,]),'TkAsig':([8,],[13,]),'TkInt':([12,],[14,]),'TkOpenPar':([13,17,21,22,23,24,25,26,27,28,29,],[17,17,17,17,17,17,17,17,17,17,17,]),'TkNum':([13,17,21,22,23,24,25,26,27,28,29,],[18,18,18,18,18,18,18,18,18,18,18,]),'TkSemiColon':([14,15,16,18,31,32,33,34,35,36,37,38,39,40,],[19,-19,20,-18,-8,-9,-10,-11,-12,-13,-14,-15,-16,-17,]),'TkPlus':([15,16,18,30,31,32,33,34,35,36,37,38,39,40,],[-19,21,-18,21,-8,-9,-10,-11,-12,21,21,21,21,-17,]),'TkMinus':([15,16,18,30,31,32,33,34,35,36,37,38,39,40,],[-19,22,-18,22,-8,-9,-10,-11,-12,22,22,22,22,-17,]),'TkMult':([15,16,18,30,31,32,33,34,35,36,37,38,39,40,],[-19,23,-18,23,23,23,-10,-11,-12,23,23,23,23,-17,]),'TkDiv':([15,16,18,30,31,32,33,34,35,36,37,38,39,40,],[-19,24,-18,24,24,24,-10,-11,-12,24,24,24,24,-17,]),'TkMod':([15,16,18,30,31,32,33,34,35,36,37,38,39,40,],[-19,25,-18,25,25,25,-10,-11,-12,25,25,25,25,-17,]),'TkLess':([15,16,18,30,31,32,33,34,35,36,37,38,39,40,],[-19,26,-18,26,-8,-9,-10,-11,-12,None,None,None,None,-17,]),'TkLeq':([15,16,18,30,31,32,33,34,35,36,37,38,39,40,],[-19,27,-18,27,-8,-9,-10,-11,-12,None,None,None,None,-17,]),'TkGeq':([15,16,18,30,31,32,33,34,35,36,37,38,39,40,],[-19,28,-18,28,-8,-9,-10,-11,-12,None,None,None,None,-17,]),'TkGreater':([15,16,18,30,31,32,33,34,35,36,37,38,39,40,],[-19,29,-18,29,-8,-9,-10,-11,-12,None,None,None,None,-17,]),'TkClosePar':([15,18,30,31,32,33,34,35,36,37,38,39,40,],[-19,-18,40,-8,-9,-10,-11,-12,-13,-14,-15,-16,-17,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'start':([0,2,3,],[1,6,7,]),'declaration':([0,2,3,],[2,2,2,]),'assign':([0,2,3,],[3,3,3,]),'empty':([0,2,3,],[4,4,4,]),'expression':([9,13,17,18,19,20,21,22,23,24,25,],[12,26,27,28,29,30,31,32,33,34,35,]),}
+_lr_goto_items = {'block':([0,],[1,]),'start':([3,5,6,],[4,10,11,]),'declaration':([3,5,6,],[5,5,5,]),'assign':([3,5,6,],[6,6,6,]),'empty':([3,5,6,],[7,7,7,]),'expression':([13,17,21,22,23,24,25,26,27,28,29,],[16,30,31,32,33,34,35,36,37,38,39,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -26,23 +26,24 @@ for _k, _v in _lr_goto_items.items():
        _lr_goto[_x][_k] = _y
 del _lr_goto_items
 _lr_productions = [
-  ("S' -> start","S'",1,None,None,None),
-  ('start -> declaration start','start',2,'p_start','parser.py',31),
-  ('start -> assign start','start',2,'p_start','parser.py',32),
-  ('start -> empty','start',1,'p_start','parser.py',33),
-  ('empty -> <empty>','empty',0,'p_empty','parser.py',36),
-  ('declaration -> TkId TkTwoPoints TkInt TkSemiColon','declaration',4,'p_declaration','parser.py',40),
-  ('assign -> TkId TkAsig expression TkSemiColon','assign',4,'p_assign_expr','parser.py',50),
-  ('expression -> expression TkPlus expression','expression',3,'p_expression_bin','parser.py',74),
-  ('expression -> expression TkMinus expression','expression',3,'p_expression_bin','parser.py',75),
-  ('expression -> expression TkMult expression','expression',3,'p_expression_bin','parser.py',76),
-  ('expression -> expression TkDiv expression','expression',3,'p_expression_bin','parser.py',77),
-  ('expression -> expression TkMod expression','expression',3,'p_expression_bin','parser.py',78),
-  ('expression -> expression TkLess expression','expression',3,'p_expression_bin','parser.py',79),
-  ('expression -> expression TkLeq expression','expression',3,'p_expression_bin','parser.py',80),
-  ('expression -> expression TkGeq expression','expression',3,'p_expression_bin','parser.py',81),
-  ('expression -> expression TkGreater expression','expression',3,'p_expression_bin','parser.py',82),
-  ('expression -> TkOpenPar expression TkClosePar','expression',3,'p_expression_group','parser.py',96),
-  ('expression -> TkNum','expression',1,'p_expression_number','parser.py',100),
-  ('expression -> TkId','expression',1,'p_expression_id','parser.py',105),
+  ("S' -> block","S'",1,None,None,None),
+  ('block -> TkOBlock TkDeclare start TkCBlock','block',4,'p_code','parser.py',27),
+  ('start -> declaration start','start',2,'p_start','parser.py',32),
+  ('start -> assign start','start',2,'p_start','parser.py',33),
+  ('start -> empty','start',1,'p_start','parser.py',34),
+  ('empty -> <empty>','empty',0,'p_empty','parser.py',37),
+  ('declaration -> TkId TkTwoPoints TkInt TkSemiColon','declaration',4,'p_declaration','parser.py',41),
+  ('assign -> TkId TkAsig expression TkSemiColon','assign',4,'p_assign_expr','parser.py',51),
+  ('expression -> expression TkPlus expression','expression',3,'p_expression_bin','parser.py',75),
+  ('expression -> expression TkMinus expression','expression',3,'p_expression_bin','parser.py',76),
+  ('expression -> expression TkMult expression','expression',3,'p_expression_bin','parser.py',77),
+  ('expression -> expression TkDiv expression','expression',3,'p_expression_bin','parser.py',78),
+  ('expression -> expression TkMod expression','expression',3,'p_expression_bin','parser.py',79),
+  ('expression -> expression TkLess expression','expression',3,'p_expression_bin','parser.py',80),
+  ('expression -> expression TkLeq expression','expression',3,'p_expression_bin','parser.py',81),
+  ('expression -> expression TkGeq expression','expression',3,'p_expression_bin','parser.py',82),
+  ('expression -> expression TkGreater expression','expression',3,'p_expression_bin','parser.py',83),
+  ('expression -> TkOpenPar expression TkClosePar','expression',3,'p_expression_group','parser.py',97),
+  ('expression -> TkNum','expression',1,'p_expression_number','parser.py',101),
+  ('expression -> TkId','expression',1,'p_expression_id','parser.py',106),
 ]

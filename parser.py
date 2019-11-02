@@ -23,9 +23,10 @@ precedence = (
 
 ids = { }
 
-#def p_code(p):
-#    '''block : TkOBlock TkDeclare declaration TkCBlock
-#             | TkOBlock TkDeclare declaration body TkCBlock'''
+def p_code(p):
+    'block : TkOBlock TkDeclare start TkCBlock'
+    print("Block\nDeclare")
+
 
 def p_start(p):
     ''' start : declaration start
@@ -39,7 +40,7 @@ def p_empty(p):
 def p_declaration(p):
     'declaration : TkId TkTwoPoints TkInt TkSemiColon'
     ids[p[1]] = 0
-    print("Declare %s" % p[1])
+    print("Ident: %s" % p[1])
 
 
 #def p_tipo(p):
@@ -80,9 +81,10 @@ def p_expression_bin(p):
                   | expression TkLeq expression
                   | expression TkGeq expression
                   | expression TkGreater expression'''
+    print("Exp")
     if p[2] == '+'   :
+        print("Plus")
         p[0] = p[1] + p[3]
-        print("suma")
     elif p[2] == '-' : p[0] = p[1] - p[3]
     elif p[2] == '*' : p[0] = p[1] * p[3]
     elif p[2] == '/' : p[0] = p[1] / p[3]
@@ -98,13 +100,14 @@ def p_expression_group(p):
 
 def p_expression_number(p):
     'expression : TkNum'
+    print("Literal: %d" % p[1])
     p[0] = p[1]
-    print(p[1])
 
 def p_expression_id(p):
     'expression : TkId'
     try:
         p[0] = ids[p[1]]
+        print("Ident: %s" % p[1])
     except LookupError:
         print("Undefined id '%s'" % p[1])
         p[0] = 0
