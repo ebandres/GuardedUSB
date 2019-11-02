@@ -30,6 +30,7 @@ ids = { }
 def p_declaration(p):
     'declaration : TkId TkTwoPoints TkInt TkSemiColon'
     ids[p[0]] = 0
+    print("Declare")
 
 #def p_tipo(p):
 #    '''tipo : TkInt
@@ -38,7 +39,7 @@ def p_declaration(p):
 def p_assign_expr(p):
     'assign : TkId TkAsig expression TkSemiColon'
     ids[p[1]] = p[3]
-    #print("Asig")
+    print("Asig")
 
 #def p_assign_str(p):
 #    'assign : TkId TkAsig strexp'
@@ -85,7 +86,7 @@ def p_expression_group(p):
 
 def p_expression_number(p):
     'expression : TkNum TkSemiColon'
-    p[0] - p[1]
+    p[0] = p[1]
 
 def p_expression_id(p):
     'expression : TkId TkSemiColon'
@@ -98,10 +99,6 @@ def p_expression_id(p):
 def p_error(p):
     print("Syntax error at '%s" % p.value)
 
-def make_parser():
-    parser = yacc.yacc()
-    return parser
- 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
         print("Error: Indicar el nombre del archivo a leer")
@@ -116,5 +113,5 @@ if __name__ == '__main__':
         content = file.read()
 
     lexer = lex.lex()
-    test = make_parser()
-    test.parse(content, lexer=lexer)
+    parser = yacc.yacc()
+    parser.parse(content, lexer=lexer)

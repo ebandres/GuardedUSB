@@ -4,8 +4,8 @@
 //    d, e, f : array[0..2]
 	b : int;
 	a : int;
-    b := 1;
-    a := b + 3;
+//    b := 1;
+    a := 3;
 //    read e
     // Esto es un comentario. Debe ser ignorado.
 //]|
