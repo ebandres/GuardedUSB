@@ -9,6 +9,7 @@ reserved = {
         'print' : 'TkPrint',
         'println' : 'TkPrintln',
         'int' : 'TkInt',
+        'array' : 'TkArray',
         'in' : 'TkIn',
         'to' : 'TkTo',
         'read' : 'TkRead',
