@@ -74,11 +74,11 @@ def p_expression_bin(p):
     elif p[2] == '-' : p[0] = p[1] - p[3]
     elif p[2] == '*' : p[0] = p[1] * p[3]
     elif p[2] == '/' : p[0] = p[1] / p[3]
-    elif p[2] == '%' : p[0] = p[1] / p[3]
-    elif p[2] == '<' : p[0] = p[1] / p[3]
-    elif p[2] == '<=': p[0] = p[1] / p[3]
-    elif p[2] == '>=': p[0] = p[1] / p[3]
-    elif p[2] == '>' : p[0] = p[1] / p[3]
+    elif p[2] == '%' : p[0] = p[1] % p[3]
+    elif p[2] == '<' : p[0] = p[1] < p[3]
+    elif p[2] == '<=': p[0] = p[1] <= p[3]
+    elif p[2] == '>=': p[0] = p[1] >= p[3]
+    elif p[2] == '>' : p[0] = p[1] > p[3]
 
 def p_expression_group(p):
     'expression : TkOpenPar expression TkClosePar'
@@ -87,6 +87,7 @@ def p_expression_group(p):
 def p_expression_number(p):
     'expression : TkNum TkSemiColon'
     p[0] = p[1]
+    print(p[1])
 
 def p_expression_id(p):
     'expression : TkId TkSemiColon'

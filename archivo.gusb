@@ -5,7 +5,7 @@
 	b : int;
 	a : int;
 //    b := 1;
-    a := 3;
+    a := c;
 //    read e
     // Esto es un comentario. Debe ser ignorado.
 //]|
