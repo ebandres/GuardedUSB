@@ -64,7 +64,7 @@ Rule 52    boolean -> boolean TkNEqual expression
 Rule 53    boolean -> boolean TkNEqual boolean
 Rule 54    boolean -> TkTrue
 Rule 55    boolean -> TkFalse
-Rule 56    boolean -> boolean TkNot
+Rule 56    boolean -> TkNot boolean
 Rule 57    read -> TkRead TkId TkSemiColon
 Rule 58    gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon
 Rule 59    gdo -> TkDo boolean TkArrow block TkOd TkSemiColon
@@ -556,7 +556,7 @@ state 17
     (53) boolean -> . boolean TkNEqual boolean
     (54) boolean -> . TkTrue
     (55) boolean -> . TkFalse
-    (56) boolean -> . boolean TkNot
+    (56) boolean -> . TkNot boolean
     (28) expression -> . expression TkPlus expression
     (29) expression -> . expression TkMinus expression
     (30) expression -> . expression TkMult expression
@@ -572,13 +572,14 @@ state 17
 
     TkTrue          shift and go to state 38
     TkFalse         shift and go to state 39
-    TkOpenPar       shift and go to state 40
-    TkSize          shift and go to state 41
-    TkMax           shift and go to state 43
-    TkMin           shift and go to state 44
-    TkAtoi          shift and go to state 45
-    TkNum           shift and go to state 46
-    TkId            shift and go to state 42
+    TkNot           shift and go to state 40
+    TkOpenPar       shift and go to state 41
+    TkSize          shift and go to state 42
+    TkMax           shift and go to state 44
+    TkMin           shift and go to state 45
+    TkAtoi          shift and go to state 46
+    TkNum           shift and go to state 47
+    TkId            shift and go to state 43
 
     boolean                        shift and go to state 36
     expression                     shift and go to state 37
@@ -587,7 +588,7 @@ state 18
 
     (1) block -> TkOBlock TkDeclare start . TkCBlock
 
-    TkCBlock        shift and go to state 47
+    TkCBlock        shift and go to state 48
 
 
 state 19
@@ -623,7 +624,7 @@ state 19
     TkCBlock        reduce using rule 12 (empty -> .)
 
     declaration                    shift and go to state 19
-    start                          shift and go to state 48
+    start                          shift and go to state 49
     body                           shift and go to state 20
     assign                         shift and go to state 5
     gfor                           shift and go to state 6
@@ -648,8 +649,8 @@ state 21
     (20) assign -> TkId . TkAsig strexp TkSemiColon
     (21) assign -> TkId . TkAsig array TkSemiColon
 
-    TkTwoPoints     shift and go to state 49
-    TkComma         shift and go to state 50
+    TkTwoPoints     shift and go to state 50
+    TkComma         shift and go to state 51
     TkAsig          shift and go to state 29
 
 
@@ -726,32 +727,32 @@ state 29
     (22) array -> . TkOBracket inarray TkCBracket
     (23) array -> . TkOBracket TkNum TkSoForth TkNum TkCBracket
 
-    TkOpenPar       shift and go to state 40
-    TkSize          shift and go to state 41
-    TkMax           shift and go to state 43
-    TkMin           shift and go to state 44
-    TkAtoi          shift and go to state 45
-    TkNum           shift and go to state 46
-    TkId            shift and go to state 42
-    TkString        shift and go to state 54
-    TkOBracket      shift and go to state 55
+    TkOpenPar       shift and go to state 41
+    TkSize          shift and go to state 42
+    TkMax           shift and go to state 44
+    TkMin           shift and go to state 45
+    TkAtoi          shift and go to state 46
+    TkNum           shift and go to state 47
+    TkId            shift and go to state 43
+    TkString        shift and go to state 55
+    TkOBracket      shift and go to state 56
 
-    expression                     shift and go to state 51
-    strexp                         shift and go to state 52
-    array                          shift and go to state 53
+    expression                     shift and go to state 52
+    strexp                         shift and go to state 53
+    array                          shift and go to state 54
 
 state 30
 
     (58) gfor -> TkFor TkId . TkIn expression TkTo expression TkArrow block TkRof TkSemiColon
 
-    TkIn            shift and go to state 56
+    TkIn            shift and go to state 57
 
 
 state 31
 
     (60) gprint -> TkPrint strprint . TkSemiColon
 
-    TkSemiColon     shift and go to state 57
+    TkSemiColon     shift and go to state 58
 
 
 state 32
@@ -759,7 +760,7 @@ state 32
     (62) strprint -> TkString . TkConcat strprint
     (64) strprint -> TkString .
 
-    TkConcat        shift and go to state 58
+    TkConcat        shift and go to state 59
     TkSemiColon     reduce using rule 64 (strprint -> TkString .)
 
 
@@ -768,7 +769,7 @@ state 33
     (63) strprint -> TkId . TkConcat strprint
     (65) strprint -> TkId .
 
-    TkConcat        shift and go to state 59
+    TkConcat        shift and go to state 60
     TkSemiColon     reduce using rule 65 (strprint -> TkId .)
 
 
@@ -776,14 +777,14 @@ state 34
 
     (61) gprintln -> TkPrintln strprint . TkSemiColon
 
-    TkSemiColon     shift and go to state 60
+    TkSemiColon     shift and go to state 61
 
 
 state 35
 
     (57) read -> TkRead TkId . TkSemiColon
 
-    TkSemiColon     shift and go to state 61
+    TkSemiColon     shift and go to state 62
 
 
 state 36
@@ -795,14 +796,12 @@ state 36
     (49) boolean -> boolean . TkEqual boolean
     (52) boolean -> boolean . TkNEqual expression
     (53) boolean -> boolean . TkNEqual boolean
-    (56) boolean -> boolean . TkNot
 
-    TkArrow         shift and go to state 62
-    TkOr            shift and go to state 63
-    TkAnd           shift and go to state 64
-    TkEqual         shift and go to state 65
-    TkNEqual        shift and go to state 66
-    TkNot           shift and go to state 67
+    TkArrow         shift and go to state 63
+    TkOr            shift and go to state 64
+    TkAnd           shift and go to state 65
+    TkEqual         shift and go to state 66
+    TkNEqual        shift and go to state 67
 
 
 state 37
@@ -843,7 +842,6 @@ state 38
     TkAnd           reduce using rule 54 (boolean -> TkTrue .)
     TkEqual         reduce using rule 54 (boolean -> TkTrue .)
     TkNEqual        reduce using rule 54 (boolean -> TkTrue .)
-    TkNot           reduce using rule 54 (boolean -> TkTrue .)
 
 
 state 39
@@ -855,10 +853,56 @@ state 39
     TkAnd           reduce using rule 55 (boolean -> TkFalse .)
     TkEqual         reduce using rule 55 (boolean -> TkFalse .)
     TkNEqual        reduce using rule 55 (boolean -> TkFalse .)
-    TkNot           reduce using rule 55 (boolean -> TkFalse .)
 
 
 state 40
+
+    (56) boolean -> TkNot . boolean
+    (40) boolean -> . expression TkLess expression
+    (41) boolean -> . expression TkLeq expression
+    (42) boolean -> . expression TkGeq expression
+    (43) boolean -> . expression TkGreater expression
+    (44) boolean -> . boolean TkOr boolean
+    (45) boolean -> . boolean TkAnd boolean
+    (46) boolean -> . expression TkEqual expression
+    (47) boolean -> . expression TkEqual boolean
+    (48) boolean -> . boolean TkEqual expression
+    (49) boolean -> . boolean TkEqual boolean
+    (50) boolean -> . expression TkNEqual expression
+    (51) boolean -> . expression TkNEqual boolean
+    (52) boolean -> . boolean TkNEqual expression
+    (53) boolean -> . boolean TkNEqual boolean
+    (54) boolean -> . TkTrue
+    (55) boolean -> . TkFalse
+    (56) boolean -> . TkNot boolean
+    (28) expression -> . expression TkPlus expression
+    (29) expression -> . expression TkMinus expression
+    (30) expression -> . expression TkMult expression
+    (31) expression -> . expression TkDiv expression
+    (32) expression -> . expression TkMod expression
+    (33) expression -> . TkOpenPar expression TkClosePar
+    (34) expression -> . TkSize TkOpenPar TkId TkClosePar
+    (35) expression -> . TkMax TkOpenPar TkId TkClosePar
+    (36) expression -> . TkMin TkOpenPar TkId TkClosePar
+    (37) expression -> . TkAtoi TkOpenPar TkId TkClosePar
+    (38) expression -> . TkNum
+    (39) expression -> . TkId
+
+    TkTrue          shift and go to state 38
+    TkFalse         shift and go to state 39
+    TkNot           shift and go to state 40
+    TkOpenPar       shift and go to state 41
+    TkSize          shift and go to state 42
+    TkMax           shift and go to state 44
+    TkMin           shift and go to state 45
+    TkAtoi          shift and go to state 46
+    TkNum           shift and go to state 47
+    TkId            shift and go to state 43
+
+    boolean                        shift and go to state 79
+    expression                     shift and go to state 37
+
+state 41
 
     (33) expression -> TkOpenPar . expression TkClosePar
     (28) expression -> . expression TkPlus expression
@@ -874,24 +918,24 @@ state 40
     (38) expression -> . TkNum
     (39) expression -> . TkId
 
-    TkOpenPar       shift and go to state 40
-    TkSize          shift and go to state 41
-    TkMax           shift and go to state 43
-    TkMin           shift and go to state 44
-    TkAtoi          shift and go to state 45
-    TkNum           shift and go to state 46
-    TkId            shift and go to state 42
+    TkOpenPar       shift and go to state 41
+    TkSize          shift and go to state 42
+    TkMax           shift and go to state 44
+    TkMin           shift and go to state 45
+    TkAtoi          shift and go to state 46
+    TkNum           shift and go to state 47
+    TkId            shift and go to state 43
 
-    expression                     shift and go to state 79
+    expression                     shift and go to state 80
 
-state 41
+state 42
 
     (34) expression -> TkSize . TkOpenPar TkId TkClosePar
 
-    TkOpenPar       shift and go to state 80
+    TkOpenPar       shift and go to state 81
 
 
-state 42
+state 43
 
     (39) expression -> TkId .
 
@@ -912,31 +956,30 @@ state 42
     TkArrow         reduce using rule 39 (expression -> TkId .)
     TkOr            reduce using rule 39 (expression -> TkId .)
     TkAnd           reduce using rule 39 (expression -> TkId .)
-    TkNot           reduce using rule 39 (expression -> TkId .)
-
-
-state 43
-
-    (35) expression -> TkMax . TkOpenPar TkId TkClosePar
-
-    TkOpenPar       shift and go to state 81
 
 
 state 44
 
-    (36) expression -> TkMin . TkOpenPar TkId TkClosePar
+    (35) expression -> TkMax . TkOpenPar TkId TkClosePar
 
     TkOpenPar       shift and go to state 82
 
 
 state 45
 
-    (37) expression -> TkAtoi . TkOpenPar TkId TkClosePar
+    (36) expression -> TkMin . TkOpenPar TkId TkClosePar
 
     TkOpenPar       shift and go to state 83
 
 
 state 46
+
+    (37) expression -> TkAtoi . TkOpenPar TkId TkClosePar
+
+    TkOpenPar       shift and go to state 84
+
+
+state 47
 
     (38) expression -> TkNum .
 
@@ -957,10 +1000,9 @@ state 46
     TkArrow         reduce using rule 38 (expression -> TkNum .)
     TkOr            reduce using rule 38 (expression -> TkNum .)
     TkAnd           reduce using rule 38 (expression -> TkNum .)
-    TkNot           reduce using rule 38 (expression -> TkNum .)
 
 
-state 47
+state 48
 
     (1) block -> TkOBlock TkDeclare start TkCBlock .
 
@@ -969,35 +1011,35 @@ state 47
     TkRof           reduce using rule 1 (block -> TkOBlock TkDeclare start TkCBlock .)
 
 
-state 48
+state 49
 
     (10) start -> declaration start .
 
     TkCBlock        reduce using rule 10 (start -> declaration start .)
 
 
-state 49
+state 50
 
     (13) declaration -> TkId TkTwoPoints . tipo TkSemiColon
     (17) tipo -> . TkInt
     (18) tipo -> . TkArray TkOBracket TkNum TkSoForth TkNum TkCBracket
 
-    TkInt           shift and go to state 85
-    TkArray         shift and go to state 86
+    TkInt           shift and go to state 86
+    TkArray         shift and go to state 87
 
-    tipo                           shift and go to state 84
+    tipo                           shift and go to state 85
 
-state 50
+state 51
 
     (14) declaration -> TkId TkComma . listaid TkTwoPoints tipo TkSemiColon
     (15) listaid -> . TkId TkComma listaid
     (16) listaid -> . TkId
 
-    TkId            shift and go to state 87
+    TkId            shift and go to state 88
 
-    listaid                        shift and go to state 88
+    listaid                        shift and go to state 89
 
-state 51
+state 52
 
     (19) assign -> TkId TkAsig expression . TkSemiColon
     (28) expression -> expression . TkPlus expression
@@ -1006,7 +1048,7 @@ state 51
     (31) expression -> expression . TkDiv expression
     (32) expression -> expression . TkMod expression
 
-    TkSemiColon     shift and go to state 89
+    TkSemiColon     shift and go to state 90
     TkPlus          shift and go to state 74
     TkMinus         shift and go to state 75
     TkMult          shift and go to state 76
@@ -1014,41 +1056,41 @@ state 51
     TkMod           shift and go to state 78
 
 
-state 52
-
-    (20) assign -> TkId TkAsig strexp . TkSemiColon
-
-    TkSemiColon     shift and go to state 90
-
-
 state 53
 
-    (21) assign -> TkId TkAsig array . TkSemiColon
+    (20) assign -> TkId TkAsig strexp . TkSemiColon
 
     TkSemiColon     shift and go to state 91
 
 
 state 54
 
-    (26) strexp -> TkString . TkConcat strexp
-    (27) strexp -> TkString .
+    (21) assign -> TkId TkAsig array . TkSemiColon
 
-    TkConcat        shift and go to state 92
-    TkSemiColon     reduce using rule 27 (strexp -> TkString .)
+    TkSemiColon     shift and go to state 92
 
 
 state 55
+
+    (26) strexp -> TkString . TkConcat strexp
+    (27) strexp -> TkString .
+
+    TkConcat        shift and go to state 93
+    TkSemiColon     reduce using rule 27 (strexp -> TkString .)
+
+
+state 56
 
     (22) array -> TkOBracket . inarray TkCBracket
     (23) array -> TkOBracket . TkNum TkSoForth TkNum TkCBracket
     (24) inarray -> . TkNum TkComma inarray
     (25) inarray -> . TkNum
 
-    TkNum           shift and go to state 94
+    TkNum           shift and go to state 95
 
-    inarray                        shift and go to state 93
+    inarray                        shift and go to state 94
 
-state 56
+state 57
 
     (58) gfor -> TkFor TkId TkIn . expression TkTo expression TkArrow block TkRof TkSemiColon
     (28) expression -> . expression TkPlus expression
@@ -1064,17 +1106,17 @@ state 56
     (38) expression -> . TkNum
     (39) expression -> . TkId
 
-    TkOpenPar       shift and go to state 40
-    TkSize          shift and go to state 41
-    TkMax           shift and go to state 43
-    TkMin           shift and go to state 44
-    TkAtoi          shift and go to state 45
-    TkNum           shift and go to state 46
-    TkId            shift and go to state 42
+    TkOpenPar       shift and go to state 41
+    TkSize          shift and go to state 42
+    TkMax           shift and go to state 44
+    TkMin           shift and go to state 45
+    TkAtoi          shift and go to state 46
+    TkNum           shift and go to state 47
+    TkId            shift and go to state 43
 
-    expression                     shift and go to state 95
+    expression                     shift and go to state 96
 
-state 57
+state 58
 
     (60) gprint -> TkPrint strprint TkSemiColon .
 
@@ -1087,22 +1129,9 @@ state 57
     TkCBlock        reduce using rule 60 (gprint -> TkPrint strprint TkSemiColon .)
 
 
-state 58
-
-    (62) strprint -> TkString TkConcat . strprint
-    (62) strprint -> . TkString TkConcat strprint
-    (63) strprint -> . TkId TkConcat strprint
-    (64) strprint -> . TkString
-    (65) strprint -> . TkId
-
-    TkString        shift and go to state 32
-    TkId            shift and go to state 33
-
-    strprint                       shift and go to state 96
-
 state 59
 
-    (63) strprint -> TkId TkConcat . strprint
+    (62) strprint -> TkString TkConcat . strprint
     (62) strprint -> . TkString TkConcat strprint
     (63) strprint -> . TkId TkConcat strprint
     (64) strprint -> . TkString
@@ -1115,6 +1144,19 @@ state 59
 
 state 60
 
+    (63) strprint -> TkId TkConcat . strprint
+    (62) strprint -> . TkString TkConcat strprint
+    (63) strprint -> . TkId TkConcat strprint
+    (64) strprint -> . TkString
+    (65) strprint -> . TkId
+
+    TkString        shift and go to state 32
+    TkId            shift and go to state 33
+
+    strprint                       shift and go to state 98
+
+state 61
+
     (61) gprintln -> TkPrintln strprint TkSemiColon .
 
     TkId            reduce using rule 61 (gprintln -> TkPrintln strprint TkSemiColon .)
@@ -1126,7 +1168,7 @@ state 60
     TkCBlock        reduce using rule 61 (gprintln -> TkPrintln strprint TkSemiColon .)
 
 
-state 61
+state 62
 
     (57) read -> TkRead TkId TkSemiColon .
 
@@ -1139,7 +1181,7 @@ state 61
     TkCBlock        reduce using rule 57 (read -> TkRead TkId TkSemiColon .)
 
 
-state 62
+state 63
 
     (59) gdo -> TkDo boolean TkArrow . block TkOd TkSemiColon
     (1) block -> . TkOBlock TkDeclare start TkCBlock
@@ -1147,9 +1189,9 @@ state 62
 
     TkOBlock        shift and go to state 2
 
-    block                          shift and go to state 98
+    block                          shift and go to state 99
 
-state 63
+state 64
 
     (44) boolean -> boolean TkOr . boolean
     (40) boolean -> . expression TkLess expression
@@ -1168,7 +1210,7 @@ state 63
     (53) boolean -> . boolean TkNEqual boolean
     (54) boolean -> . TkTrue
     (55) boolean -> . TkFalse
-    (56) boolean -> . boolean TkNot
+    (56) boolean -> . TkNot boolean
     (28) expression -> . expression TkPlus expression
     (29) expression -> . expression TkMinus expression
     (30) expression -> . expression TkMult expression
@@ -1184,18 +1226,19 @@ state 63
 
     TkTrue          shift and go to state 38
     TkFalse         shift and go to state 39
-    TkOpenPar       shift and go to state 40
-    TkSize          shift and go to state 41
-    TkMax           shift and go to state 43
-    TkMin           shift and go to state 44
-    TkAtoi          shift and go to state 45
-    TkNum           shift and go to state 46
-    TkId            shift and go to state 42
+    TkNot           shift and go to state 40
+    TkOpenPar       shift and go to state 41
+    TkSize          shift and go to state 42
+    TkMax           shift and go to state 44
+    TkMin           shift and go to state 45
+    TkAtoi          shift and go to state 46
+    TkNum           shift and go to state 47
+    TkId            shift and go to state 43
 
-    boolean                        shift and go to state 99
+    boolean                        shift and go to state 100
     expression                     shift and go to state 37
 
-state 64
+state 65
 
     (45) boolean -> boolean TkAnd . boolean
     (40) boolean -> . expression TkLess expression
@@ -1214,7 +1257,7 @@ state 64
     (53) boolean -> . boolean TkNEqual boolean
     (54) boolean -> . TkTrue
     (55) boolean -> . TkFalse
-    (56) boolean -> . boolean TkNot
+    (56) boolean -> . TkNot boolean
     (28) expression -> . expression TkPlus expression
     (29) expression -> . expression TkMinus expression
     (30) expression -> . expression TkMult expression
@@ -1230,18 +1273,19 @@ state 64
 
     TkTrue          shift and go to state 38
     TkFalse         shift and go to state 39
-    TkOpenPar       shift and go to state 40
-    TkSize          shift and go to state 41
-    TkMax           shift and go to state 43
-    TkMin           shift and go to state 44
-    TkAtoi          shift and go to state 45
-    TkNum           shift and go to state 46
-    TkId            shift and go to state 42
+    TkNot           shift and go to state 40
+    TkOpenPar       shift and go to state 41
+    TkSize          shift and go to state 42
+    TkMax           shift and go to state 44
+    TkMin           shift and go to state 45
+    TkAtoi          shift and go to state 46
+    TkNum           shift and go to state 47
+    TkId            shift and go to state 43
 
-    boolean                        shift and go to state 100
+    boolean                        shift and go to state 101
     expression                     shift and go to state 37
 
-state 65
+state 66
 
     (48) boolean -> boolean TkEqual . expression
     (49) boolean -> boolean TkEqual . boolean
@@ -1273,22 +1317,23 @@ state 65
     (53) boolean -> . boolean TkNEqual boolean
     (54) boolean -> . TkTrue
     (55) boolean -> . TkFalse
-    (56) boolean -> . boolean TkNot
+    (56) boolean -> . TkNot boolean
 
-    TkOpenPar       shift and go to state 40
-    TkSize          shift and go to state 41
-    TkMax           shift and go to state 43
-    TkMin           shift and go to state 44
-    TkAtoi          shift and go to state 45
-    TkNum           shift and go to state 46
-    TkId            shift and go to state 42
+    TkOpenPar       shift and go to state 41
+    TkSize          shift and go to state 42
+    TkMax           shift and go to state 44
+    TkMin           shift and go to state 45
+    TkAtoi          shift and go to state 46
+    TkNum           shift and go to state 47
+    TkId            shift and go to state 43
     TkTrue          shift and go to state 38
     TkFalse         shift and go to state 39
+    TkNot           shift and go to state 40
 
-    boolean                        shift and go to state 101
-    expression                     shift and go to state 102
+    boolean                        shift and go to state 102
+    expression                     shift and go to state 103
 
-state 66
+state 67
 
     (52) boolean -> boolean TkNEqual . expression
     (53) boolean -> boolean TkNEqual . boolean
@@ -1320,32 +1365,21 @@ state 66
     (53) boolean -> . boolean TkNEqual boolean
     (54) boolean -> . TkTrue
     (55) boolean -> . TkFalse
-    (56) boolean -> . boolean TkNot
+    (56) boolean -> . TkNot boolean
 
-    TkOpenPar       shift and go to state 40
-    TkSize          shift and go to state 41
-    TkMax           shift and go to state 43
-    TkMin           shift and go to state 44
-    TkAtoi          shift and go to state 45
-    TkNum           shift and go to state 46
-    TkId            shift and go to state 42
+    TkOpenPar       shift and go to state 41
+    TkSize          shift and go to state 42
+    TkMax           shift and go to state 44
+    TkMin           shift and go to state 45
+    TkAtoi          shift and go to state 46
+    TkNum           shift and go to state 47
+    TkId            shift and go to state 43
     TkTrue          shift and go to state 38
     TkFalse         shift and go to state 39
+    TkNot           shift and go to state 40
 
-    boolean                        shift and go to state 103
-    expression                     shift and go to state 104
-
-state 67
-
-    (56) boolean -> boolean TkNot .
-
-    TkArrow         reduce using rule 56 (boolean -> boolean TkNot .)
-    TkOr            reduce using rule 56 (boolean -> boolean TkNot .)
-    TkAnd           reduce using rule 56 (boolean -> boolean TkNot .)
-    TkEqual         reduce using rule 56 (boolean -> boolean TkNot .)
-    TkNEqual        reduce using rule 56 (boolean -> boolean TkNot .)
-    TkNot           reduce using rule 56 (boolean -> boolean TkNot .)
-
+    boolean                        shift and go to state 104
+    expression                     shift and go to state 105
 
 state 68
 
@@ -1363,15 +1397,15 @@ state 68
     (38) expression -> . TkNum
     (39) expression -> . TkId
 
-    TkOpenPar       shift and go to state 40
-    TkSize          shift and go to state 41
-    TkMax           shift and go to state 43
-    TkMin           shift and go to state 44
-    TkAtoi          shift and go to state 45
-    TkNum           shift and go to state 46
-    TkId            shift and go to state 42
+    TkOpenPar       shift and go to state 41
+    TkSize          shift and go to state 42
+    TkMax           shift and go to state 44
+    TkMin           shift and go to state 45
+    TkAtoi          shift and go to state 46
+    TkNum           shift and go to state 47
+    TkId            shift and go to state 43
 
-    expression                     shift and go to state 105
+    expression                     shift and go to state 106
 
 state 69
 
@@ -1389,15 +1423,15 @@ state 69
     (38) expression -> . TkNum
     (39) expression -> . TkId
 
-    TkOpenPar       shift and go to state 40
-    TkSize          shift and go to state 41
-    TkMax           shift and go to state 43
-    TkMin           shift and go to state 44
-    TkAtoi          shift and go to state 45
-    TkNum           shift and go to state 46
-    TkId            shift and go to state 42
+    TkOpenPar       shift and go to state 41
+    TkSize          shift and go to state 42
+    TkMax           shift and go to state 44
+    TkMin           shift and go to state 45
+    TkAtoi          shift and go to state 46
+    TkNum           shift and go to state 47
+    TkId            shift and go to state 43
 
-    expression                     shift and go to state 106
+    expression                     shift and go to state 107
 
 state 70
 
@@ -1415,15 +1449,15 @@ state 70
     (38) expression -> . TkNum
     (39) expression -> . TkId
 
-    TkOpenPar       shift and go to state 40
-    TkSize          shift and go to state 41
-    TkMax           shift and go to state 43
-    TkMin           shift and go to state 44
-    TkAtoi          shift and go to state 45
-    TkNum           shift and go to state 46
-    TkId            shift and go to state 42
+    TkOpenPar       shift and go to state 41
+    TkSize          shift and go to state 42
+    TkMax           shift and go to state 44
+    TkMin           shift and go to state 45
+    TkAtoi          shift and go to state 46
+    TkNum           shift and go to state 47
+    TkId            shift and go to state 43
 
-    expression                     shift and go to state 107
+    expression                     shift and go to state 108
 
 state 71
 
@@ -1441,15 +1475,15 @@ state 71
     (38) expression -> . TkNum
     (39) expression -> . TkId
 
-    TkOpenPar       shift and go to state 40
-    TkSize          shift and go to state 41
-    TkMax           shift and go to state 43
-    TkMin           shift and go to state 44
-    TkAtoi          shift and go to state 45
-    TkNum           shift and go to state 46
-    TkId            shift and go to state 42
+    TkOpenPar       shift and go to state 41
+    TkSize          shift and go to state 42
+    TkMax           shift and go to state 44
+    TkMin           shift and go to state 45
+    TkAtoi          shift and go to state 46
+    TkNum           shift and go to state 47
+    TkId            shift and go to state 43
 
-    expression                     shift and go to state 108
+    expression                     shift and go to state 109
 
 state 72
 
@@ -1483,20 +1517,21 @@ state 72
     (53) boolean -> . boolean TkNEqual boolean
     (54) boolean -> . TkTrue
     (55) boolean -> . TkFalse
-    (56) boolean -> . boolean TkNot
+    (56) boolean -> . TkNot boolean
 
-    TkOpenPar       shift and go to state 40
-    TkSize          shift and go to state 41
-    TkMax           shift and go to state 43
-    TkMin           shift and go to state 44
-    TkAtoi          shift and go to state 45
-    TkNum           shift and go to state 46
-    TkId            shift and go to state 42
+    TkOpenPar       shift and go to state 41
+    TkSize          shift and go to state 42
+    TkMax           shift and go to state 44
+    TkMin           shift and go to state 45
+    TkAtoi          shift and go to state 46
+    TkNum           shift and go to state 47
+    TkId            shift and go to state 43
     TkTrue          shift and go to state 38
     TkFalse         shift and go to state 39
+    TkNot           shift and go to state 40
 
-    expression                     shift and go to state 109
-    boolean                        shift and go to state 110
+    expression                     shift and go to state 110
+    boolean                        shift and go to state 111
 
 state 73
 
@@ -1530,20 +1565,21 @@ state 73
     (53) boolean -> . boolean TkNEqual boolean
     (54) boolean -> . TkTrue
     (55) boolean -> . TkFalse
-    (56) boolean -> . boolean TkNot
+    (56) boolean -> . TkNot boolean
 
-    TkOpenPar       shift and go to state 40
-    TkSize          shift and go to state 41
-    TkMax           shift and go to state 43
-    TkMin           shift and go to state 44
-    TkAtoi          shift and go to state 45
-    TkNum           shift and go to state 46
-    TkId            shift and go to state 42
+    TkOpenPar       shift and go to state 41
+    TkSize          shift and go to state 42
+    TkMax           shift and go to state 44
+    TkMin           shift and go to state 45
+    TkAtoi          shift and go to state 46
+    TkNum           shift and go to state 47
+    TkId            shift and go to state 43
     TkTrue          shift and go to state 38
     TkFalse         shift and go to state 39
+    TkNot           shift and go to state 40
 
-    expression                     shift and go to state 111
-    boolean                        shift and go to state 112
+    expression                     shift and go to state 112
+    boolean                        shift and go to state 113
 
 state 74
 
@@ -1561,15 +1597,15 @@ state 74
     (38) expression -> . TkNum
     (39) expression -> . TkId
 
-    TkOpenPar       shift and go to state 40
-    TkSize          shift and go to state 41
-    TkMax           shift and go to state 43
-    TkMin           shift and go to state 44
-    TkAtoi          shift and go to state 45
-    TkNum           shift and go to state 46
-    TkId            shift and go to state 42
+    TkOpenPar       shift and go to state 41
+    TkSize          shift and go to state 42
+    TkMax           shift and go to state 44
+    TkMin           shift and go to state 45
+    TkAtoi          shift and go to state 46
+    TkNum           shift and go to state 47
+    TkId            shift and go to state 43
 
-    expression                     shift and go to state 113
+    expression                     shift and go to state 114
 
 state 75
 
@@ -1587,15 +1623,15 @@ state 75
     (38) expression -> . TkNum
     (39) expression -> . TkId
 
-    TkOpenPar       shift and go to state 40
-    TkSize          shift and go to state 41
-    TkMax           shift and go to state 43
-    TkMin           shift and go to state 44
-    TkAtoi          shift and go to state 45
-    TkNum           shift and go to state 46
-    TkId            shift and go to state 42
+    TkOpenPar       shift and go to state 41
+    TkSize          shift and go to state 42
+    TkMax           shift and go to state 44
+    TkMin           shift and go to state 45
+    TkAtoi          shift and go to state 46
+    TkNum           shift and go to state 47
+    TkId            shift and go to state 43
 
-    expression                     shift and go to state 114
+    expression                     shift and go to state 115
 
 state 76
 
@@ -1613,15 +1649,15 @@ state 76
     (38) expression -> . TkNum
     (39) expression -> . TkId
 
-    TkOpenPar       shift and go to state 40
-    TkSize          shift and go to state 41
-    TkMax           shift and go to state 43
-    TkMin           shift and go to state 44
-    TkAtoi          shift and go to state 45
-    TkNum           shift and go to state 46
-    TkId            shift and go to state 42
+    TkOpenPar       shift and go to state 41
+    TkSize          shift and go to state 42
+    TkMax           shift and go to state 44
+    TkMin           shift and go to state 45
+    TkAtoi          shift and go to state 46
+    TkNum           shift and go to state 47
+    TkId            shift and go to state 43
 
-    expression                     shift and go to state 115
+    expression                     shift and go to state 116
 
 state 77
 
@@ -1639,15 +1675,15 @@ state 77
     (38) expression -> . TkNum
     (39) expression -> . TkId
 
-    TkOpenPar       shift and go to state 40
-    TkSize          shift and go to state 41
-    TkMax           shift and go to state 43
-    TkMin           shift and go to state 44
-    TkAtoi          shift and go to state 45
-    TkNum           shift and go to state 46
-    TkId            shift and go to state 42
+    TkOpenPar       shift and go to state 41
+    TkSize          shift and go to state 42
+    TkMax           shift and go to state 44
+    TkMin           shift and go to state 45
+    TkAtoi          shift and go to state 46
+    TkNum           shift and go to state 47
+    TkId            shift and go to state 43
 
-    expression                     shift and go to state 116
+    expression                     shift and go to state 117
 
 state 78
 
@@ -1665,17 +1701,39 @@ state 78
     (38) expression -> . TkNum
     (39) expression -> . TkId
 
-    TkOpenPar       shift and go to state 40
-    TkSize          shift and go to state 41
-    TkMax           shift and go to state 43
-    TkMin           shift and go to state 44
-    TkAtoi          shift and go to state 45
-    TkNum           shift and go to state 46
-    TkId            shift and go to state 42
+    TkOpenPar       shift and go to state 41
+    TkSize          shift and go to state 42
+    TkMax           shift and go to state 44
+    TkMin           shift and go to state 45
+    TkAtoi          shift and go to state 46
+    TkNum           shift and go to state 47
+    TkId            shift and go to state 43
 
-    expression                     shift and go to state 117
+    expression                     shift and go to state 118
 
 state 79
+
+    (56) boolean -> TkNot boolean .
+    (44) boolean -> boolean . TkOr boolean
+    (45) boolean -> boolean . TkAnd boolean
+    (48) boolean -> boolean . TkEqual expression
+    (49) boolean -> boolean . TkEqual boolean
+    (52) boolean -> boolean . TkNEqual expression
+    (53) boolean -> boolean . TkNEqual boolean
+
+    TkArrow         reduce using rule 56 (boolean -> TkNot boolean .)
+    TkOr            reduce using rule 56 (boolean -> TkNot boolean .)
+    TkAnd           reduce using rule 56 (boolean -> TkNot boolean .)
+    TkEqual         reduce using rule 56 (boolean -> TkNot boolean .)
+    TkNEqual        reduce using rule 56 (boolean -> TkNot boolean .)
+
+  ! TkOr            [ shift and go to state 64 ]
+  ! TkAnd           [ shift and go to state 65 ]
+  ! TkEqual         [ shift and go to state 66 ]
+  ! TkNEqual        [ shift and go to state 67 ]
+
+
+state 80
 
     (33) expression -> TkOpenPar expression . TkClosePar
     (28) expression -> expression . TkPlus expression
@@ -1684,7 +1742,7 @@ state 79
     (31) expression -> expression . TkDiv expression
     (32) expression -> expression . TkMod expression
 
-    TkClosePar      shift and go to state 118
+    TkClosePar      shift and go to state 119
     TkPlus          shift and go to state 74
     TkMinus         shift and go to state 75
     TkMult          shift and go to state 76
@@ -1692,72 +1750,72 @@ state 79
     TkMod           shift and go to state 78
 
 
-state 80
-
-    (34) expression -> TkSize TkOpenPar . TkId TkClosePar
-
-    TkId            shift and go to state 119
-
-
 state 81
 
-    (35) expression -> TkMax TkOpenPar . TkId TkClosePar
+    (34) expression -> TkSize TkOpenPar . TkId TkClosePar
 
     TkId            shift and go to state 120
 
 
 state 82
 
-    (36) expression -> TkMin TkOpenPar . TkId TkClosePar
+    (35) expression -> TkMax TkOpenPar . TkId TkClosePar
 
     TkId            shift and go to state 121
 
 
 state 83
 
-    (37) expression -> TkAtoi TkOpenPar . TkId TkClosePar
+    (36) expression -> TkMin TkOpenPar . TkId TkClosePar
 
     TkId            shift and go to state 122
 
 
 state 84
 
-    (13) declaration -> TkId TkTwoPoints tipo . TkSemiColon
+    (37) expression -> TkAtoi TkOpenPar . TkId TkClosePar
 
-    TkSemiColon     shift and go to state 123
+    TkId            shift and go to state 123
 
 
 state 85
+
+    (13) declaration -> TkId TkTwoPoints tipo . TkSemiColon
+
+    TkSemiColon     shift and go to state 124
+
+
+state 86
 
     (17) tipo -> TkInt .
 
     TkSemiColon     reduce using rule 17 (tipo -> TkInt .)
 
 
-state 86
+state 87
 
     (18) tipo -> TkArray . TkOBracket TkNum TkSoForth TkNum TkCBracket
 
-    TkOBracket      shift and go to state 124
-
-
-state 87
-
-    (15) listaid -> TkId . TkComma listaid
-    (16) listaid -> TkId .
-
-    TkComma         shift and go to state 125
-    TkTwoPoints     reduce using rule 16 (listaid -> TkId .)
+    TkOBracket      shift and go to state 125
 
 
 state 88
 
-    (14) declaration -> TkId TkComma listaid . TkTwoPoints tipo TkSemiColon
+    (15) listaid -> TkId . TkComma listaid
+    (16) listaid -> TkId .
 
-    TkTwoPoints     shift and go to state 126
+    TkComma         shift and go to state 126
+    TkTwoPoints     reduce using rule 16 (listaid -> TkId .)
 
 
 state 89
+
+    (14) declaration -> TkId TkComma listaid . TkTwoPoints tipo TkSemiColon
+
+    TkTwoPoints     shift and go to state 127
+
+
+state 90
 
     (19) assign -> TkId TkAsig expression TkSemiColon .
 
@@ -1770,7 +1828,7 @@ state 89
     TkCBlock        reduce using rule 19 (assign -> TkId TkAsig expression TkSemiColon .)
 
 
-state 90
+state 91
 
     (20) assign -> TkId TkAsig strexp TkSemiColon .
 
@@ -1783,7 +1841,7 @@ state 90
     TkCBlock        reduce using rule 20 (assign -> TkId TkAsig strexp TkSemiColon .)
 
 
-state 91
+state 92
 
     (21) assign -> TkId TkAsig array TkSemiColon .
 
@@ -1796,35 +1854,35 @@ state 91
     TkCBlock        reduce using rule 21 (assign -> TkId TkAsig array TkSemiColon .)
 
 
-state 92
+state 93
 
     (26) strexp -> TkString TkConcat . strexp
     (26) strexp -> . TkString TkConcat strexp
     (27) strexp -> . TkString
 
-    TkString        shift and go to state 54
+    TkString        shift and go to state 55
 
-    strexp                         shift and go to state 127
+    strexp                         shift and go to state 128
 
-state 93
+state 94
 
     (22) array -> TkOBracket inarray . TkCBracket
 
-    TkCBracket      shift and go to state 128
+    TkCBracket      shift and go to state 129
 
 
-state 94
+state 95
 
     (23) array -> TkOBracket TkNum . TkSoForth TkNum TkCBracket
     (24) inarray -> TkNum . TkComma inarray
     (25) inarray -> TkNum .
 
-    TkSoForth       shift and go to state 129
-    TkComma         shift and go to state 130
+    TkSoForth       shift and go to state 130
+    TkComma         shift and go to state 131
     TkCBracket      reduce using rule 25 (inarray -> TkNum .)
 
 
-state 95
+state 96
 
     (58) gfor -> TkFor TkId TkIn expression . TkTo expression TkArrow block TkRof TkSemiColon
     (28) expression -> expression . TkPlus expression
@@ -1833,7 +1891,7 @@ state 95
     (31) expression -> expression . TkDiv expression
     (32) expression -> expression . TkMod expression
 
-    TkTo            shift and go to state 131
+    TkTo            shift and go to state 132
     TkPlus          shift and go to state 74
     TkMinus         shift and go to state 75
     TkMult          shift and go to state 76
@@ -1841,28 +1899,28 @@ state 95
     TkMod           shift and go to state 78
 
 
-state 96
+state 97
 
     (62) strprint -> TkString TkConcat strprint .
 
     TkSemiColon     reduce using rule 62 (strprint -> TkString TkConcat strprint .)
 
 
-state 97
+state 98
 
     (63) strprint -> TkId TkConcat strprint .
 
     TkSemiColon     reduce using rule 63 (strprint -> TkId TkConcat strprint .)
 
 
-state 98
+state 99
 
     (59) gdo -> TkDo boolean TkArrow block . TkOd TkSemiColon
 
-    TkOd            shift and go to state 132
+    TkOd            shift and go to state 133
 
 
-state 99
+state 100
 
     (44) boolean -> boolean TkOr boolean .
     (44) boolean -> boolean . TkOr boolean
@@ -1871,23 +1929,20 @@ state 99
     (49) boolean -> boolean . TkEqual boolean
     (52) boolean -> boolean . TkNEqual expression
     (53) boolean -> boolean . TkNEqual boolean
-    (56) boolean -> boolean . TkNot
 
     TkArrow         reduce using rule 44 (boolean -> boolean TkOr boolean .)
     TkOr            reduce using rule 44 (boolean -> boolean TkOr boolean .)
     TkAnd           reduce using rule 44 (boolean -> boolean TkOr boolean .)
     TkEqual         reduce using rule 44 (boolean -> boolean TkOr boolean .)
     TkNEqual        reduce using rule 44 (boolean -> boolean TkOr boolean .)
-    TkNot           shift and go to state 67
 
-  ! TkNot           [ reduce using rule 44 (boolean -> boolean TkOr boolean .) ]
-  ! TkOr            [ shift and go to state 63 ]
-  ! TkAnd           [ shift and go to state 64 ]
-  ! TkEqual         [ shift and go to state 65 ]
-  ! TkNEqual        [ shift and go to state 66 ]
+  ! TkOr            [ shift and go to state 64 ]
+  ! TkAnd           [ shift and go to state 65 ]
+  ! TkEqual         [ shift and go to state 66 ]
+  ! TkNEqual        [ shift and go to state 67 ]
 
 
-state 100
+state 101
 
     (45) boolean -> boolean TkAnd boolean .
     (44) boolean -> boolean . TkOr boolean
@@ -1896,23 +1951,20 @@ state 100
     (49) boolean -> boolean . TkEqual boolean
     (52) boolean -> boolean . TkNEqual expression
     (53) boolean -> boolean . TkNEqual boolean
-    (56) boolean -> boolean . TkNot
 
     TkArrow         reduce using rule 45 (boolean -> boolean TkAnd boolean .)
     TkOr            reduce using rule 45 (boolean -> boolean TkAnd boolean .)
     TkAnd           reduce using rule 45 (boolean -> boolean TkAnd boolean .)
     TkEqual         reduce using rule 45 (boolean -> boolean TkAnd boolean .)
     TkNEqual        reduce using rule 45 (boolean -> boolean TkAnd boolean .)
-    TkNot           shift and go to state 67
 
-  ! TkNot           [ reduce using rule 45 (boolean -> boolean TkAnd boolean .) ]
-  ! TkOr            [ shift and go to state 63 ]
-  ! TkAnd           [ shift and go to state 64 ]
-  ! TkEqual         [ shift and go to state 65 ]
-  ! TkNEqual        [ shift and go to state 66 ]
+  ! TkOr            [ shift and go to state 64 ]
+  ! TkAnd           [ shift and go to state 65 ]
+  ! TkEqual         [ shift and go to state 66 ]
+  ! TkNEqual        [ shift and go to state 67 ]
 
 
-state 101
+state 102
 
     (49) boolean -> boolean TkEqual boolean .
     (44) boolean -> boolean . TkOr boolean
@@ -1921,23 +1973,20 @@ state 101
     (49) boolean -> boolean . TkEqual boolean
     (52) boolean -> boolean . TkNEqual expression
     (53) boolean -> boolean . TkNEqual boolean
-    (56) boolean -> boolean . TkNot
 
     TkArrow         reduce using rule 49 (boolean -> boolean TkEqual boolean .)
     TkEqual         reduce using rule 49 (boolean -> boolean TkEqual boolean .)
     TkNEqual        reduce using rule 49 (boolean -> boolean TkEqual boolean .)
-    TkOr            shift and go to state 63
-    TkAnd           shift and go to state 64
-    TkNot           shift and go to state 67
+    TkOr            shift and go to state 64
+    TkAnd           shift and go to state 65
 
   ! TkOr            [ reduce using rule 49 (boolean -> boolean TkEqual boolean .) ]
   ! TkAnd           [ reduce using rule 49 (boolean -> boolean TkEqual boolean .) ]
-  ! TkNot           [ reduce using rule 49 (boolean -> boolean TkEqual boolean .) ]
-  ! TkEqual         [ shift and go to state 65 ]
-  ! TkNEqual        [ shift and go to state 66 ]
+  ! TkEqual         [ shift and go to state 66 ]
+  ! TkNEqual        [ shift and go to state 67 ]
 
 
-state 102
+state 103
 
     (48) boolean -> boolean TkEqual expression .
     (28) expression -> expression . TkPlus expression
@@ -1959,7 +2008,6 @@ state 102
     TkAnd           reduce using rule 48 (boolean -> boolean TkEqual expression .)
     TkEqual         reduce using rule 48 (boolean -> boolean TkEqual expression .)
     TkNEqual        reduce using rule 48 (boolean -> boolean TkEqual expression .)
-    TkNot           reduce using rule 48 (boolean -> boolean TkEqual expression .)
     TkPlus          shift and go to state 74
     TkMinus         shift and go to state 75
     TkMult          shift and go to state 76
@@ -1974,7 +2022,7 @@ state 102
   ! TkNEqual        [ shift and go to state 73 ]
 
 
-state 103
+state 104
 
     (53) boolean -> boolean TkNEqual boolean .
     (44) boolean -> boolean . TkOr boolean
@@ -1983,23 +2031,20 @@ state 103
     (49) boolean -> boolean . TkEqual boolean
     (52) boolean -> boolean . TkNEqual expression
     (53) boolean -> boolean . TkNEqual boolean
-    (56) boolean -> boolean . TkNot
 
     TkArrow         reduce using rule 53 (boolean -> boolean TkNEqual boolean .)
     TkEqual         reduce using rule 53 (boolean -> boolean TkNEqual boolean .)
     TkNEqual        reduce using rule 53 (boolean -> boolean TkNEqual boolean .)
-    TkOr            shift and go to state 63
-    TkAnd           shift and go to state 64
-    TkNot           shift and go to state 67
+    TkOr            shift and go to state 64
+    TkAnd           shift and go to state 65
 
   ! TkOr            [ reduce using rule 53 (boolean -> boolean TkNEqual boolean .) ]
   ! TkAnd           [ reduce using rule 53 (boolean -> boolean TkNEqual boolean .) ]
-  ! TkNot           [ reduce using rule 53 (boolean -> boolean TkNEqual boolean .) ]
-  ! TkEqual         [ shift and go to state 65 ]
-  ! TkNEqual        [ shift and go to state 66 ]
+  ! TkEqual         [ shift and go to state 66 ]
+  ! TkNEqual        [ shift and go to state 67 ]
 
 
-state 104
+state 105
 
     (52) boolean -> boolean TkNEqual expression .
     (28) expression -> expression . TkPlus expression
@@ -2021,7 +2066,6 @@ state 104
     TkAnd           reduce using rule 52 (boolean -> boolean TkNEqual expression .)
     TkEqual         reduce using rule 52 (boolean -> boolean TkNEqual expression .)
     TkNEqual        reduce using rule 52 (boolean -> boolean TkNEqual expression .)
-    TkNot           reduce using rule 52 (boolean -> boolean TkNEqual expression .)
     TkPlus          shift and go to state 74
     TkMinus         shift and go to state 75
     TkMult          shift and go to state 76
@@ -2036,7 +2080,7 @@ state 104
   ! TkNEqual        [ shift and go to state 73 ]
 
 
-state 105
+state 106
 
     (40) boolean -> expression TkLess expression .
     (28) expression -> expression . TkPlus expression
@@ -2050,7 +2094,6 @@ state 105
     TkAnd           reduce using rule 40 (boolean -> expression TkLess expression .)
     TkEqual         reduce using rule 40 (boolean -> expression TkLess expression .)
     TkNEqual        reduce using rule 40 (boolean -> expression TkLess expression .)
-    TkNot           reduce using rule 40 (boolean -> expression TkLess expression .)
     TkPlus          shift and go to state 74
     TkMinus         shift and go to state 75
     TkMult          shift and go to state 76
@@ -2058,7 +2101,7 @@ state 105
     TkMod           shift and go to state 78
 
 
-state 106
+state 107
 
     (41) boolean -> expression TkLeq expression .
     (28) expression -> expression . TkPlus expression
@@ -2072,7 +2115,6 @@ state 106
     TkAnd           reduce using rule 41 (boolean -> expression TkLeq expression .)
     TkEqual         reduce using rule 41 (boolean -> expression TkLeq expression .)
     TkNEqual        reduce using rule 41 (boolean -> expression TkLeq expression .)
-    TkNot           reduce using rule 41 (boolean -> expression TkLeq expression .)
     TkPlus          shift and go to state 74
     TkMinus         shift and go to state 75
     TkMult          shift and go to state 76
@@ -2080,7 +2122,7 @@ state 106
     TkMod           shift and go to state 78
 
 
-state 107
+state 108
 
     (42) boolean -> expression TkGeq expression .
     (28) expression -> expression . TkPlus expression
@@ -2094,7 +2136,6 @@ state 107
     TkAnd           reduce using rule 42 (boolean -> expression TkGeq expression .)
     TkEqual         reduce using rule 42 (boolean -> expression TkGeq expression .)
     TkNEqual        reduce using rule 42 (boolean -> expression TkGeq expression .)
-    TkNot           reduce using rule 42 (boolean -> expression TkGeq expression .)
     TkPlus          shift and go to state 74
     TkMinus         shift and go to state 75
     TkMult          shift and go to state 76
@@ -2102,7 +2143,7 @@ state 107
     TkMod           shift and go to state 78
 
 
-state 108
+state 109
 
     (43) boolean -> expression TkGreater expression .
     (28) expression -> expression . TkPlus expression
@@ -2116,7 +2157,6 @@ state 108
     TkAnd           reduce using rule 43 (boolean -> expression TkGreater expression .)
     TkEqual         reduce using rule 43 (boolean -> expression TkGreater expression .)
     TkNEqual        reduce using rule 43 (boolean -> expression TkGreater expression .)
-    TkNot           reduce using rule 43 (boolean -> expression TkGreater expression .)
     TkPlus          shift and go to state 74
     TkMinus         shift and go to state 75
     TkMult          shift and go to state 76
@@ -2124,7 +2164,7 @@ state 108
     TkMod           shift and go to state 78
 
 
-state 109
+state 110
 
     (46) boolean -> expression TkEqual expression .
     (28) expression -> expression . TkPlus expression
@@ -2146,7 +2186,6 @@ state 109
     TkAnd           reduce using rule 46 (boolean -> expression TkEqual expression .)
     TkEqual         reduce using rule 46 (boolean -> expression TkEqual expression .)
     TkNEqual        reduce using rule 46 (boolean -> expression TkEqual expression .)
-    TkNot           reduce using rule 46 (boolean -> expression TkEqual expression .)
     TkPlus          shift and go to state 74
     TkMinus         shift and go to state 75
     TkMult          shift and go to state 76
@@ -2161,7 +2200,7 @@ state 109
   ! TkNEqual        [ shift and go to state 73 ]
 
 
-state 110
+state 111
 
     (47) boolean -> expression TkEqual boolean .
     (44) boolean -> boolean . TkOr boolean
@@ -2170,23 +2209,20 @@ state 110
     (49) boolean -> boolean . TkEqual boolean
     (52) boolean -> boolean . TkNEqual expression
     (53) boolean -> boolean . TkNEqual boolean
-    (56) boolean -> boolean . TkNot
 
     TkArrow         reduce using rule 47 (boolean -> expression TkEqual boolean .)
     TkEqual         reduce using rule 47 (boolean -> expression TkEqual boolean .)
     TkNEqual        reduce using rule 47 (boolean -> expression TkEqual boolean .)
-    TkOr            shift and go to state 63
-    TkAnd           shift and go to state 64
-    TkNot           shift and go to state 67
+    TkOr            shift and go to state 64
+    TkAnd           shift and go to state 65
 
   ! TkOr            [ reduce using rule 47 (boolean -> expression TkEqual boolean .) ]
   ! TkAnd           [ reduce using rule 47 (boolean -> expression TkEqual boolean .) ]
-  ! TkNot           [ reduce using rule 47 (boolean -> expression TkEqual boolean .) ]
-  ! TkEqual         [ shift and go to state 65 ]
-  ! TkNEqual        [ shift and go to state 66 ]
+  ! TkEqual         [ shift and go to state 66 ]
+  ! TkNEqual        [ shift and go to state 67 ]
 
 
-state 111
+state 112
 
     (50) boolean -> expression TkNEqual expression .
     (28) expression -> expression . TkPlus expression
@@ -2208,7 +2244,6 @@ state 111
     TkAnd           reduce using rule 50 (boolean -> expression TkNEqual expression .)
     TkEqual         reduce using rule 50 (boolean -> expression TkNEqual expression .)
     TkNEqual        reduce using rule 50 (boolean -> expression TkNEqual expression .)
-    TkNot           reduce using rule 50 (boolean -> expression TkNEqual expression .)
     TkPlus          shift and go to state 74
     TkMinus         shift and go to state 75
     TkMult          shift and go to state 76
@@ -2223,7 +2258,7 @@ state 111
   ! TkNEqual        [ shift and go to state 73 ]
 
 
-state 112
+state 113
 
     (51) boolean -> expression TkNEqual boolean .
     (44) boolean -> boolean . TkOr boolean
@@ -2232,23 +2267,20 @@ state 112
     (49) boolean -> boolean . TkEqual boolean
     (52) boolean -> boolean . TkNEqual expression
     (53) boolean -> boolean . TkNEqual boolean
-    (56) boolean -> boolean . TkNot
 
     TkArrow         reduce using rule 51 (boolean -> expression TkNEqual boolean .)
     TkEqual         reduce using rule 51 (boolean -> expression TkNEqual boolean .)
     TkNEqual        reduce using rule 51 (boolean -> expression TkNEqual boolean .)
-    TkOr            shift and go to state 63
-    TkAnd           shift and go to state 64
-    TkNot           shift and go to state 67
+    TkOr            shift and go to state 64
+    TkAnd           shift and go to state 65
 
   ! TkOr            [ reduce using rule 51 (boolean -> expression TkNEqual boolean .) ]
   ! TkAnd           [ reduce using rule 51 (boolean -> expression TkNEqual boolean .) ]
-  ! TkNot           [ reduce using rule 51 (boolean -> expression TkNEqual boolean .) ]
-  ! TkEqual         [ shift and go to state 65 ]
-  ! TkNEqual        [ shift and go to state 66 ]
+  ! TkEqual         [ shift and go to state 66 ]
+  ! TkNEqual        [ shift and go to state 67 ]
 
 
-state 113
+state 114
 
     (28) expression -> expression TkPlus expression .
     (28) expression -> expression . TkPlus expression
@@ -2271,7 +2303,6 @@ state 113
     TkArrow         reduce using rule 28 (expression -> expression TkPlus expression .)
     TkOr            reduce using rule 28 (expression -> expression TkPlus expression .)
     TkAnd           reduce using rule 28 (expression -> expression TkPlus expression .)
-    TkNot           reduce using rule 28 (expression -> expression TkPlus expression .)
     TkMult          shift and go to state 76
     TkDiv           shift and go to state 77
     TkMod           shift and go to state 78
@@ -2283,7 +2314,7 @@ state 113
   ! TkMinus         [ shift and go to state 75 ]
 
 
-state 114
+state 115
 
     (29) expression -> expression TkMinus expression .
     (28) expression -> expression . TkPlus expression
@@ -2306,7 +2337,6 @@ state 114
     TkArrow         reduce using rule 29 (expression -> expression TkMinus expression .)
     TkOr            reduce using rule 29 (expression -> expression TkMinus expression .)
     TkAnd           reduce using rule 29 (expression -> expression TkMinus expression .)
-    TkNot           reduce using rule 29 (expression -> expression TkMinus expression .)
     TkMult          shift and go to state 76
     TkDiv           shift and go to state 77
     TkMod           shift and go to state 78
@@ -2318,7 +2348,7 @@ state 114
   ! TkMinus         [ shift and go to state 75 ]
 
 
-state 115
+state 116
 
     (30) expression -> expression TkMult expression .
     (28) expression -> expression . TkPlus expression
@@ -2344,7 +2374,6 @@ state 115
     TkArrow         reduce using rule 30 (expression -> expression TkMult expression .)
     TkOr            reduce using rule 30 (expression -> expression TkMult expression .)
     TkAnd           reduce using rule 30 (expression -> expression TkMult expression .)
-    TkNot           reduce using rule 30 (expression -> expression TkMult expression .)
 
   ! TkPlus          [ shift and go to state 74 ]
   ! TkMinus         [ shift and go to state 75 ]
@@ -2353,7 +2382,7 @@ state 115
   ! TkMod           [ shift and go to state 78 ]
 
 
-state 116
+state 117
 
     (31) expression -> expression TkDiv expression .
     (28) expression -> expression . TkPlus expression
@@ -2379,7 +2408,6 @@ state 116
     TkArrow         reduce using rule 31 (expression -> expression TkDiv expression .)
     TkOr            reduce using rule 31 (expression -> expression TkDiv expression .)
     TkAnd           reduce using rule 31 (expression -> expression TkDiv expression .)
-    TkNot           reduce using rule 31 (expression -> expression TkDiv expression .)
 
   ! TkPlus          [ shift and go to state 74 ]
   ! TkMinus         [ shift and go to state 75 ]
@@ -2388,7 +2416,7 @@ state 116
   ! TkMod           [ shift and go to state 78 ]
 
 
-state 117
+state 118
 
     (32) expression -> expression TkMod expression .
     (28) expression -> expression . TkPlus expression
@@ -2414,7 +2442,6 @@ state 117
     TkArrow         reduce using rule 32 (expression -> expression TkMod expression .)
     TkOr            reduce using rule 32 (expression -> expression TkMod expression .)
     TkAnd           reduce using rule 32 (expression -> expression TkMod expression .)
-    TkNot           reduce using rule 32 (expression -> expression TkMod expression .)
 
   ! TkPlus          [ shift and go to state 74 ]
   ! TkMinus         [ shift and go to state 75 ]
@@ -2423,7 +2450,7 @@ state 117
   ! TkMod           [ shift and go to state 78 ]
 
 
-state 118
+state 119
 
     (33) expression -> TkOpenPar expression TkClosePar .
 
@@ -2444,38 +2471,37 @@ state 118
     TkArrow         reduce using rule 33 (expression -> TkOpenPar expression TkClosePar .)
     TkOr            reduce using rule 33 (expression -> TkOpenPar expression TkClosePar .)
     TkAnd           reduce using rule 33 (expression -> TkOpenPar expression TkClosePar .)
-    TkNot           reduce using rule 33 (expression -> TkOpenPar expression TkClosePar .)
-
-
-state 119
-
-    (34) expression -> TkSize TkOpenPar TkId . TkClosePar
-
-    TkClosePar      shift and go to state 133
 
 
 state 120
 
-    (35) expression -> TkMax TkOpenPar TkId . TkClosePar
+    (34) expression -> TkSize TkOpenPar TkId . TkClosePar
 
     TkClosePar      shift and go to state 134
 
 
 state 121
 
-    (36) expression -> TkMin TkOpenPar TkId . TkClosePar
+    (35) expression -> TkMax TkOpenPar TkId . TkClosePar
 
     TkClosePar      shift and go to state 135
 
 
 state 122
 
-    (37) expression -> TkAtoi TkOpenPar TkId . TkClosePar
+    (36) expression -> TkMin TkOpenPar TkId . TkClosePar
 
     TkClosePar      shift and go to state 136
 
 
 state 123
+
+    (37) expression -> TkAtoi TkOpenPar TkId . TkClosePar
+
+    TkClosePar      shift and go to state 137
+
+
+state 124
 
     (13) declaration -> TkId TkTwoPoints tipo TkSemiColon .
 
@@ -2488,66 +2514,66 @@ state 123
     TkCBlock        reduce using rule 13 (declaration -> TkId TkTwoPoints tipo TkSemiColon .)
 
 
-state 124
+state 125
 
     (18) tipo -> TkArray TkOBracket . TkNum TkSoForth TkNum TkCBracket
 
-    TkNum           shift and go to state 137
+    TkNum           shift and go to state 138
 
 
-state 125
+state 126
 
     (15) listaid -> TkId TkComma . listaid
     (15) listaid -> . TkId TkComma listaid
     (16) listaid -> . TkId
 
-    TkId            shift and go to state 87
+    TkId            shift and go to state 88
 
-    listaid                        shift and go to state 138
+    listaid                        shift and go to state 139
 
-state 126
+state 127
 
     (14) declaration -> TkId TkComma listaid TkTwoPoints . tipo TkSemiColon
     (17) tipo -> . TkInt
     (18) tipo -> . TkArray TkOBracket TkNum TkSoForth TkNum TkCBracket
 
-    TkInt           shift and go to state 85
-    TkArray         shift and go to state 86
+    TkInt           shift and go to state 86
+    TkArray         shift and go to state 87
 
-    tipo                           shift and go to state 139
+    tipo                           shift and go to state 140
 
-state 127
+state 128
 
     (26) strexp -> TkString TkConcat strexp .
 
     TkSemiColon     reduce using rule 26 (strexp -> TkString TkConcat strexp .)
 
 
-state 128
+state 129
 
     (22) array -> TkOBracket inarray TkCBracket .
 
     TkSemiColon     reduce using rule 22 (array -> TkOBracket inarray TkCBracket .)
 
 
-state 129
+state 130
 
     (23) array -> TkOBracket TkNum TkSoForth . TkNum TkCBracket
 
-    TkNum           shift and go to state 140
+    TkNum           shift and go to state 141
 
 
-state 130
+state 131
 
     (24) inarray -> TkNum TkComma . inarray
     (24) inarray -> . TkNum TkComma inarray
     (25) inarray -> . TkNum
 
-    TkNum           shift and go to state 141
+    TkNum           shift and go to state 142
 
-    inarray                        shift and go to state 142
+    inarray                        shift and go to state 143
 
-state 131
+state 132
 
     (58) gfor -> TkFor TkId TkIn expression TkTo . expression TkArrow block TkRof TkSemiColon
     (28) expression -> . expression TkPlus expression
@@ -2563,24 +2589,24 @@ state 131
     (38) expression -> . TkNum
     (39) expression -> . TkId
 
-    TkOpenPar       shift and go to state 40
-    TkSize          shift and go to state 41
-    TkMax           shift and go to state 43
-    TkMin           shift and go to state 44
-    TkAtoi          shift and go to state 45
-    TkNum           shift and go to state 46
-    TkId            shift and go to state 42
+    TkOpenPar       shift and go to state 41
+    TkSize          shift and go to state 42
+    TkMax           shift and go to state 44
+    TkMin           shift and go to state 45
+    TkAtoi          shift and go to state 46
+    TkNum           shift and go to state 47
+    TkId            shift and go to state 43
 
-    expression                     shift and go to state 143
+    expression                     shift and go to state 144
 
-state 132
+state 133
 
     (59) gdo -> TkDo boolean TkArrow block TkOd . TkSemiColon
 
-    TkSemiColon     shift and go to state 144
+    TkSemiColon     shift and go to state 145
 
 
-state 133
+state 134
 
     (34) expression -> TkSize TkOpenPar TkId TkClosePar .
 
@@ -2601,10 +2627,9 @@ state 133
     TkArrow         reduce using rule 34 (expression -> TkSize TkOpenPar TkId TkClosePar .)
     TkOr            reduce using rule 34 (expression -> TkSize TkOpenPar TkId TkClosePar .)
     TkAnd           reduce using rule 34 (expression -> TkSize TkOpenPar TkId TkClosePar .)
-    TkNot           reduce using rule 34 (expression -> TkSize TkOpenPar TkId TkClosePar .)
 
 
-state 134
+state 135
 
     (35) expression -> TkMax TkOpenPar TkId TkClosePar .
 
@@ -2625,10 +2650,9 @@ state 134
     TkArrow         reduce using rule 35 (expression -> TkMax TkOpenPar TkId TkClosePar .)
     TkOr            reduce using rule 35 (expression -> TkMax TkOpenPar TkId TkClosePar .)
     TkAnd           reduce using rule 35 (expression -> TkMax TkOpenPar TkId TkClosePar .)
-    TkNot           reduce using rule 35 (expression -> TkMax TkOpenPar TkId TkClosePar .)
 
 
-state 135
+state 136
 
     (36) expression -> TkMin TkOpenPar TkId TkClosePar .
 
@@ -2649,10 +2673,9 @@ state 135
     TkArrow         reduce using rule 36 (expression -> TkMin TkOpenPar TkId TkClosePar .)
     TkOr            reduce using rule 36 (expression -> TkMin TkOpenPar TkId TkClosePar .)
     TkAnd           reduce using rule 36 (expression -> TkMin TkOpenPar TkId TkClosePar .)
-    TkNot           reduce using rule 36 (expression -> TkMin TkOpenPar TkId TkClosePar .)
 
 
-state 136
+state 137
 
     (37) expression -> TkAtoi TkOpenPar TkId TkClosePar .
 
@@ -2673,54 +2696,53 @@ state 136
     TkArrow         reduce using rule 37 (expression -> TkAtoi TkOpenPar TkId TkClosePar .)
     TkOr            reduce using rule 37 (expression -> TkAtoi TkOpenPar TkId TkClosePar .)
     TkAnd           reduce using rule 37 (expression -> TkAtoi TkOpenPar TkId TkClosePar .)
-    TkNot           reduce using rule 37 (expression -> TkAtoi TkOpenPar TkId TkClosePar .)
-
-
-state 137
-
-    (18) tipo -> TkArray TkOBracket TkNum . TkSoForth TkNum TkCBracket
-
-    TkSoForth       shift and go to state 145
 
 
 state 138
+
+    (18) tipo -> TkArray TkOBracket TkNum . TkSoForth TkNum TkCBracket
+
+    TkSoForth       shift and go to state 146
+
+
+state 139
 
     (15) listaid -> TkId TkComma listaid .
 
     TkTwoPoints     reduce using rule 15 (listaid -> TkId TkComma listaid .)
 
 
-state 139
+state 140
 
     (14) declaration -> TkId TkComma listaid TkTwoPoints tipo . TkSemiColon
 
-    TkSemiColon     shift and go to state 146
-
-
-state 140
-
-    (23) array -> TkOBracket TkNum TkSoForth TkNum . TkCBracket
-
-    TkCBracket      shift and go to state 147
+    TkSemiColon     shift and go to state 147
 
 
 state 141
 
-    (24) inarray -> TkNum . TkComma inarray
-    (25) inarray -> TkNum .
+    (23) array -> TkOBracket TkNum TkSoForth TkNum . TkCBracket
 
-    TkComma         shift and go to state 130
-    TkCBracket      reduce using rule 25 (inarray -> TkNum .)
+    TkCBracket      shift and go to state 148
 
 
 state 142
+
+    (24) inarray -> TkNum . TkComma inarray
+    (25) inarray -> TkNum .
+
+    TkComma         shift and go to state 131
+    TkCBracket      reduce using rule 25 (inarray -> TkNum .)
+
+
+state 143
 
     (24) inarray -> TkNum TkComma inarray .
 
     TkCBracket      reduce using rule 24 (inarray -> TkNum TkComma inarray .)
 
 
-state 143
+state 144
 
     (58) gfor -> TkFor TkId TkIn expression TkTo expression . TkArrow block TkRof TkSemiColon
     (28) expression -> expression . TkPlus expression
@@ -2729,7 +2751,7 @@ state 143
     (31) expression -> expression . TkDiv expression
     (32) expression -> expression . TkMod expression
 
-    TkArrow         shift and go to state 148
+    TkArrow         shift and go to state 149
     TkPlus          shift and go to state 74
     TkMinus         shift and go to state 75
     TkMult          shift and go to state 76
@@ -2737,7 +2759,7 @@ state 143
     TkMod           shift and go to state 78
 
 
-state 144
+state 145
 
     (59) gdo -> TkDo boolean TkArrow block TkOd TkSemiColon .
 
@@ -2750,14 +2772,14 @@ state 144
     TkCBlock        reduce using rule 59 (gdo -> TkDo boolean TkArrow block TkOd TkSemiColon .)
 
 
-state 145
+state 146
 
     (18) tipo -> TkArray TkOBracket TkNum TkSoForth . TkNum TkCBracket
 
-    TkNum           shift and go to state 149
+    TkNum           shift and go to state 150
 
 
-state 146
+state 147
 
     (14) declaration -> TkId TkComma listaid TkTwoPoints tipo TkSemiColon .
 
@@ -2770,14 +2792,14 @@ state 146
     TkCBlock        reduce using rule 14 (declaration -> TkId TkComma listaid TkTwoPoints tipo TkSemiColon .)
 
 
-state 147
+state 148
 
     (23) array -> TkOBracket TkNum TkSoForth TkNum TkCBracket .
 
     TkSemiColon     reduce using rule 23 (array -> TkOBracket TkNum TkSoForth TkNum TkCBracket .)
 
 
-state 148
+state 149
 
     (58) gfor -> TkFor TkId TkIn expression TkTo expression TkArrow . block TkRof TkSemiColon
     (1) block -> . TkOBlock TkDeclare start TkCBlock
@@ -2785,37 +2807,37 @@ state 148
 
     TkOBlock        shift and go to state 2
 
-    block                          shift and go to state 150
-
-state 149
-
-    (18) tipo -> TkArray TkOBracket TkNum TkSoForth TkNum . TkCBracket
-
-    TkCBracket      shift and go to state 151
-
+    block                          shift and go to state 151
 
 state 150
 
-    (58) gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block . TkRof TkSemiColon
+    (18) tipo -> TkArray TkOBracket TkNum TkSoForth TkNum . TkCBracket
 
-    TkRof           shift and go to state 152
+    TkCBracket      shift and go to state 152
 
 
 state 151
+
+    (58) gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block . TkRof TkSemiColon
+
+    TkRof           shift and go to state 153
+
+
+state 152
 
     (18) tipo -> TkArray TkOBracket TkNum TkSoForth TkNum TkCBracket .
 
     TkSemiColon     reduce using rule 18 (tipo -> TkArray TkOBracket TkNum TkSoForth TkNum TkCBracket .)
 
 
-state 152
+state 153
 
     (58) gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof . TkSemiColon
 
-    TkSemiColon     shift and go to state 153
+    TkSemiColon     shift and go to state 154
 
 
-state 153
+state 154
 
     (58) gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon .
 

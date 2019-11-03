@@ -5,13 +5,17 @@ class Node(object):
 		self.rc = rc
 
 	def __repr__(self):
-		return repr(self.lc) + "\n" + repr(self.p) + "\n" + repr(self.rc)
+		ret = ""
+		if self.lc != None: ret += str(self.lc) + "\n"
+		if self.p  != None: ret += str(self.p) + "\n"
+		if self.rc != None: ret += str(self.rc)
+		return ret
 		
 		
 
 # test
 if __name__ == '__main__':
 	t = Node('+',1,2)
-	tt = Node('-',t,3)
+	tt = Node('-',t,None)
 
 	print(tt)

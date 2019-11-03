@@ -5,6 +5,7 @@
 import ply.yacc as yacc
 import ply.lex as lex
 import sys
+from tree import Node
 # Del lexer importamos los tokens
 from Lexer import *
 
@@ -26,8 +27,12 @@ ids = { }
 def p_code(p):
     '''block : TkOBlock TkDeclare start TkCBlock
              | TkOBlock body TkCBlock'''
-    if len(p) == 5: print("Block\nDeclare")
-    else: print("Block")
+    #if len(p) == 5: print("Block\nDeclare")
+    #else: print("Block")
+    if len(p) == 5: 
+        p[0] = Node("Block\n Declare", None, p[3])
+        print(p[0])
+    else: p[0] = Node("Block", None, p[2])
 
 def p_body(p):
     '''body : assign body
@@ -37,10 +42,12 @@ def p_body(p):
             | read body
             | gdo body
             | empty'''
+    if len(p) == 3: p[0] = Node(p[1], None, p[2])
 
 def p_start(p):
     ''' start : declaration start
               | body'''
+    if len(p) == 3: p[0] = Node(None, p[1], p[2])
               
 def p_empty(p):
     'empty :'
