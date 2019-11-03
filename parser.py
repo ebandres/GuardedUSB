@@ -159,16 +159,16 @@ def p_boolean_exp(p):
 
 def p_boolean_true(p):
     'boolean : TkTrue'
-    p[0] = p[1]
+    p[0] = True
     print("True")
 
 def p_boolean_false(p):
     'boolean : TkFalse'
-    p[0] = p[1]
+    p[0] = False
     print("False")
 
 def p_boolean_not(p):
-    'boolean : boolean TkNot'
+    'boolean : TkNot boolean'
     # No se que poner para el p[0], un condicional?? achu       
 
 def p_read(p):
