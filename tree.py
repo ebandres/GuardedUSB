@@ -6,8 +6,8 @@ class Node(object):
 
 	def __repr__(self):
 		ret = ""
-		if self.lc != None: ret += str(self.lc) + "\n"
-		if self.p  != None: ret += str(self.p) + "\n"
+		if self.p != None: ret += str(self.p) + "\n"
+		if self.lc  != None: ret += str(self.lc) + "\n"
 		if self.rc != None: ret += str(self.rc)
 		return ret
 		
