@@ -6,9 +6,14 @@ class Node(object):
 
 	def __repr__(self):
 		ret = ""
-		if self.p != None: ret += str(self.p) + "\n"
-		if self.lc  != None: ret += str(self.lc) + "\n"
-		if self.rc != None: ret += str(self.rc)
+
+		if self.p != None: 
+			ret += str(self.p) + "\n"
+		if self.lc != None: 
+			ret += str(self.lc) + "\n"
+		if self.rc != None: 
+			ret += str(self.rc)
+
 		return ret
 		
 		
@@ -16,6 +21,8 @@ class Node(object):
 # test
 if __name__ == '__main__':
 	t = Node('+',1,2)
-	tt = Node('-',t,None)
+	tt = Node(None,None,None)
 
+	print("a")
 	print(tt)
+	print("b")

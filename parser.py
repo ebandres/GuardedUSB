@@ -31,7 +31,9 @@ def p_code(p):
     #else: print("Block")
     if len(p) == 5: 
         p[0] = Node("Block\n Declare", None, p[3])
-        print(p[0])
+        out = str(p[0])
+        while "\n\n" in out: out = out.replace("\n\n", "\n")
+        print(out)
     else: p[0] = Node("Block", None, p[2])
 
 def p_body(p):
