@@ -13,7 +13,6 @@ Unused terminals:
     TkNot
     TkOd
     TkOr
-    TkRead
     TkTrue
 
 Grammar
@@ -60,39 +59,40 @@ Rule 38    expression -> TkMin TkOpenPar TkId TkClosePar
 Rule 39    expression -> TkAtoi TkOpenPar TkId TkClosePar
 Rule 40    expression -> TkNum
 Rule 41    expression -> TkId
-Rule 42    gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon
-Rule 43    gprint -> TkPrint strprint TkSemiColon
-Rule 44    gprintln -> TkPrintln strprint TkSemiColon
-Rule 45    strprint -> TkString TkConcat strprint
-Rule 46    strprint -> TkId TkConcat strprint
-Rule 47    strprint -> TkString
-Rule 48    strprint -> TkId
+Rule 42    read -> TkRead TkId TkSemiColon
+Rule 43    gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon
+Rule 44    gprint -> TkPrint strprint TkSemiColon
+Rule 45    gprintln -> TkPrintln strprint TkSemiColon
+Rule 46    strprint -> TkString TkConcat strprint
+Rule 47    strprint -> TkId TkConcat strprint
+Rule 48    strprint -> TkString
+Rule 49    strprint -> TkId
 
 Terminals, with rules where they appear
 
 TkAnd                : 
 TkArray              : 16
-TkArrow              : 42
+TkArrow              : 43
 TkAsig               : 17 18 19
 TkAtoi               : 39
 TkCBlock             : 1 2
 TkCBracket           : 16 20 21
 TkClosePar           : 35 36 37 38 39
 TkComma              : 12 13 22
-TkConcat             : 24 45 46
+TkConcat             : 24 46 47
 TkDeclare            : 1
 TkDiv                : 29
 TkDo                 : 
 TkEqual              : 
 TkFalse              : 
 TkFi                 : 
-TkFor                : 42
+TkFor                : 43
 TkGeq                : 33
 TkGreater            : 34
 TkGuard              : 
-TkId                 : 11 12 13 14 17 18 19 36 37 38 39 41 42 46 48
+TkId                 : 11 12 13 14 17 18 19 36 37 38 39 41 42 43 47 49
 TkIf                 : 
-TkIn                 : 42
+TkIn                 : 43
 TkInt                : 15
 TkLeq                : 32
 TkLess               : 31
@@ -110,15 +110,15 @@ TkOd                 :
 TkOpenPar            : 35 36 37 38 39
 TkOr                 : 
 TkPlus               : 26
-TkPrint              : 43
-TkPrintln            : 44
-TkRead               : 
-TkRof                : 42
-TkSemiColon          : 11 12 17 18 19 42 43 44
+TkPrint              : 44
+TkPrintln            : 45
+TkRead               : 42
+TkRof                : 43
+TkSemiColon          : 11 12 17 18 19 42 43 44 45
 TkSize               : 36
 TkSoForth            : 16 21
-TkString             : 24 25 45 47
-TkTo                 : 42
+TkString             : 24 25 46 48
+TkTo                 : 43
 TkTrue               : 
 TkTwoPoints          : 11 12
 error                : 
@@ -127,19 +127,20 @@ Nonterminals, with rules where they appear
 
 array                : 19
 assign               : 3
-block                : 42 0
+block                : 43 0
 body                 : 2 3 4 5 6 9
 declaration          : 8
 empty                : 7
-expression           : 17 26 26 27 27 28 28 29 29 30 30 31 31 32 32 33 33 34 34 35 42 42
+expression           : 17 26 26 27 27 28 28 29 29 30 30 31 31 32 32 33 33 34 34 35 43 43
 gfor                 : 4
 gprint               : 5
 gprintln             : 6
 inarray              : 20 22
 listaid              : 12 13
+read                 : 
 start                : 1 8
 strexp               : 18 24
-strprint             : 43 44 45 46
+strprint             : 44 45 46 47
 tipo                 : 11 12
 
 Parsing method: LALR
@@ -172,9 +173,9 @@ state 2
     (17) assign -> . TkId TkAsig expression TkSemiColon
     (18) assign -> . TkId TkAsig strexp TkSemiColon
     (19) assign -> . TkId TkAsig array TkSemiColon
-    (42) gfor -> . TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon
-    (43) gprint -> . TkPrint strprint TkSemiColon
-    (44) gprintln -> . TkPrintln strprint TkSemiColon
+    (43) gfor -> . TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon
+    (44) gprint -> . TkPrint strprint TkSemiColon
+    (45) gprintln -> . TkPrintln strprint TkSemiColon
     (10) empty -> .
 
     TkDeclare       shift and go to state 3
@@ -206,9 +207,9 @@ state 3
     (17) assign -> . TkId TkAsig expression TkSemiColon
     (18) assign -> . TkId TkAsig strexp TkSemiColon
     (19) assign -> . TkId TkAsig array TkSemiColon
-    (42) gfor -> . TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon
-    (43) gprint -> . TkPrint strprint TkSemiColon
-    (44) gprintln -> . TkPrintln strprint TkSemiColon
+    (43) gfor -> . TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon
+    (44) gprint -> . TkPrint strprint TkSemiColon
+    (45) gprintln -> . TkPrintln strprint TkSemiColon
     (10) empty -> .
 
     TkId            shift and go to state 17
@@ -244,9 +245,9 @@ state 5
     (17) assign -> . TkId TkAsig expression TkSemiColon
     (18) assign -> . TkId TkAsig strexp TkSemiColon
     (19) assign -> . TkId TkAsig array TkSemiColon
-    (42) gfor -> . TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon
-    (43) gprint -> . TkPrint strprint TkSemiColon
-    (44) gprintln -> . TkPrintln strprint TkSemiColon
+    (43) gfor -> . TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon
+    (44) gprint -> . TkPrint strprint TkSemiColon
+    (45) gprintln -> . TkPrintln strprint TkSemiColon
     (10) empty -> .
 
     TkId            shift and go to state 10
@@ -273,9 +274,9 @@ state 6
     (17) assign -> . TkId TkAsig expression TkSemiColon
     (18) assign -> . TkId TkAsig strexp TkSemiColon
     (19) assign -> . TkId TkAsig array TkSemiColon
-    (42) gfor -> . TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon
-    (43) gprint -> . TkPrint strprint TkSemiColon
-    (44) gprintln -> . TkPrintln strprint TkSemiColon
+    (43) gfor -> . TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon
+    (44) gprint -> . TkPrint strprint TkSemiColon
+    (45) gprintln -> . TkPrintln strprint TkSemiColon
     (10) empty -> .
 
     TkId            shift and go to state 10
@@ -302,9 +303,9 @@ state 7
     (17) assign -> . TkId TkAsig expression TkSemiColon
     (18) assign -> . TkId TkAsig strexp TkSemiColon
     (19) assign -> . TkId TkAsig array TkSemiColon
-    (42) gfor -> . TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon
-    (43) gprint -> . TkPrint strprint TkSemiColon
-    (44) gprintln -> . TkPrintln strprint TkSemiColon
+    (43) gfor -> . TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon
+    (44) gprint -> . TkPrint strprint TkSemiColon
+    (45) gprintln -> . TkPrintln strprint TkSemiColon
     (10) empty -> .
 
     TkId            shift and go to state 10
@@ -331,9 +332,9 @@ state 8
     (17) assign -> . TkId TkAsig expression TkSemiColon
     (18) assign -> . TkId TkAsig strexp TkSemiColon
     (19) assign -> . TkId TkAsig array TkSemiColon
-    (42) gfor -> . TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon
-    (43) gprint -> . TkPrint strprint TkSemiColon
-    (44) gprintln -> . TkPrintln strprint TkSemiColon
+    (43) gfor -> . TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon
+    (44) gprint -> . TkPrint strprint TkSemiColon
+    (45) gprintln -> . TkPrintln strprint TkSemiColon
     (10) empty -> .
 
     TkId            shift and go to state 10
@@ -367,18 +368,18 @@ state 10
 
 state 11
 
-    (42) gfor -> TkFor . TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon
+    (43) gfor -> TkFor . TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon
 
     TkId            shift and go to state 24
 
 
 state 12
 
-    (43) gprint -> TkPrint . strprint TkSemiColon
-    (45) strprint -> . TkString TkConcat strprint
-    (46) strprint -> . TkId TkConcat strprint
-    (47) strprint -> . TkString
-    (48) strprint -> . TkId
+    (44) gprint -> TkPrint . strprint TkSemiColon
+    (46) strprint -> . TkString TkConcat strprint
+    (47) strprint -> . TkId TkConcat strprint
+    (48) strprint -> . TkString
+    (49) strprint -> . TkId
 
     TkString        shift and go to state 26
     TkId            shift and go to state 27
@@ -387,11 +388,11 @@ state 12
 
 state 13
 
-    (44) gprintln -> TkPrintln . strprint TkSemiColon
-    (45) strprint -> . TkString TkConcat strprint
-    (46) strprint -> . TkId TkConcat strprint
-    (47) strprint -> . TkString
-    (48) strprint -> . TkId
+    (45) gprintln -> TkPrintln . strprint TkSemiColon
+    (46) strprint -> . TkString TkConcat strprint
+    (47) strprint -> . TkId TkConcat strprint
+    (48) strprint -> . TkString
+    (49) strprint -> . TkId
 
     TkString        shift and go to state 26
     TkId            shift and go to state 27
@@ -420,9 +421,9 @@ state 15
     (17) assign -> . TkId TkAsig expression TkSemiColon
     (18) assign -> . TkId TkAsig strexp TkSemiColon
     (19) assign -> . TkId TkAsig array TkSemiColon
-    (42) gfor -> . TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon
-    (43) gprint -> . TkPrint strprint TkSemiColon
-    (44) gprintln -> . TkPrintln strprint TkSemiColon
+    (43) gfor -> . TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon
+    (44) gprint -> . TkPrint strprint TkSemiColon
+    (45) gprintln -> . TkPrintln strprint TkSemiColon
     (10) empty -> .
 
     TkId            shift and go to state 17
@@ -538,39 +539,39 @@ state 23
 
 state 24
 
-    (42) gfor -> TkFor TkId . TkIn expression TkTo expression TkArrow block TkRof TkSemiColon
+    (43) gfor -> TkFor TkId . TkIn expression TkTo expression TkArrow block TkRof TkSemiColon
 
     TkIn            shift and go to state 45
 
 
 state 25
 
-    (43) gprint -> TkPrint strprint . TkSemiColon
+    (44) gprint -> TkPrint strprint . TkSemiColon
 
     TkSemiColon     shift and go to state 46
 
 
 state 26
 
-    (45) strprint -> TkString . TkConcat strprint
-    (47) strprint -> TkString .
+    (46) strprint -> TkString . TkConcat strprint
+    (48) strprint -> TkString .
 
     TkConcat        shift and go to state 47
-    TkSemiColon     reduce using rule 47 (strprint -> TkString .)
+    TkSemiColon     reduce using rule 48 (strprint -> TkString .)
 
 
 state 27
 
-    (46) strprint -> TkId . TkConcat strprint
-    (48) strprint -> TkId .
+    (47) strprint -> TkId . TkConcat strprint
+    (49) strprint -> TkId .
 
     TkConcat        shift and go to state 48
-    TkSemiColon     reduce using rule 48 (strprint -> TkId .)
+    TkSemiColon     reduce using rule 49 (strprint -> TkId .)
 
 
 state 28
 
-    (44) gprintln -> TkPrintln strprint . TkSemiColon
+    (45) gprintln -> TkPrintln strprint . TkSemiColon
 
     TkSemiColon     shift and go to state 49
 
@@ -768,7 +769,7 @@ state 44
 
 state 45
 
-    (42) gfor -> TkFor TkId TkIn . expression TkTo expression TkArrow block TkRof TkSemiColon
+    (43) gfor -> TkFor TkId TkIn . expression TkTo expression TkArrow block TkRof TkSemiColon
     (26) expression -> . expression TkPlus expression
     (27) expression -> . expression TkMinus expression
     (28) expression -> . expression TkMult expression
@@ -798,22 +799,22 @@ state 45
 
 state 46
 
-    (43) gprint -> TkPrint strprint TkSemiColon .
+    (44) gprint -> TkPrint strprint TkSemiColon .
 
-    TkId            reduce using rule 43 (gprint -> TkPrint strprint TkSemiColon .)
-    TkFor           reduce using rule 43 (gprint -> TkPrint strprint TkSemiColon .)
-    TkPrint         reduce using rule 43 (gprint -> TkPrint strprint TkSemiColon .)
-    TkPrintln       reduce using rule 43 (gprint -> TkPrint strprint TkSemiColon .)
-    TkCBlock        reduce using rule 43 (gprint -> TkPrint strprint TkSemiColon .)
+    TkId            reduce using rule 44 (gprint -> TkPrint strprint TkSemiColon .)
+    TkFor           reduce using rule 44 (gprint -> TkPrint strprint TkSemiColon .)
+    TkPrint         reduce using rule 44 (gprint -> TkPrint strprint TkSemiColon .)
+    TkPrintln       reduce using rule 44 (gprint -> TkPrint strprint TkSemiColon .)
+    TkCBlock        reduce using rule 44 (gprint -> TkPrint strprint TkSemiColon .)
 
 
 state 47
 
-    (45) strprint -> TkString TkConcat . strprint
-    (45) strprint -> . TkString TkConcat strprint
-    (46) strprint -> . TkId TkConcat strprint
-    (47) strprint -> . TkString
-    (48) strprint -> . TkId
+    (46) strprint -> TkString TkConcat . strprint
+    (46) strprint -> . TkString TkConcat strprint
+    (47) strprint -> . TkId TkConcat strprint
+    (48) strprint -> . TkString
+    (49) strprint -> . TkId
 
     TkString        shift and go to state 26
     TkId            shift and go to state 27
@@ -822,11 +823,11 @@ state 47
 
 state 48
 
-    (46) strprint -> TkId TkConcat . strprint
-    (45) strprint -> . TkString TkConcat strprint
-    (46) strprint -> . TkId TkConcat strprint
-    (47) strprint -> . TkString
-    (48) strprint -> . TkId
+    (47) strprint -> TkId TkConcat . strprint
+    (46) strprint -> . TkString TkConcat strprint
+    (47) strprint -> . TkId TkConcat strprint
+    (48) strprint -> . TkString
+    (49) strprint -> . TkId
 
     TkString        shift and go to state 26
     TkId            shift and go to state 27
@@ -835,13 +836,13 @@ state 48
 
 state 49
 
-    (44) gprintln -> TkPrintln strprint TkSemiColon .
+    (45) gprintln -> TkPrintln strprint TkSemiColon .
 
-    TkId            reduce using rule 44 (gprintln -> TkPrintln strprint TkSemiColon .)
-    TkFor           reduce using rule 44 (gprintln -> TkPrintln strprint TkSemiColon .)
-    TkPrint         reduce using rule 44 (gprintln -> TkPrintln strprint TkSemiColon .)
-    TkPrintln       reduce using rule 44 (gprintln -> TkPrintln strprint TkSemiColon .)
-    TkCBlock        reduce using rule 44 (gprintln -> TkPrintln strprint TkSemiColon .)
+    TkId            reduce using rule 45 (gprintln -> TkPrintln strprint TkSemiColon .)
+    TkFor           reduce using rule 45 (gprintln -> TkPrintln strprint TkSemiColon .)
+    TkPrint         reduce using rule 45 (gprintln -> TkPrintln strprint TkSemiColon .)
+    TkPrintln       reduce using rule 45 (gprintln -> TkPrintln strprint TkSemiColon .)
+    TkCBlock        reduce using rule 45 (gprintln -> TkPrintln strprint TkSemiColon .)
 
 
 state 50
@@ -1267,7 +1268,7 @@ state 74
 
 state 75
 
-    (42) gfor -> TkFor TkId TkIn expression . TkTo expression TkArrow block TkRof TkSemiColon
+    (43) gfor -> TkFor TkId TkIn expression . TkTo expression TkArrow block TkRof TkSemiColon
     (26) expression -> expression . TkPlus expression
     (27) expression -> expression . TkMinus expression
     (28) expression -> expression . TkMult expression
@@ -1292,16 +1293,16 @@ state 75
 
 state 76
 
-    (45) strprint -> TkString TkConcat strprint .
+    (46) strprint -> TkString TkConcat strprint .
 
-    TkSemiColon     reduce using rule 45 (strprint -> TkString TkConcat strprint .)
+    TkSemiColon     reduce using rule 46 (strprint -> TkString TkConcat strprint .)
 
 
 state 77
 
-    (46) strprint -> TkId TkConcat strprint .
+    (47) strprint -> TkId TkConcat strprint .
 
-    TkSemiColon     reduce using rule 46 (strprint -> TkId TkConcat strprint .)
+    TkSemiColon     reduce using rule 47 (strprint -> TkId TkConcat strprint .)
 
 
 state 78
@@ -1765,7 +1766,7 @@ state 99
 
 state 100
 
-    (42) gfor -> TkFor TkId TkIn expression TkTo . expression TkArrow block TkRof TkSemiColon
+    (43) gfor -> TkFor TkId TkIn expression TkTo . expression TkArrow block TkRof TkSemiColon
     (26) expression -> . expression TkPlus expression
     (27) expression -> . expression TkMinus expression
     (28) expression -> . expression TkMult expression
@@ -1915,7 +1916,7 @@ state 110
 
 state 111
 
-    (42) gfor -> TkFor TkId TkIn expression TkTo expression . TkArrow block TkRof TkSemiColon
+    (43) gfor -> TkFor TkId TkIn expression TkTo expression . TkArrow block TkRof TkSemiColon
     (26) expression -> expression . TkPlus expression
     (27) expression -> expression . TkMinus expression
     (28) expression -> expression . TkMult expression
@@ -1965,7 +1966,7 @@ state 114
 
 state 115
 
-    (42) gfor -> TkFor TkId TkIn expression TkTo expression TkArrow . block TkRof TkSemiColon
+    (43) gfor -> TkFor TkId TkIn expression TkTo expression TkArrow . block TkRof TkSemiColon
     (1) block -> . TkOBlock TkDeclare start TkCBlock
     (2) block -> . TkOBlock body TkCBlock
 
@@ -1982,7 +1983,7 @@ state 116
 
 state 117
 
-    (42) gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block . TkRof TkSemiColon
+    (43) gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block . TkRof TkSemiColon
 
     TkRof           shift and go to state 119
 
@@ -1996,18 +1997,18 @@ state 118
 
 state 119
 
-    (42) gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof . TkSemiColon
+    (43) gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof . TkSemiColon
 
     TkSemiColon     shift and go to state 120
 
 
 state 120
 
-    (42) gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon .
+    (43) gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon .
 
-    TkId            reduce using rule 42 (gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon .)
-    TkFor           reduce using rule 42 (gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon .)
-    TkPrint         reduce using rule 42 (gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon .)
-    TkPrintln       reduce using rule 42 (gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon .)
-    TkCBlock        reduce using rule 42 (gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon .)
+    TkId            reduce using rule 43 (gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon .)
+    TkFor           reduce using rule 43 (gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon .)
+    TkPrint         reduce using rule 43 (gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon .)
+    TkPrintln       reduce using rule 43 (gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon .)
+    TkCBlock        reduce using rule 43 (gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon .)
 

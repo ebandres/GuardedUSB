@@ -119,7 +119,7 @@ def p_expression_fun(p):
                   | TkMax TkOpenPar TkId TkClosePar
                   | TkMin TkOpenPar TkId TkClosePar
                   | TkAtoi TkOpenPar TkId TkClosePar'''
-    print("size")
+    print(p[1])
 
 def p_expression_number(p):
     'expression : TkNum'
@@ -134,6 +134,10 @@ def p_expression_id(p):
     except LookupError:
         print("Undefined id '%s'" % p[1])
         p[0] = 0
+
+def p_read(p):
+    'read : TkRead TkId TkSemiColon'
+    print("Read\nIdent: %s" % p[2])
 
 def p_cycle_for(p):
     'gfor : TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon'

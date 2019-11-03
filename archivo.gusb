@@ -1,16 +1,16 @@
 |[
   declare
-    a, b, c, g, e: int;
-    d, e, f : array[0..2];
+    a, b, c, g, j: int;
+    d, e, f, x, y : array[0..2];
 //	ba : int;
 //	a : int;
 //	d : int;
-//    b := 1;
-//    a := b + 2 + 5;
+    b := 1;
+    a := b + 2 + 5;
     e := max(d);
     a := min(d);
-    c := size(d);
-    g := atoi(a);
-//    read e
+//    c := size(d);
+//    g := atoi(a);
+    read x;
     // Esto es un comentario. Debe ser ignorado.
 ]|
