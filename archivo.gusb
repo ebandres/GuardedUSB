@@ -7,18 +7,25 @@
 //	d : int;
     b := 1;
     a := b + 2 + 5;
-//    e := max(d);
-//    a := min(d);
+    e := max(d);
+    //a := min(d);
 //    c := size(d);
 //    g := atoi(a);
     read x;
-    do true == false -->
+    do a < (4+6) -->
     	|[
     		c := 5;
     		println "brr" ;
     		a := a+1;
     	]|
     od;
+    if (3<6) /\ (a == 8) --> c := 9
+    [] b != 3 --> print "hola"
+    [] (a == 6) \/ (7<8) -->
+    	|[
+    		e := 1212;
+    	]|
+    fi;
     println "Variable \"i\" es igual a: " || i;
     // Esto es un comentario. Debe ser ignorado.
 ]|

@@ -35,12 +35,11 @@ def p_code(p):
     else: p[0] = Node("Block", None, p[2])
 
 def p_body(p):
-    '''body : assign body
+    '''body : sentence body
             | gfor body
-            | gprint body
-            | gprintln body
             | read body
             | gdo body
+            | gif body
             | empty'''
     if len(p) == 3: p[0] = Node(p[1], None, p[2])
 
@@ -70,17 +69,17 @@ def p_tipo(p):
             | TkArray TkOBracket TkNum TkSoForth TkNum TkCBracket'''
 
 def p_assign_expr(p):
-    'assign : TkId TkAsig expression TkSemiColon'
+    'assign : TkId TkAsig expression'
     print("Asig")
     ids[p[1]] = p[3]
 
 def p_assign_str(p):
-    'assign : TkId TkAsig strexp TkSemiColon'
+    'assign : TkId TkAsig strexp'
     print("String")
     ids[p[1]] = p[3]
 
 def p_assign_arr(p):
-    'assign : TkId TkAsig array TkSemiColon'
+    'assign : TkId TkAsig array'
     print("Array")
     ids[p[1]] = p[3]
 
@@ -164,6 +163,11 @@ def p_boolean_exp(p):
     elif p[2] == '==' : p[0] = p[1] == p[3]
     elif p[2] == '!=' : p[0] = p[1] != p[3]
 
+def p_boolean_group(p):
+    'boolean : TkOpenPar boolean TkClosePar'
+    p[0] = p[2]
+
+
 def p_boolean_true(p):
     'boolean : TkTrue'
     p[0] = True
@@ -188,11 +192,29 @@ def p_cycle_for(p):
 def p_cycle_do(p):
     'gdo : TkDo boolean TkArrow block TkOd TkSemiColon'
 
+def p_if(p):
+    '''gif : TkIf boolean TkArrow unique guard TkFi TkSemiColon
+           | TkIf boolean TkArrow block guard TkFi TkSemiColon'''
+
+def p_sentence(p):
+    '''sentence : assign TkSemiColon
+                | gprint TkSemiColon
+                | gprintln TkSemiColon''' 
+def p_unique(p):
+    '''unique : assign
+              | gprint
+              | gprintln'''
+
+def p_guard(p):
+    '''guard : TkGuard boolean TkArrow unique guard
+             | TkGuard boolean TkArrow block guard
+             | empty'''
+
 def p_print(p):
-    'gprint : TkPrint strprint TkSemiColon'
+    'gprint : TkPrint strprint'
 
 def p_println(p):
-    'gprintln : TkPrintln strprint TkSemiColon'
+    'gprintln : TkPrintln strprint'
 
 def p_strprint(p):
     '''strprint : TkString TkConcat strprint
