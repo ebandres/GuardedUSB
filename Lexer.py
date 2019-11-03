@@ -22,7 +22,9 @@ reserved = {
         'max' : 'TkMax',
         'min' : 'TkMin',
         'size' : 'TkSize',
-        'atoi' : 'TkAtoi'
+        'atoi' : 'TkAtoi',
+        'true' : 'TkTrue',
+        'false' : 'TkFalse'
         }
 
 # Lista de tokens
@@ -30,7 +32,7 @@ tokens = ['TkOBlock','TkCBlock','TkSoForth','TkComma','TkOpenPar','TkClosePar','
           'TkSemiColon','TkArrow','TkGuard','TkPlus','TkMinus','TkMult','TkDiv','TkMod',
           'TkOr','TkAnd','TkNot','TkLess','TkLeq','TkGeq','TkGreater','TkEqual','TkNEqual',
           'TkOBracket','TkCBracket','TkTwoPoints','TkConcat',
-          'TkId','TkNum','TkString','TkTrue','TkFalse'] + list(reserved.values())
+          'TkId','TkNum','TkString'] + list(reserved.values())
 
 # Tokens
 t_TkOBlock = r'\|\['
@@ -62,8 +64,6 @@ t_TkCBracket = r'\]'
 t_TkTwoPoints = r':'
 t_TkConcat = r'\|\|'
 t_TkString = r'(\"[^\"\\]*(?:\\.[^\"\\]*)*\")'
-t_TkTrue = r'\btrue\b'
-t_TkFalse = r'\bfalse\b'
 
 def t_TkId(t):
      r'[a-zA-Z_][a-zA-Z_0-9]*'

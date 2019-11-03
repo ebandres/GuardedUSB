@@ -160,10 +160,12 @@ def p_boolean_exp(p):
 def p_boolean_true(p):
     'boolean : TkTrue'
     p[0] = p[1]
+    print("True")
 
 def p_boolean_false(p):
     'boolean : TkFalse'
     p[0] = p[1]
+    print("False")
 
 def p_boolean_not(p):
     'boolean : boolean TkNot'

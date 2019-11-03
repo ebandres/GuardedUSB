@@ -7,12 +7,12 @@
 //	d : int;
     b := 1;
     a := b + 2 + 5;
-    e := max(d);
-    a := min(d);
+//    e := max(d);
+//    a := min(d);
 //    c := size(d);
 //    g := atoi(a);
     read x;
-    do a < (4+6) -->
+    do true == false -->
     	|[
     		c := 5;
     		println "brr" ;
