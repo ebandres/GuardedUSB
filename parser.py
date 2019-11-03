@@ -25,15 +25,16 @@ ids = { }
 
 def p_code(p):
     '''block : TkOBlock TkDeclare start TkCBlock
-    	     | TkOBlock body TkCBlock'''
-    print("Block\nDeclare")
+             | TkOBlock body TkCBlock'''
+    if len(p) == 5: print("Block\nDeclare")
+    else: print("Block")
 
 def p_body(p):
-	'''body : assign body
-			| gfor body
-			| gprint body
-			| gprintln body
-			| empty'''
+    '''body : assign body
+            | gfor body
+            | gprint body
+            | gprintln body
+            | empty'''
 
 def p_start(p):
     ''' start : declaration start
@@ -83,8 +84,8 @@ def p_iarray(p):
                | TkNum'''
 
 def p_expression_str(p):
-	'''strexp : TkString TkConcat strexp
-			  | TkString''' 
+    '''strexp : TkString TkConcat strexp
+              | TkString''' 
 
 def p_expression_bin(p):
     '''expression : expression TkPlus expression
@@ -114,10 +115,11 @@ def p_expression_group(p):
     p[0] = p[2]
 
 def p_expression_fun(p):
-	'''expression : TkSize TkOpenPar array TkClosePar
-			      | TkMax TkOpenPar array TkClosePar
-			      | TkMin TkOpenPar array TkClosePar
-			      | TkAtoi TkOpenPar array TkClosePar'''
+    '''expression : TkSize TkOpenPar TkId TkClosePar
+                  | TkMax TkOpenPar TkId TkClosePar
+                  | TkMin TkOpenPar TkId TkClosePar
+                  | TkAtoi TkOpenPar TkId TkClosePar'''
+    print("size")
 
 def p_expression_number(p):
     'expression : TkNum'
@@ -134,22 +136,22 @@ def p_expression_id(p):
         p[0] = 0
 
 def p_cycle_for(p):
-	'gfor : TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon'
+    'gfor : TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon'
 
 # Para agregar el do primero debemos tener los booleanos :(
 #def p_cycle_do(p):
 
 def p_print(p):
-	'gprint : TkPrint strprint TkSemiColon'
+    'gprint : TkPrint strprint TkSemiColon'
 
 def p_println(p):
-	'gprintln : TkPrintln strprint TkSemiColon'
+    'gprintln : TkPrintln strprint TkSemiColon'
 
 def p_strprint(p):
-	'''strprint : TkString TkConcat strprint
-				| TkId TkConcat strprint
-				| TkString
-				| TkId'''
+    '''strprint : TkString TkConcat strprint
+                | TkId TkConcat strprint
+                | TkString
+                | TkId'''
 
 def p_error(p):
     print("Syntax error at '%s'" % p.value)

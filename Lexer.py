@@ -18,15 +18,19 @@ reserved = {
         'do' : 'TkDo',
         'od' : 'TkOd',
         'for' : 'TkFor',
-        'rof' : 'TkRof'
+        'rof' : 'TkRof',
+        'max' : 'TkMax',
+        'min' : 'TkMin',
+        'size' : 'TkSize',
+        'atoi' : 'TkAtoi'
         }
 
 # Lista de tokens
 tokens = ['TkOBlock','TkCBlock','TkSoForth','TkComma','TkOpenPar','TkClosePar','TkAsig',
           'TkSemiColon','TkArrow','TkGuard','TkPlus','TkMinus','TkMult','TkDiv','TkMod',
           'TkOr','TkAnd','TkNot','TkLess','TkLeq','TkGeq','TkGreater','TkEqual','TkNEqual',
-          'TkOBracket','TkCBracket','TkTwoPoints','TkConcat','TkAtoi','TkSize','TkMax',
-          'TkMin','TkId','TkNum','TkString','TkTrue','TkFalse'] + list(reserved.values())
+          'TkOBracket','TkCBracket','TkTwoPoints','TkConcat',
+          'TkId','TkNum','TkString','TkTrue','TkFalse'] + list(reserved.values())
 
 # Tokens
 t_TkOBlock = r'\|\['
