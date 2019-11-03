@@ -61,7 +61,7 @@ t_TkOBracket = r'\['
 t_TkCBracket = r'\]'
 t_TkTwoPoints = r':'
 t_TkConcat = r'\|\|'
-t_TkString = r'\".*?\"'
+t_TkString = r'(\"[^\"\\]*(?:\\.[^\"\\]*)*\")'
 t_TkTrue = r'\btrue\b'
 t_TkFalse = r'\bfalse\b'
 

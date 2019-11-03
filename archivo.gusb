@@ -12,5 +12,6 @@
 //    c := size(d);
 //    g := atoi(a);
     read x;
+    println "Variable \"i\" es igual a: " || i;
     // Esto es un comentario. Debe ser ignorado.
 ]|

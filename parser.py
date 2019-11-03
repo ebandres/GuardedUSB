@@ -34,6 +34,7 @@ def p_body(p):
             | gfor body
             | gprint body
             | gprintln body
+            | read body
             | empty'''
 
 def p_start(p):
@@ -156,6 +157,7 @@ def p_strprint(p):
                 | TkId TkConcat strprint
                 | TkString
                 | TkId'''
+    if (len(p) == 4): print("Concat\n%s" % p[1])
 
 def p_error(p):
     print("Syntax error at '%s'" % p.value)
