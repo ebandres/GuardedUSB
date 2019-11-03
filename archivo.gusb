@@ -12,6 +12,13 @@
 //    c := size(d);
 //    g := atoi(a);
     read x;
+    do a < (4+6) -->
+    	|[
+    		c := 5;
+    		println "brr" ;
+    		a := a+1;
+    	]|
+    od;
     println "Variable \"i\" es igual a: " || i;
     // Esto es un comentario. Debe ser ignorado.
 ]|

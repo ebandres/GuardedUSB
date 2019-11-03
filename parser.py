@@ -35,6 +35,7 @@ def p_body(p):
             | gprint body
             | gprintln body
             | read body
+            | gdo body
             | empty'''
 
 def p_start(p):
@@ -93,11 +94,8 @@ def p_expression_bin(p):
                   | expression TkMinus expression
                   | expression TkMult expression
                   | expression TkDiv expression
-                  | expression TkMod expression
-                  | expression TkLess expression
-                  | expression TkLeq expression
-                  | expression TkGeq expression
-                  | expression TkGreater expression'''
+                  | expression TkMod expression'''
+                                                
     print("Exp")
     if p[2] == '+'   :
         print("Plus")
@@ -106,10 +104,7 @@ def p_expression_bin(p):
     elif p[2] == '*' : p[0] = p[1] * p[3]
     elif p[2] == '/' : p[0] = p[1] / p[3]
     elif p[2] == '%' : p[0] = p[1] % p[3]
-    elif p[2] == '<' : p[0] = p[1] < p[3]
-    elif p[2] == '<=': p[0] = p[1] <= p[3]
-    elif p[2] == '>=': p[0] = p[1] >= p[3]
-    elif p[2] == '>' : p[0] = p[1] > p[3]
+
 
 def p_expression_group(p):
     'expression : TkOpenPar expression TkClosePar'
@@ -136,15 +131,53 @@ def p_expression_id(p):
         print("Undefined id '%s'" % p[1])
         p[0] = 0
 
+def p_boolean_exp(p):
+    '''boolean : expression TkLess expression
+               | expression TkLeq expression
+               | expression TkGeq expression
+               | expression TkGreater expression
+               | boolean TkOr boolean
+               | boolean TkAnd boolean
+               | expression TkEqual expression
+               | expression TkEqual boolean
+               | boolean TkEqual expression
+               | boolean TkEqual boolean
+               | expression TkNEqual expression
+               | expression TkNEqual boolean
+               | boolean TkNEqual expression
+               | boolean TkNEqual boolean'''
+
+    print("Bool")
+    if p[2] == '<' : p[0] = p[1] < p[3]
+    elif p[2] == '<=': p[0] = p[1] <= p[3]
+    elif p[2] == '>=': p[0] = p[1] >= p[3]
+    elif p[2] == '>' : p[0] = p[1] > p[3]
+    elif p[2] == '\\/': p[0] = p[1] or p[3]
+    elif p[2] == '/\\': p[0] = p[1] and p[3]
+    elif p[2] == '==' : p[0] = p[1] == p[3]
+    elif p[2] == '!=' : p[0] = p[1] != p[3]
+
+def p_boolean_true(p):
+    'boolean : TkTrue'
+    p[0] = p[1]
+
+def p_boolean_false(p):
+    'boolean : TkFalse'
+    p[0] = p[1]
+
+def p_boolean_not(p):
+    'boolean : boolean TkNot'
+    # No se que poner para el p[0], un condicional?? achu       
+
 def p_read(p):
     'read : TkRead TkId TkSemiColon'
     print("Read\nIdent: %s" % p[2])
 
 def p_cycle_for(p):
     'gfor : TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon'
-
-# Para agregar el do primero debemos tener los booleanos :(
-#def p_cycle_do(p):
+ 
+def p_cycle_do(p):
+    'gdo : TkDo boolean TkArrow block TkOd TkSemiColon'
 
 def p_print(p):
     'gprint : TkPrint strprint TkSemiColon'
