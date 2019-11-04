@@ -235,7 +235,7 @@ def p_read(p):
 def p_cycle_for(p):
     'gfor : TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon'
     # Si esto no funciona poner p5 y p7 como un nodo, 2do param
-    p[0] = Node("For\n In\n  %s\n  %s" % (p[5], p[7]), p[8], None)
+    p[0] = Node("For\n In\n  Ident: %s\n  %s\n  %s" % (p[2], p[4], p[6]), p[8], None)
  
 def p_cycle_do(p):
     'gdo : TkDo boolean TkArrow block TkOd TkSemiColon'
@@ -286,6 +286,7 @@ def p_strprint(p):
 
 def p_error(p):
     print("Syntax error at '%s'" % p.value)
+    print(p.lineno)
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:

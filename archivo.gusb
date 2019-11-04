@@ -5,8 +5,8 @@
 //	ba : int;
 //	a : int;
 //	d : int;
-    b := 1;
-    a := b + 2 + 5;
+    b := -1;
+    a := b + 2 - 5;
     e := max(d);
     //a := min(d);
 //    c := size(d);

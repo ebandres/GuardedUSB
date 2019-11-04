@@ -71,7 +71,7 @@ def t_TkId(t):
      return t
 
 def t_TkNum(t):
-     r'\d+'
+     r'-?\d+'
      t.value = int(t.value)
      return t 
 
