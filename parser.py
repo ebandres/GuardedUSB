@@ -30,7 +30,7 @@ def p_code(p):
     #if len(p) == 5: print("Block\nDeclare")
     #else: print("Block")
     if len(p) == 5: 
-        p[0] = Node("Block\n Declare", None, p[3])
+        p[0] = Node("Block\n Declare", None, "  %s" % p[3])
         out = str(p[0])
         while "\n\n" in out: out = out.replace("\n\n", "\n")
         print(out)
@@ -59,8 +59,8 @@ def p_declaration(p):
     '''declaration : TkId TkTwoPoints tipo TkSemiColon
                    | TkId TkComma listaid TkTwoPoints tipo TkSemiColon'''
     ids[p[1]] = 0
-    if len(p) == 5: p[0] = Node(None, "Ident: %s" % p[1], None)
-    else: p[0] = Node(None, "Ident: %s" % p[1], p[3])
+    if len(p) == 5: p[0] = Node("Ident: %s" % p[1], None, "Sequencing")
+    else: p[0] = Node("Ident: %s" % p[1], p[3], "Sequencing")
     #print("Ident: %s" % p[1])
 
 def p_listid(p):
@@ -79,7 +79,7 @@ def p_assign_expr(p):
     'assign : TkId TkAsig expression'
     #print("Asig")
     ids[p[1]] = p[3]
-    p[0] = Node("Asig", "Ident: %s\n Exp" % p[1], p[3])
+    p[0] = Node("Asig", "Ident: %s" % p[1], p[3])
 
 def p_assign_str(p):
     'assign : TkId TkAsig strexp'
@@ -91,7 +91,7 @@ def p_assign_arr(p):
     'assign : TkId TkAsig array'
     #print("Array")
     ids[p[1]] = p[3]
-    p[0] = Node("AsigArray", "Ident: %s\n Exp" % p[1], p[3])
+    p[0] = Node("AsigArray", "Ident: %s" % p[1], p[3])
 
 def p_array(p):
     '''array : TkOBracket inarray TkCBracket
@@ -117,19 +117,19 @@ def p_expression_bin(p):
     if p[2] == '+'   :
         #print("Plus")
         #p[0] = p[1] + p[3]
-        p[0] = Node("Plus", p[1], p[3])
+        p[0] = Node("Exp\n Plus", p[1], p[3])
     elif p[2] == '-' : 
         #p[0] = p[1] - p[3]
-        p[0] = Node("Minus", p[1], p[3])
+        p[0] = Node("Exp\n Minus", p[1], p[3])
     elif p[2] == '*' : 
         #p[0] = p[1] * p[3]
-        p[0] = Node("Mult", p[1], p[3])
+        p[0] = Node("Exp\n Mult", p[1], p[3])
     elif p[2] == '/' : 
         #p[0] = p[1] / p[3]
-        p[0] = Node("Div", p[1], p[3])
+        p[0] = Node("Exp\n Div", p[1], p[3])
     elif p[2] == '%' : 
         #p[0] = p[1] % p[3]
-        p[0] = Node("Mod", p[1], p[3])
+        p[0] = Node("Exp\n Mod", p[1], p[3])
 
 
 def p_expression_group(p):
@@ -143,7 +143,7 @@ def p_expression_fun(p):
                   | TkMin TkOpenPar TkId TkClosePar
                   | TkAtoi TkOpenPar TkId TkClosePar'''
     #print(p[1])
-    p[0] = Node(p[1].capitalize(), "Ident: %s" % p[3], None)
+    p[0] = Node("Exp\n %s" % p[1].capitalize(), "  Ident: %s" % p[3], None)
 
 def p_expression_number(p):
     'expression : TkNum'
@@ -230,7 +230,7 @@ def p_read(p):
     'read : TkRead TkId TkSemiColon'
     #print("Read\nIdent: %s" % p[2])
     # Sequencing en TkSemiColon?
-    p[0] = Node("Read", "Ident: %s" % p[2], None)
+    p[0] = Node("Read", "Ident: %s" % p[2], "Sequencing")
 
 def p_cycle_for(p):
     'gfor : TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon'
@@ -251,7 +251,7 @@ def p_sentence(p):
                 | gprint TkSemiColon
                 | gprintln TkSemiColon''' 
     # Sequencing en TkSemicolon?
-    p[0] = Node(p[1], None, None)
+    p[0] = Node(p[1], None, "Sequencing")
 
 def p_unique(p):
     '''unique : assign
