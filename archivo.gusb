@@ -16,16 +16,16 @@
     	|[
     		c := 5;
     		println "brr" ;
-    		a := a+1;
+    		a := a+1
     	]|
     od;
     if (3<6) /\ (a == 8) --> c := 9
     [] b != 3 --> print "hola"
     [] (a == 6) \/ (7<8) -->
     	|[
-    		e := 1212;
+    		e := 1212
     	]|
     fi;
-    println "Variable \"i\" es igual a: " || i;
+    println "Variable \"i\" es igual a: " || i
     // Esto es un comentario. Debe ser ignorado.
 ]|

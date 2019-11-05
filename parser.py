@@ -32,9 +32,6 @@ def p_code(p):
     #else: print("Block")
     if len(p) == 5: 
         p[0] = Node("Block\n Declare", None, "  %s" % p[3])
-        out = str(p[0])
-        while "\n\n" in out: out = out.replace("\n\n", "\n")
-        print(out)
     else: p[0] = Node("Block", None, p[2])
     # para len(p) == 4??
  
@@ -44,7 +41,7 @@ def p_body(p):
             | unique
             | terminal'''
     if len(p) == 3: p[0] = Node(p[1], None, p[2])
-    else: p[0] = Node(p[1],None,None)
+    else: p[0] = Node(p[1], None, None)
 
 #def p_body2(p):
 #	'''body2 : sentence
@@ -54,10 +51,8 @@ def p_body(p):
 def p_start(p):
     ''' start : declaration start
               | declaration body'''
-              
-    if len(p) == 3: p[0] = Node(None, p[1], p[2])
+    p[0] = Node(None, p[1], p[2])
 
-              
 def p_empty(p):
     'empty :'
     pass
@@ -170,13 +165,13 @@ def p_expression_id(p):
 
 def p_boolean_exp(p):
     '''expression : expression TkLess expression
-               | expression TkLeq expression
-               | expression TkGeq expression
-               | expression TkGreater expression
-               | expression TkOr expression
-               | expression TkAnd expression
-               | expression TkEqual expression
-               | expression TkNEqual expression'''
+                  | expression TkLeq expression
+                  | expression TkGeq expression
+                  | expression TkGreater expression
+                  | expression TkOr expression
+                  | expression TkAnd expression
+                  | expression TkEqual expression
+                  | expression TkNEqual expression'''
 
     #print("Bool")
     if p[2] == '<'    : 
@@ -317,4 +312,7 @@ if __name__ == '__main__':
 
     lexer = lex.lex()
     parser = yacc.yacc()
-    parser.parse(content, lexer=lexer)
+
+    out = str(parser.parse(content, lexer=lexer))
+    while "\n\n" in out: out = out.replace("\n\n", "\n")
+    print(out)
