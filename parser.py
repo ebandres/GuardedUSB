@@ -11,11 +11,11 @@ from Lexer import *
 
 precedence = (
     ('left', 'TkAsig'),
+    ('left', 'TkAnd', 'TkOr'),
     ('nonassoc', 'TkLess', 'TkLeq', 'TkGeq', 'TkGreater'),
     ('left', 'TkPlus', 'TkMinus'),
     ('left', 'TkMult', 'TkDiv', 'TkMod'),
     ('left', 'TkEqual', 'TkNEqual'),
-    ('left', 'TkAnd', 'TkOr'),
     ('right', 'TkNot'),
     ('left', 'TkOBracket', 'TkCBracket'),
     ('left', 'TkConcat'),
@@ -26,7 +26,8 @@ ids = { }
 
 def p_code(p):
     '''block : TkOBlock TkDeclare start TkCBlock
-             | TkOBlock body TkCBlock'''
+             | TkOBlock body terminal TkCBlock
+             | TkOBlock body2 TkCBlock'''
     #if len(p) == 5: print("Block\nDeclare")
     #else: print("Block")
     if len(p) == 5: 
@@ -35,21 +36,30 @@ def p_code(p):
         while "\n\n" in out: out = out.replace("\n\n", "\n")
         print(out)
     else: p[0] = Node("Block", None, p[2])
-
+    # para len(p) == 4??
+ 
 def p_body(p):
     '''body : sentence body
-            | gfor body
-            | read body
-            | gdo body
-            | gif body
-            | empty'''
+            | sentcond body
+            | sentence
+            | sentcond'''
     if len(p) == 3: p[0] = Node(p[1], None, p[2])
+    else: p[0] = Node(p[1],None,None)
+
+def p_body2(p):
+	'''body2 : sentence
+			 | sentcond'''
+	# nodo??
 
 def p_start(p):
     ''' start : declaration start
-              | body'''
+              | declaration body terminal
+              | declaration terminal 
+              | declaration'''
     if len(p) == 3: p[0] = Node(None, p[1], p[2])
     else: p[0] = Node(None, p[1], None)
+    # para len(p) == 4??
+
               
 def p_empty(p):
     'empty :'
@@ -162,20 +172,14 @@ def p_expression_id(p):
     p[0] = Node("Ident: %s" % p[1], None, None)
 
 def p_boolean_exp(p):
-    '''boolean : expression TkLess expression
+    '''expression : expression TkLess expression
                | expression TkLeq expression
                | expression TkGeq expression
                | expression TkGreater expression
-               | boolean TkOr boolean
-               | boolean TkAnd boolean
+               | expression TkOr expression
+               | expression TkAnd expression
                | expression TkEqual expression
-               | expression TkEqual boolean
-               | boolean TkEqual expression
-               | boolean TkEqual boolean
-               | expression TkNEqual expression
-               | expression TkNEqual boolean
-               | boolean TkNEqual expression
-               | boolean TkNEqual boolean'''
+               | expression TkNEqual expression'''
 
     #print("Bool")
     if p[2] == '<'    : 
@@ -203,55 +207,71 @@ def p_boolean_exp(p):
         #p[0] = p[1] != p[3]
         p[0] = Node("NEqual", p[1], p[3])
 
-def p_boolean_group(p):
-    'boolean : TkOpenPar boolean TkClosePar'
+#def p_boolean_group(p):
+#    'boolean : TkOpenPar boolean TkClosePar'
     #p[0] = p[2]
-    p[0] = Node(None, p[2], None)
+#    p[0] = Node(None, p[2], None)
 
 
-def p_boolean_true(p):
-    'boolean : TkTrue'
+def p_expression_true(p):
+    'expression : TkTrue'
     #p[0] = True
     #print("True")
     p[0] = Node("True", None, None)
 
-def p_boolean_false(p):
-    'boolean : TkFalse'
+def p_expression_false(p):
+    'expression : TkFalse'
     #p[0] = False
     #print("False")
     p[0] = Node("False", None, None)
 
 
-def p_boolean_not(p):
-    'boolean : TkNot boolean'
+def p_expression_not(p):
+    'expression : TkNot expression'
     p[0] = Node("Not", p[2], None)
 
 def p_read(p):
-    'read : TkRead TkId TkSemiColon'
+    'read : TkRead TkId'
     #print("Read\nIdent: %s" % p[2])
     # Sequencing en TkSemiColon?
     p[0] = Node("Read", "Ident: %s" % p[2], "Sequencing")
 
 def p_cycle_for(p):
-    'gfor : TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon'
+    'gfor : TkFor TkId TkIn expression TkTo expression TkArrow block TkRof'
     # Si esto no funciona poner p5 y p7 como un nodo, 2do param
     p[0] = Node("For\n In\n  Ident: %s\n  %s\n  %s" % (p[2], p[4], p[6]), p[8], None)
  
 def p_cycle_do(p):
-    'gdo : TkDo boolean TkArrow block TkOd TkSemiColon'
+    'gdo : TkDo expression TkArrow block TkOd'
     p[0] = Node("Do", p[2], p[4])
 
 def p_if(p):
-    '''gif : TkIf boolean TkArrow unique guard TkFi TkSemiColon
-           | TkIf boolean TkArrow block guard TkFi TkSemiColon'''
+    '''gif : TkIf expression TkArrow unique guard TkFi 
+           | TkIf expression TkArrow block guard TkFi'''
     p[0] = Node("If\n Guard\n  %s" % p[2], p[4], p[5])
 
 def p_sentence(p):
     '''sentence : assign TkSemiColon
                 | gprint TkSemiColon
-                | gprintln TkSemiColon''' 
+                | gprintln TkSemiColon
+                | read TkSemiColon''' 
     # Sequencing en TkSemicolon?
     p[0] = Node(p[1], None, "Sequencing")
+
+def p_sentence_cond(p):
+	'''sentcond : gif TkSemiColon
+				| gdo TkSemiColon
+				| gfor TkSemiColon'''
+	p[0] = Node(p[1],None,"Sequencing")
+
+def p_terminal(p):
+	'''terminal : gif
+				| gdo
+				| gfor
+				| assign
+				| gprint
+				| gprintln'''
+	p[0] = Node(p[1],None,None)
 
 def p_unique(p):
     '''unique : assign
@@ -260,8 +280,8 @@ def p_unique(p):
     p[0] = Node(p[1], None, None)
 
 def p_guard(p):
-    '''guard : TkGuard boolean TkArrow unique guard
-             | TkGuard boolean TkArrow block guard
+    '''guard : TkGuard expression TkArrow unique guard
+             | TkGuard expression TkArrow block guard
              | empty'''
     if len(p) == 6: 
         p[0] = Node(" Guard\n  %s" % p[2], p[4], p[5])
