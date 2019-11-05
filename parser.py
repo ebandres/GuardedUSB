@@ -27,7 +27,7 @@ ids = { }
 def p_code(p):
     '''block : TkOBlock TkDeclare start TkCBlock
              | TkOBlock body TkCBlock'''
-#             | TkOBlock body2 TkCBlock'''
+#            | TkOBlock body2 TkCBlock'''
     #if len(p) == 5: print("Block\nDeclare")
     #else: print("Block")
     if len(p) == 5: 
@@ -40,12 +40,9 @@ def p_code(p):
  
 def p_body(p):
     '''body : sentence body
-            | gdo body
-            | gfor body
-            | gif body
-            | empty'''
-#            | sentence
-#            | sentcond
+            | sentcond body
+            | unique
+            | terminal'''
     if len(p) == 3: p[0] = Node(p[1], None, p[2])
     else: p[0] = Node(p[1],None,None)
 
@@ -57,12 +54,8 @@ def p_body(p):
 def p_start(p):
     ''' start : declaration start
               | declaration body'''
-#             | declaration terminal
-#              | declaration body terminal
               
     if len(p) == 3: p[0] = Node(None, p[1], p[2])
-    else: p[0] = Node(None, p[1], None)
-    # para len(p) == 4??
 
               
 def p_empty(p):
@@ -241,17 +234,17 @@ def p_read(p):
     p[0] = Node("Read", "Ident: %s" % p[2], "Sequencing")
 
 def p_cycle_for(p):
-    'gfor : TkFor TkId TkIn expression TkTo expression TkArrow block TkRof TkSemiColon'
+    'gfor : TkFor TkId TkIn expression TkTo expression TkArrow block TkRof'
     # Si esto no funciona poner p5 y p7 como un nodo, 2do param
     p[0] = Node("For\n In\n  Ident: %s\n  %s\n  %s" % (p[2], p[4], p[6]), p[8], None)
  
 def p_cycle_do(p):
-    'gdo : TkDo expression TkArrow block TkOd TkSemiColon'
+    'gdo : TkDo expression TkArrow block TkOd'
     p[0] = Node("Do", p[2], p[4])
 
 def p_if(p):
-    '''gif : TkIf expression TkArrow unique guard TkFi TkSemiColon 
-           | TkIf expression TkArrow block guard TkFi TkSemiColon'''
+    '''gif : TkIf expression TkArrow unique guard TkFi  
+           | TkIf expression TkArrow block guard TkFi '''
     p[0] = Node("If\n Guard\n  %s" % p[2], p[4], p[5])
 
 def p_sentence(p):
@@ -262,20 +255,17 @@ def p_sentence(p):
     # Sequencing en TkSemicolon?
     p[0] = Node(p[1], None, "Sequencing")
 
-#def p_sentence_cond(p):
-#	'''sentcond : gif TkSemiColon
-#				| gdo TkSemiColon
-#				| gfor TkSemiColon'''
-#	p[0] = Node(p[1],None,"Sequencing")
+def p_sentence_cond(p):
+	'''sentcond : gif TkSemiColon
+				| gdo TkSemiColon
+				| gfor TkSemiColon'''
+	p[0] = Node(p[1],None,"Sequencing")
 
-#def p_terminal(p):
-#	'''terminal : gif
-#				| gdo
-#				| gfor
-#				| assign
-#				| gprint
-#				| gprintln'''
-#	p[0] = Node(p[1],None,None)
+def p_terminal(p):
+	'''terminal : gif
+				| gdo
+				| gfor'''
+	p[0] = Node(p[1],None,None)
 
 def p_unique(p):
     '''unique : assign
