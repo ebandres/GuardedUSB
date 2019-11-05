@@ -294,8 +294,8 @@ def p_strprint(p):
     else: p[0] = Node("%s" % p[1], None, None)
 
 def p_error(p):
-    print("Syntax error at '%s'" % p.value)
-    print(p.lineno)
+    print("Syntax error at '%s' in line: %s" % (p.value, p.lineno))
+    exit(1)
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
