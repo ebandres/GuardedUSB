@@ -9,7 +9,7 @@
   //x := x(2:a)(3:b);
   for i in a to b -->
     |[
-      println "Variable \"i\" es igual a: " || i;
+      println "Variable \"i\" es igual a: " || i
     ]|
   rof;
 
@@ -21,26 +21,33 @@
   //  ]|
   //rof;
 
-  a := 3 + b;
+  a := 3+b;
   b := -4;
 
-  if min(x) <= b /\ b <= max(x) --> println b
-  [] min(y) < b /\ b < max(y) --> println a
-  [] min(y) >= b \/ b >= max(y) -->
+  if  a > b --> println a
+  [] b < a -->
     |[
-      declare z : array[2..3];
-      println a || b;
-      //z := z(2:a)(3:b);
-      //println "array[" || min(z) || ".." || max(z) || "]"
+      b := 0
     ]|
   fi;
+
+  //if min(x) <= b /\ b <= max(x) --> println b
+  //[] min(y) < b /\ b < max(y) --> println a
+  //[] min(y) >= b \/ b >= max(y) -->
+  //  |[
+  //    declare z : array[2..3];
+  //    println a || b
+      //z := z(2:a)(3:b);
+      //println "array[" || min(z) || ".." || max(z) || "]"
+  //  ]|
+  //fi;
 
   i := 3;
   do i < 10 -->
     |[
       read i;
       print "Still here!";
-      i := i+1;
+      i := i+1
     ]|
-  od;
+  od
 ]|
