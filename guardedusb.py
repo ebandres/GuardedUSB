@@ -1,3 +1,7 @@
+# GuardedUSB
+# Emmanuel Bandres, 14-10071
+# Daniela Caballero, 14-10140
+
 import sys, Parser
 
 if __name__ == '__main__':

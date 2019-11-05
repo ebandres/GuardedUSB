@@ -22,7 +22,10 @@ precedence = (
     ('right', 'TkArrow')
     )
 
+# Diccionario de ids
 ids = { }
+
+# Gramatica
 
 def p_code(p):
     '''block : TkOBlock TkDeclare start TkCBlock
@@ -155,13 +158,12 @@ def p_expression_number(p):
 
 def p_expression_id(p):
     'expression : TkId'
-    #try:
-    #    p[0] = ids[p[1]]
-    #    #print("Ident: %s" % p[1])
-    #except LookupError:
-    #    print("Undefined id '%s'" % p[1])
-    #    p[0] = 0
-    p[0] = Node("Ident: %s" % p[1], None, None)
+    try:
+        p[0] = ids[p[1]]
+        p[0] = Node("Ident: %s" % p[1], None, None)
+    except LookupError:
+        print("Undefined id '%s'" % p[1])
+        exit(1)
 
 def p_boolean_exp(p):
     '''expression : expression TkLess expression
@@ -225,12 +227,21 @@ def p_read(p):
     'read : TkRead TkId'
     #print("Read\nIdent: %s" % p[2])
     # Sequencing en TkSemiColon?
-    p[0] = Node("Read", " Ident: %s" % p[2], None)
+    try:
+        p[0] = ids[p[2]]
+        p[0] = Node("Read", " Ident: %s" % p[2], None)
+    except LookupError:
+        print("Undefined id '%s'" % p[2])
+        exit(1)
 
 def p_cycle_for(p):
     'gfor : TkFor TkId TkIn expression TkTo expression TkArrow block TkRof'
-    # Si esto no funciona poner p5 y p7 como un nodo, 2do param
-    p[0] = Node("For\n In\n  Ident: %s\n  Exp\n   %s\n  Exp\n   %s" % (p[2], p[4], p[6]), " %s" % p[8], None)
+    try:
+        p[0] = ids[p[2]]
+        p[0] = Node("For\n In\n  Ident: %s\n  Exp\n   %s\n  Exp\n   %s" % (p[2], p[4], p[6]), " %s" % p[8], None)
+    except LookupError:
+        print("Undefined id '%s'" % p[2])
+        exit(1)
  
 def p_cycle_do(p):
     'gdo : TkDo expression TkArrow block TkOd'
@@ -284,12 +295,26 @@ def p_println(p):
 
 def p_strprint(p):
     '''strprint : TkString TkConcat strprint
-                | TkId TkConcat strprint
+                | TkId TkConcat strprint empty
                 | TkString
-                | TkId'''
+                | TkId empty'''
     if (len(p) == 4): 
         #print("Concat\n%s" % p[1])
         p[0] = Node("Concat", "  %s" % p[1], "  %s" % p[3])
+    elif len(p) == 5:
+        try:
+            p[0] = ids[p[1]]
+            p[0] = Node("Concat", "  %s" % p[1], "  %s" % p[3])
+        except LookupError:
+            print("Undefined id '%s'" % p[1])
+            exit(1)
+    elif len(p) == 3:
+        try:
+            p[0] = ids[p[1]]
+            p[0] = Node("%s" % p[1], None, None)
+        except LookupError:
+            print("Undefined id '%s'" % p[1])
+            exit(1)
     else: p[0] = Node("%s" % p[1], None, None)
 
 def p_error(p):
