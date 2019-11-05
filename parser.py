@@ -31,7 +31,7 @@ def p_code(p):
     #if len(p) == 5: print("Block\nDeclare")
     #else: print("Block")
     if len(p) == 5: 
-        p[0] = Node("Block\n Declare", None, "  %s" % p[3])
+        p[0] = Node("Block\n Declare", None, "%s" % p[3])
     else: p[0] = Node("Block", None, p[2])
     # para len(p) == 4??
  
@@ -61,16 +61,16 @@ def p_declaration(p):
     '''declaration : TkId TkTwoPoints tipo TkSemiColon
                    | TkId TkComma listaid TkTwoPoints tipo TkSemiColon'''
     ids[p[1]] = 0
-    if len(p) == 5: p[0] = Node("Ident: %s" % p[1], None, "Sequencing")
-    else: p[0] = Node("Ident: %s" % p[1], p[3], "Sequencing")
+    if len(p) == 5: p[0] = Node("  Ident: %s" % p[1], None, " Sequencing")
+    else: p[0] = Node("  Ident: %s" % p[1], p[3], " Sequencing")
     #print("Ident: %s" % p[1])
 
 def p_listid(p):
     '''listaid : TkId TkComma listaid
                | TkId'''
     ids[p[1]] = 0
-    if len(p) == 4: p[0] = Node(None, "Ident: %s" % p[1], p[3])
-    else: p[0] = Node(None, "Ident: %s" % p[1], None)
+    if len(p) == 4: p[0] = Node(None, "  Ident: %s" % p[1], p[3])
+    else: p[0] = Node(None, "  Ident: %s" % p[1], None)
     #print("Ident: %s" % p[1])
 
 def p_tipo(p):
@@ -81,7 +81,7 @@ def p_assign_expr(p):
     'assign : TkId TkAsig expression'
     #print("Asig")
     ids[p[1]] = p[3]
-    p[0] = Node("Asig", "Ident: %s" % p[1], p[3])
+    p[0] = Node("Asig", " Ident: %s" % p[1], " %s" % p[3])
 
 def p_assign_str(p):
     'assign : TkId TkAsig strexp'
@@ -119,19 +119,19 @@ def p_expression_bin(p):
     if p[2] == '+'   :
         #print("Plus")
         #p[0] = p[1] + p[3]
-        p[0] = Node("Exp\n Plus", p[1], p[3])
+        p[0] = Node("Exp\n Plus", "  %s" % p[1], "  %s" % p[3])
     elif p[2] == '-' : 
         #p[0] = p[1] - p[3]
-        p[0] = Node("Exp\n Minus", p[1], p[3])
+        p[0] = Node("Exp\n Minus", "  %s" % p[1], "  %s" % p[3])
     elif p[2] == '*' : 
         #p[0] = p[1] * p[3]
-        p[0] = Node("Exp\n Mult", p[1], p[3])
+        p[0] = Node("Exp\n Mult", "  %s" % p[1], "  %s" % p[3])
     elif p[2] == '/' : 
         #p[0] = p[1] / p[3]
-        p[0] = Node("Exp\n Div", p[1], p[3])
+        p[0] = Node("Exp\n Div", "  %s" % p[1], "  %s" % p[3])
     elif p[2] == '%' : 
         #p[0] = p[1] % p[3]
-        p[0] = Node("Exp\n Mod", p[1], p[3])
+        p[0] = Node("Exp\n Mod", "  %s" % p[1], "  %s" % p[3])
 
 
 def p_expression_group(p):
@@ -176,28 +176,28 @@ def p_boolean_exp(p):
     #print("Bool")
     if p[2] == '<'    : 
         #p[0] = p[1] < p[3]
-        p[0] = Node("Less", p[1], p[3])
+        p[0] = Node("Less", "  %s" % p[1], "  %s" % p[3])
     elif p[2] == '<=' : 
         #p[0] = p[1] <= p[3]
-        p[0] = Node("Leq", p[1], p[3])
+        p[0] = Node("Leq", "  %s" % p[1], "  %s" % p[3])
     elif p[2] == '>=' : 
         #p[0] = p[1] >= p[3]
-        p[0] = Node("Geq", p[1], p[3])
+        p[0] = Node("Geq", "  %s" % p[1], "  %s" % p[3])
     elif p[2] == '>'  : 
         #p[0] = p[1] > p[3]
-        p[0] = Node("Greater", p[1], p[3])
+        p[0] = Node("Greater", "  %s" % p[1], "  %s" % p[3])
     elif p[2] == '\\/': 
         #p[0] = p[1] or p[3]
-        p[0] = Node("Or", p[1], p[3])
+        p[0] = Node("Or", "  %s" % p[1], "  %s" % p[3])
     elif p[2] == '/\\': 
         #p[0] = p[1] and p[3]
-        p[0] = Node("And", p[1], p[3])
+        p[0] = Node("And", "  %s" % p[1], "  %s" % p[3])
     elif p[2] == '==' : 
         #p[0] = p[1] == p[3]
-        p[0] = Node("Equal", p[1], p[3])
+        p[0] = Node("Equal", "  %s" % p[1], "  %s" % p[3])
     elif p[2] == '!=' : 
         #p[0] = p[1] != p[3]
-        p[0] = Node("NEqual", p[1], p[3])
+        p[0] = Node("NEqual", "  %s" % p[1], "  %s" % p[3])
 
 #def p_boolean_group(p):
 #    'boolean : TkOpenPar boolean TkClosePar'
@@ -226,12 +226,12 @@ def p_read(p):
     'read : TkRead TkId'
     #print("Read\nIdent: %s" % p[2])
     # Sequencing en TkSemiColon?
-    p[0] = Node("Read", "Ident: %s" % p[2], "Sequencing")
+    p[0] = Node("Read", " Ident: %s" % p[2], None)
 
 def p_cycle_for(p):
     'gfor : TkFor TkId TkIn expression TkTo expression TkArrow block TkRof'
     # Si esto no funciona poner p5 y p7 como un nodo, 2do param
-    p[0] = Node("For\n In\n  Ident: %s\n  %s\n  %s" % (p[2], p[4], p[6]), p[8], None)
+    p[0] = Node("For\n In\n  Ident: %s\n  Exp\n   %s\n  Exp\n   %s" % (p[2], p[4], p[6]), " %s" % p[8], None)
  
 def p_cycle_do(p):
     'gdo : TkDo expression TkArrow block TkOd'
@@ -277,11 +277,11 @@ def p_guard(p):
 
 def p_print(p):
     'gprint : TkPrint strprint'
-    p[0] = Node("Print", p[2], None)
+    p[0] = Node(" Print", "  %s" % p[2], None)
 
 def p_println(p):
     'gprintln : TkPrintln strprint'
-    p[0] = Node("Println", p[2], None)
+    p[0] = Node(" Println", "  %s" % p[2], None)
 
 def p_strprint(p):
     '''strprint : TkString TkConcat strprint
@@ -290,8 +290,8 @@ def p_strprint(p):
                 | TkId'''
     if (len(p) == 4): 
         #print("Concat\n%s" % p[1])
-        p[0] = Node("Concat", p[1], p[3])
-    else: p[0] = Node(p[1], None, None)
+        p[0] = Node("Concat", "  %s" % p[1], "  %s" % p[3])
+    else: p[0] = Node("%s" % p[1], None, None)
 
 def p_error(p):
     print("Syntax error at '%s'" % p.value)
