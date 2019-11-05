@@ -44,9 +44,9 @@ def p_body(p):
     else: p[0] = Node(p[1], None, None)
 
 #def p_body2(p):
-#	'''body2 : sentence
-#			 | sentcond'''
-	# nodo??
+#   '''body2 : sentence
+#            | sentcond'''
+    # nodo??
 
 def p_start(p):
     ''' start : declaration start
@@ -204,7 +204,6 @@ def p_boolean_exp(p):
     #p[0] = p[2]
 #    p[0] = Node(None, p[2], None)
 
-
 def p_expression_true(p):
     'expression : TkTrue'
     #p[0] = True
@@ -251,16 +250,16 @@ def p_sentence(p):
     p[0] = Node(p[1], None, "Sequencing")
 
 def p_sentence_cond(p):
-	'''sentcond : gif TkSemiColon
-				| gdo TkSemiColon
-				| gfor TkSemiColon'''
-	p[0] = Node(p[1],None,"Sequencing")
+    '''sentcond : gif TkSemiColon
+                | gdo TkSemiColon
+                | gfor TkSemiColon'''
+    p[0] = Node(p[1],None,"Sequencing")
 
 def p_terminal(p):
-	'''terminal : gif
-				| gdo
-				| gfor'''
-	p[0] = Node(p[1],None,None)
+    '''terminal : gif
+                | gdo
+                | gfor'''
+    p[0] = Node(p[1],None,None)
 
 def p_unique(p):
     '''unique : assign
@@ -297,19 +296,7 @@ def p_error(p):
     print("Syntax error at '%s' in line: %s" % (p.value, p.lineno))
     exit(1)
 
-if __name__ == '__main__':
-    if len(sys.argv) != 2:
-        print("Error: Indicar el nombre del archivo a leer")
-        exit(1)
-    elif sys.argv[1][len(sys.argv[1]) - 5:] != ".gusb":
-        print("Error: El archivo indicado no es un archivo de GuardedUSB")
-        exit(1)
-    
-    # Leemos el contenido del archivo
-    content = ""
-    with open(sys.argv[1], 'r') as file:
-        content = file.read()
-
+def parsear(content):
     lexer = lex.lex()
     parser = yacc.yacc()
 
