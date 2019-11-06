@@ -2,6 +2,7 @@
   declare
     a, b, i : int;
     x, y : array[2..5];
+    c, d : bool;
 
   // iterar entre a y b
   read a;
@@ -15,11 +16,12 @@
 
   // iterar sobre los indices del segundo arreglo
   read y;
-  //for j in min(y) to max(y) -->
-  //  |[
-  //    print j || ":" || y[j] || " ";
-  //  ]|
-  //rof;
+  a := y[min(y)];
+  for i in min(y) to max(y) -->
+    |[
+      print i || ":" || y[i] || " "
+    ]|
+  rof;
 
   a := 3+b;
   b := -4;
@@ -43,6 +45,7 @@
   fi;
 
   i := 3;
+  x := 1, 2, 3;
   do i < 10 --> a := 5
   [] a >= 4 --> println b
   [] b == 6 -->

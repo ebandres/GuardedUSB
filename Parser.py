@@ -78,6 +78,7 @@ def p_listid(p):
 
 def p_tipo(p):
     '''tipo : TkInt
+            | TkBool
             | TkArray TkOBracket TkNum TkSoForth TkNum TkCBracket'''
 
 def p_assign_expr(p):
@@ -93,7 +94,6 @@ def p_assign_expr(p):
 
 def p_assign_str(p):
     'assign : TkId TkAsig strexp'
-    #print("String")
     try:
         p[0] = ids[p[1]]
         ids[p[1]] = p[3]
@@ -103,8 +103,8 @@ def p_assign_str(p):
         exit(1)
 
 def p_assign_arr(p):
-    'assign : TkId TkAsig array'
-    #print("Array")
+    '''assign : TkId TkAsig array
+              | TkId TkAsig TkId TkOpenPar TkNum TkTwoPoints TkNum TkClosePar'''
     try:
         p[0] = ids[p[1]]
         ids[p[1]] = p[3]
@@ -114,12 +114,10 @@ def p_assign_arr(p):
         exit(1)
 
 def p_array(p):
-    '''array : TkOBracket inarray TkCBracket
-             | TkOBracket TkNum TkSoForth TkNum TkCBracket'''
-
-def p_iarray(p):
-    '''inarray : TkNum TkComma inarray
-               | TkNum'''
+    '''array : TkNum TkComma array
+             | TkNum'''
+    if len(p) == 4: p[0] = Node(" Literal: %s" % p[1], " %s" % p[3], None)
+    else: p[0] = Node(" Literal: %s" % p[1], None, None)
 
 def p_expression_str(p):
     '''strexp : TkString TkConcat strexp
@@ -171,10 +169,11 @@ def p_expression_fun(p):
         exit(1)
 
 def p_expression_number(p):
-    'expression : TkNum'
-    #print("Literal: %d" % p[1])
+    '''expression : TkNum
+                  | TkId TkOBracket expression TkCBracket'''
     #p[0] = p[1]
-    p[0] = Node("Literal: %d" % p[1], None, None)
+    if len(p) == 2: p[0] = Node("Literal: %d" % p[1], None, None)
+    else: p[0] = Node("EvalArray", "  Ident: %s " % p[1], "  %s" % p[3])
 
 def p_expression_id(p):
     'expression : TkId'
@@ -266,7 +265,7 @@ def p_cycle_for(p):
 def p_cycle_do(p):
     '''gdo : TkDo expression TkArrow unique guard TkOd
 		   | TkDo expression TkArrow block guard TkOd'''
-    p[0] = Node("Do %s" % p[2], p[4],p[5])
+    p[0] = Node("Do\n %s" % p[2], p[4], p[5])
 
 def p_if(p):
     '''gif : TkIf expression TkArrow unique guard TkFi  
@@ -315,28 +314,13 @@ def p_println(p):
     p[0] = Node(" Println", "  %s" % p[2], None)
 
 def p_strprint(p):
-    '''strprint : TkString TkConcat strprint
-                | TkId TkConcat strprint empty
+    '''strprint : strprint TkConcat strprint
                 | TkString
-                | TkId empty'''
+                | expression'''
     if len(p) == 4: 
         #print("Concat\n%s" % p[1])
         p[0] = Node("Concat", "  %s" % p[1], "  %s" % p[3])
-    elif len(p) == 5:
-        try:
-            p[0] = ids[p[1]]
-            p[0] = Node("Concat", "   Ident: %s" % p[1], "   %s" % p[3])
-        except LookupError:
-            print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
-            exit(1)
-    elif len(p) == 3:
-        try:
-            p[0] = ids[p[1]]
-            p[0] = Node("Ident: %s" % p[1], None, None)
-        except LookupError:
-            print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
-            exit(1)
-    else: p[0] = Node("%s" % p[1], None, None)
+    else: p[0] = Node(" %s" % p[1], None, None)
 
 def p_error(p):
     print("Syntax error at '%s' in line: %s" % (p.value, p.lineno))
