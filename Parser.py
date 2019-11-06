@@ -83,20 +83,35 @@ def p_tipo(p):
 def p_assign_expr(p):
     'assign : TkId TkAsig expression'
     #print("Asig")
-    ids[p[1]] = p[3]
-    p[0] = Node("Asig", " Ident: %s" % p[1], " %s" % p[3])
+    try:
+        p[0] = ids[p[1]]
+        ids[p[1]] = p[3]
+        p[0] = Node("Asig", " Ident: %s" % p[1], " %s" % p[3])
+    except LookupError:
+        print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
+        exit(1)
 
 def p_assign_str(p):
     'assign : TkId TkAsig strexp'
     #print("String")
-    ids[p[1]] = p[3]
-    p[0] = Node("AsigStr", "Ident: %s" % p[1], p[3])
+    try:
+        p[0] = ids[p[1]]
+        ids[p[1]] = p[3]
+        p[0] = Node("AsigStr", " Ident: %s" % p[1], " %s" % p[3])
+    except LookupError:
+        print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
+        exit(1)
 
 def p_assign_arr(p):
     'assign : TkId TkAsig array'
     #print("Array")
-    ids[p[1]] = p[3]
-    p[0] = Node("AsigArray", "Ident: %s" % p[1], p[3])
+    try:
+        p[0] = ids[p[1]]
+        ids[p[1]] = p[3]
+        p[0] = Node("AsigArray", " Ident: %s" % p[1], " %s" % p[3])
+    except LookupError:
+        print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
+        exit(1)
 
 def p_array(p):
     '''array : TkOBracket inarray TkCBracket
@@ -148,7 +163,12 @@ def p_expression_fun(p):
                   | TkMin TkOpenPar TkId TkClosePar
                   | TkAtoi TkOpenPar TkId TkClosePar'''
     #print(p[1])
-    p[0] = Node("Exp\n %s" % p[1].capitalize(), "  Ident: %s" % p[3], None)
+    try:
+        p[0] = ids[p[3]]
+        p[0] = Node("Exp\n %s" % p[1].capitalize(), "  Ident: %s" % p[3], None)
+    except LookupError:
+        print("Undefined id '%s' in line %s" % (p[3], p.lineno(3)))
+        exit(1)
 
 def p_expression_number(p):
     'expression : TkNum'
@@ -162,7 +182,7 @@ def p_expression_id(p):
         p[0] = ids[p[1]]
         p[0] = Node("Ident: %s" % p[1], None, None)
     except LookupError:
-        print("Undefined id '%s'" % p[1])
+        print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
         exit(1)
 
 def p_boolean_exp(p):
@@ -231,7 +251,7 @@ def p_read(p):
         p[0] = ids[p[2]]
         p[0] = Node("Read", " Ident: %s" % p[2], None)
     except LookupError:
-        print("Undefined id '%s'" % p[2])
+        print("Undefined id '%s' in line %s" % (p[2], p.lineno(2)))
         exit(1)
 
 def p_cycle_for(p):
@@ -240,7 +260,7 @@ def p_cycle_for(p):
         p[0] = ids[p[2]]
         p[0] = Node("For\n In\n  Ident: %s\n  Exp\n   %s\n  Exp\n   %s" % (p[2], p[4], p[6]), " %s" % p[8], None)
     except LookupError:
-        print("Undefined id '%s'" % p[2])
+        print("Undefined id '%s' in line %s" % (p[2], p.lineno(2)))
         exit(1)
  
 def p_cycle_do(p):
@@ -298,22 +318,22 @@ def p_strprint(p):
                 | TkId TkConcat strprint empty
                 | TkString
                 | TkId empty'''
-    if (len(p) == 4): 
+    if len(p) == 4: 
         #print("Concat\n%s" % p[1])
         p[0] = Node("Concat", "  %s" % p[1], "  %s" % p[3])
     elif len(p) == 5:
         try:
             p[0] = ids[p[1]]
-            p[0] = Node("Concat", "  %s" % p[1], "  %s" % p[3])
+            p[0] = Node("Concat", "   Ident: %s" % p[1], "   %s" % p[3])
         except LookupError:
-            print("Undefined id '%s'" % p[1])
+            print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
             exit(1)
     elif len(p) == 3:
         try:
             p[0] = ids[p[1]]
-            p[0] = Node("%s" % p[1], None, None)
+            p[0] = Node("Ident: %s" % p[1], None, None)
         except LookupError:
-            print("Undefined id '%s'" % p[1])
+            print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
             exit(1)
     else: p[0] = Node("%s" % p[1], None, None)
 
