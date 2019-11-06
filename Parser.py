@@ -103,19 +103,31 @@ def p_assign_str(p):
         exit(1)
 
 def p_assign_arr(p):
-    '''assign : TkId TkAsig array
-              | TkId TkAsig TkId TkOpenPar TkNum TkTwoPoints TkNum TkClosePar'''
+    'assign : TkId TkAsig array'
     try:
         p[0] = ids[p[1]]
         ids[p[1]] = p[3]
-        p[0] = Node("AsigArray", " Ident: %s" % p[1], " %s" % p[3])
+        p[0] = Node("Asig", " Ident: %s" % p[1], p[3])
     except LookupError:
         print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
         exit(1)
 
 def p_array(p):
-    '''array : TkNum TkComma array
-             | TkNum'''
+    '''array : inarray
+             | TkId arrayfun'''
+    if len(p) == 2: p[0] = Node(p[1], None, None)
+    else: p[0] = Node(" AsigArray" , "  Ident: %s" % p[1], p[2])
+
+def p_arrayfn(p):
+    '''arrayfun : TkOpenPar expression TkTwoPoints expression TkClosePar arrayfun
+                | TkOBracket expression TkCBracket
+                | empty'''
+    if len(p) == 7: p[0] = Node("  %s" % p[2], "  %s" % p[4], p[6])
+    elif len(p) == 4: p[0] = Node(" EvalArray\n  %s" % p[2], None, None)
+
+def p_iarray(p):
+    '''inarray : TkNum TkComma inarray
+               | TkNum'''
     if len(p) == 4: p[0] = Node(" Literal: %s" % p[1], " %s" % p[3], None)
     else: p[0] = Node(" Literal: %s" % p[1], None, None)
 
