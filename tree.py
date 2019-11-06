@@ -16,13 +16,19 @@ class Node(object):
 
 		return ret
 		
-		
+	def depth_lc(self, n = 1):
+		try:
+			n = self.lc.depth_lc(n + 1)
+		except:
+			pass
+		return n
 
 # test
 if __name__ == '__main__':
-	t = Node('+',1,2)
-	tt = Node(None,None,None)
+	ttt = Node('+', 3, 4)
+	tt = Node('-',ttt,1)
+	t = Node('+',tt,2)
 
 	print("a")
-	print(tt)
+	print(t.depth_lc())
 	print("b")
