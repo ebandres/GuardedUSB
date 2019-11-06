@@ -264,8 +264,9 @@ def p_cycle_for(p):
         exit(1)
  
 def p_cycle_do(p):
-    'gdo : TkDo expression TkArrow block TkOd'
-    p[0] = Node("Do", p[2], p[4])
+    '''gdo : TkDo expression TkArrow unique guard TkOd
+		   | TkDo expression TkArrow block guard TkOd'''
+    p[0] = Node("Do %s" % p[2], p[4],p[5])
 
 def p_if(p):
     '''gif : TkIf expression TkArrow unique guard TkFi  

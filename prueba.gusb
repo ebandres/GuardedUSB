@@ -43,7 +43,9 @@
   fi;
 
   i := 3;
-  do i < 10 -->
+  do i < 10 --> a := 5
+  [] a >= 4 --> println b
+  [] b == 6 -->
     |[
       read i;
       print "Still here!";
