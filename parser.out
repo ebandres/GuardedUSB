@@ -24,11 +24,11 @@ Rule 18    listatipo -> <empty>
 Rule 19    assign -> TkId TkAsig expression
 Rule 20    assign -> TkId TkAsig strexp
 Rule 21    assign -> TkId TkAsig array
-Rule 22    array -> TkNum TkComma inarray
-Rule 23    array -> TkId arrayfun
-Rule 24    arrayfun -> TkOpenPar expression TkTwoPoints expression TkClosePar arrayfun
-Rule 25    arrayfun -> TkOpenPar expression TkTwoPoints expression TkClosePar
-Rule 26    arrayfun -> TkOBracket expression TkCBracket
+Rule 22    assign -> TkId TkAsig array TkOBracket expression TkCBracket
+Rule 23    array -> TkNum TkComma inarray
+Rule 24    array -> TkId arrayfun
+Rule 25    arrayfun -> TkOpenPar expression TkTwoPoints expression TkClosePar arrayfun
+Rule 26    arrayfun -> TkOpenPar expression TkTwoPoints expression TkClosePar
 Rule 27    inarray -> TkNum TkComma inarray
 Rule 28    inarray -> TkNum
 Rule 29    strexp -> TkString TkConcat strexp
@@ -90,13 +90,13 @@ Terminals, with rules where they appear
 TkAnd                : 49
 TkArray              : 17
 TkArrow              : 56 57 58 59 60 74 75
-TkAsig               : 19 20 21
+TkAsig               : 19 20 21 22
 TkAtoi               : 40
 TkBool               : 16
 TkCBlock             : 1 2
-TkCBracket           : 17 26 42
-TkClosePar           : 24 25 36 37 38 39 40
-TkComma              : 11 12 12 13 22 27
+TkCBracket           : 17 22 42
+TkClosePar           : 25 26 36 37 38 39 40
+TkComma              : 11 12 12 13 23 27
 TkConcat             : 29 79
 TkDeclare            : 1
 TkDiv                : 34
@@ -108,7 +108,7 @@ TkFor                : 56
 TkGeq                : 46
 TkGreater            : 47
 TkGuard              : 74 75
-TkId                 : 10 11 12 13 14 19 20 21 23 37 38 39 40 42 43 55 56
+TkId                 : 10 11 12 13 14 19 20 21 22 24 37 38 39 40 42 43 55 56
 TkIf                 : 59 60
 TkIn                 : 56
 TkInt                : 15
@@ -121,11 +121,11 @@ TkMod                : 35
 TkMult               : 33
 TkNEqual             : 51
 TkNot                : 54
-TkNum                : 17 17 22 27 28 41
+TkNum                : 17 17 23 27 28 41
 TkOBlock             : 1 2
-TkOBracket           : 17 26 42
+TkOBracket           : 17 22 42
 TkOd                 : 57 58
-TkOpenPar            : 24 25 36 37 38 39 40
+TkOpenPar            : 25 26 36 37 38 39 40
 TkOr                 : 48
 TkPlus               : 31
 TkPrint              : 77
@@ -138,26 +138,26 @@ TkSoForth            : 17
 TkString             : 29 30 80
 TkTo                 : 56
 TkTrue               : 52
-TkTwoPoints          : 10 11 12 24 25
+TkTwoPoints          : 10 11 12 25 26
 error                : 
 
 Nonterminals, with rules where they appear
 
-array                : 21
-arrayfun             : 23 24
+array                : 21 22
+arrayfun             : 24 25
 assign               : 61 71
 block                : 56 58 60 75 0
 body                 : 2 3 4 8
 declaration          : 7 8
 empty                : 76
-expression           : 19 24 24 25 25 26 31 31 32 32 33 33 34 34 35 35 36 42 44 44 45 45 46 46 47 47 48 48 49 49 50 50 51 51 54 56 56 57 58 59 60 74 75 81
+expression           : 19 22 25 25 26 26 31 31 32 32 33 33 34 34 35 35 36 42 44 44 45 45 46 46 47 47 48 48 49 49 50 50 51 51 54 56 56 57 58 59 60 74 75 81
 gdo                  : 66 69
 gfor                 : 67 70
 gif                  : 65 68
 gprint               : 62 72
 gprintln             : 63 73
 guard                : 57 58 59 60 74 75
-inarray              : 22 27
+inarray              : 23 27
 listaid              : 11 12 13
 listatipo            : 12
 read                 : 64
@@ -212,6 +212,7 @@ state 2
     (19) assign -> . TkId TkAsig expression
     (20) assign -> . TkId TkAsig strexp
     (21) assign -> . TkId TkAsig array
+    (22) assign -> . TkId TkAsig array TkOBracket expression TkCBracket
     (77) gprint -> . TkPrint strprint
     (78) gprintln -> . TkPrintln strprint
     (55) read -> . TkRead TkId
@@ -287,6 +288,7 @@ state 5
     (19) assign -> . TkId TkAsig expression
     (20) assign -> . TkId TkAsig strexp
     (21) assign -> . TkId TkAsig array
+    (22) assign -> . TkId TkAsig array TkOBracket expression TkCBracket
     (77) gprint -> . TkPrint strprint
     (78) gprintln -> . TkPrintln strprint
     (55) read -> . TkRead TkId
@@ -340,6 +342,7 @@ state 6
     (19) assign -> . TkId TkAsig expression
     (20) assign -> . TkId TkAsig strexp
     (21) assign -> . TkId TkAsig array
+    (22) assign -> . TkId TkAsig array TkOBracket expression TkCBracket
     (77) gprint -> . TkPrint strprint
     (78) gprintln -> . TkPrintln strprint
     (55) read -> . TkRead TkId
@@ -450,6 +453,7 @@ state 16
     (19) assign -> TkId . TkAsig expression
     (20) assign -> TkId . TkAsig strexp
     (21) assign -> TkId . TkAsig array
+    (22) assign -> TkId . TkAsig array TkOBracket expression TkCBracket
 
     TkAsig          shift and go to state 36
 
@@ -680,6 +684,7 @@ state 24
     (19) assign -> . TkId TkAsig expression
     (20) assign -> . TkId TkAsig strexp
     (21) assign -> . TkId TkAsig array
+    (22) assign -> . TkId TkAsig array TkOBracket expression TkCBracket
     (77) gprint -> . TkPrint strprint
     (78) gprintln -> . TkPrintln strprint
     (55) read -> . TkRead TkId
@@ -843,6 +848,7 @@ state 36
     (19) assign -> TkId TkAsig . expression
     (20) assign -> TkId TkAsig . strexp
     (21) assign -> TkId TkAsig . array
+    (22) assign -> TkId TkAsig . array TkOBracket expression TkCBracket
     (31) expression -> . expression TkPlus expression
     (32) expression -> . expression TkMinus expression
     (33) expression -> . expression TkMult expression
@@ -869,8 +875,8 @@ state 36
     (54) expression -> . TkNot expression
     (29) strexp -> . TkString TkConcat strexp
     (30) strexp -> . TkString
-    (22) array -> . TkNum TkComma inarray
-    (23) array -> . TkId arrayfun
+    (23) array -> . TkNum TkComma inarray
+    (24) array -> . TkId arrayfun
 
     TkOpenPar       shift and go to state 40
     TkSize          shift and go to state 41
@@ -1311,6 +1317,7 @@ state 58
     (19) assign -> TkId . TkAsig expression
     (20) assign -> TkId . TkAsig strexp
     (21) assign -> TkId . TkAsig array
+    (22) assign -> TkId . TkAsig array TkOBracket expression TkCBracket
 
     TkTwoPoints     shift and go to state 59
     TkComma         shift and go to state 60
@@ -1345,12 +1352,11 @@ state 61
 
     (42) expression -> TkId . TkOBracket expression TkCBracket
     (43) expression -> TkId .
-    (23) array -> TkId . arrayfun
-    (24) arrayfun -> . TkOpenPar expression TkTwoPoints expression TkClosePar arrayfun
-    (25) arrayfun -> . TkOpenPar expression TkTwoPoints expression TkClosePar
-    (26) arrayfun -> . TkOBracket expression TkCBracket
+    (24) array -> TkId . arrayfun
+    (25) arrayfun -> . TkOpenPar expression TkTwoPoints expression TkClosePar arrayfun
+    (26) arrayfun -> . TkOpenPar expression TkTwoPoints expression TkClosePar
 
-    TkOBracket      shift and go to state 97
+    TkOBracket      shift and go to state 83
     TkPlus          reduce using rule 43 (expression -> TkId .)
     TkMinus         reduce using rule 43 (expression -> TkId .)
     TkMult          reduce using rule 43 (expression -> TkId .)
@@ -1369,9 +1375,9 @@ state 61
     TkGuard         reduce using rule 43 (expression -> TkId .)
     TkFi            reduce using rule 43 (expression -> TkId .)
     TkOd            reduce using rule 43 (expression -> TkId .)
-    TkOpenPar       shift and go to state 99
+    TkOpenPar       shift and go to state 98
 
-    arrayfun                       shift and go to state 98
+    arrayfun                       shift and go to state 97
 
 state 62
 
@@ -1424,18 +1430,20 @@ state 63
 state 64
 
     (21) assign -> TkId TkAsig array .
+    (22) assign -> TkId TkAsig array . TkOBracket expression TkCBracket
 
     TkSemiColon     reduce using rule 21 (assign -> TkId TkAsig array .)
     TkCBlock        reduce using rule 21 (assign -> TkId TkAsig array .)
     TkGuard         reduce using rule 21 (assign -> TkId TkAsig array .)
     TkFi            reduce using rule 21 (assign -> TkId TkAsig array .)
     TkOd            reduce using rule 21 (assign -> TkId TkAsig array .)
+    TkOBracket      shift and go to state 99
 
 
 state 65
 
     (41) expression -> TkNum .
-    (22) array -> TkNum . TkComma inarray
+    (23) array -> TkNum . TkComma inarray
 
     TkPlus          reduce using rule 41 (expression -> TkNum .)
     TkMinus         reduce using rule 41 (expression -> TkNum .)
@@ -2221,6 +2229,7 @@ state 88
     (19) assign -> . TkId TkAsig expression
     (20) assign -> . TkId TkAsig strexp
     (21) assign -> . TkId TkAsig array
+    (22) assign -> . TkId TkAsig array TkOBracket expression TkCBracket
     (77) gprint -> . TkPrint strprint
     (78) gprintln -> . TkPrintln strprint
 
@@ -2247,6 +2256,7 @@ state 89
     (19) assign -> . TkId TkAsig expression
     (20) assign -> . TkId TkAsig strexp
     (21) assign -> . TkId TkAsig array
+    (22) assign -> . TkId TkAsig array TkOBracket expression TkCBracket
     (77) gprint -> . TkPrint strprint
     (78) gprintln -> . TkPrintln strprint
 
@@ -2351,8 +2361,20 @@ state 96
 
 state 97
 
-    (42) expression -> TkId TkOBracket . expression TkCBracket
-    (26) arrayfun -> TkOBracket . expression TkCBracket
+    (24) array -> TkId arrayfun .
+
+    TkOBracket      reduce using rule 24 (array -> TkId arrayfun .)
+    TkSemiColon     reduce using rule 24 (array -> TkId arrayfun .)
+    TkCBlock        reduce using rule 24 (array -> TkId arrayfun .)
+    TkGuard         reduce using rule 24 (array -> TkId arrayfun .)
+    TkFi            reduce using rule 24 (array -> TkId arrayfun .)
+    TkOd            reduce using rule 24 (array -> TkId arrayfun .)
+
+
+state 98
+
+    (25) arrayfun -> TkOpenPar . expression TkTwoPoints expression TkClosePar arrayfun
+    (26) arrayfun -> TkOpenPar . expression TkTwoPoints expression TkClosePar
     (31) expression -> . expression TkPlus expression
     (32) expression -> . expression TkMinus expression
     (33) expression -> . expression TkMult expression
@@ -2391,21 +2413,9 @@ state 97
 
     expression                     shift and go to state 134
 
-state 98
-
-    (23) array -> TkId arrayfun .
-
-    TkSemiColon     reduce using rule 23 (array -> TkId arrayfun .)
-    TkCBlock        reduce using rule 23 (array -> TkId arrayfun .)
-    TkGuard         reduce using rule 23 (array -> TkId arrayfun .)
-    TkFi            reduce using rule 23 (array -> TkId arrayfun .)
-    TkOd            reduce using rule 23 (array -> TkId arrayfun .)
-
-
 state 99
 
-    (24) arrayfun -> TkOpenPar . expression TkTwoPoints expression TkClosePar arrayfun
-    (25) arrayfun -> TkOpenPar . expression TkTwoPoints expression TkClosePar
+    (22) assign -> TkId TkAsig array TkOBracket . expression TkCBracket
     (31) expression -> . expression TkPlus expression
     (32) expression -> . expression TkMinus expression
     (33) expression -> . expression TkMult expression
@@ -2446,7 +2456,7 @@ state 99
 
 state 100
 
-    (22) array -> TkNum TkComma . inarray
+    (23) array -> TkNum TkComma . inarray
     (27) inarray -> . TkNum TkComma inarray
     (28) inarray -> . TkNum
 
@@ -3473,8 +3483,8 @@ state 133
 
 state 134
 
-    (42) expression -> TkId TkOBracket expression . TkCBracket
-    (26) arrayfun -> TkOBracket expression . TkCBracket
+    (25) arrayfun -> TkOpenPar expression . TkTwoPoints expression TkClosePar arrayfun
+    (26) arrayfun -> TkOpenPar expression . TkTwoPoints expression TkClosePar
     (31) expression -> expression . TkPlus expression
     (32) expression -> expression . TkMinus expression
     (33) expression -> expression . TkMult expression
@@ -3489,7 +3499,7 @@ state 134
     (50) expression -> expression . TkEqual expression
     (51) expression -> expression . TkNEqual expression
 
-    TkCBracket      shift and go to state 154
+    TkTwoPoints     shift and go to state 154
     TkPlus          shift and go to state 68
     TkMinus         shift and go to state 69
     TkMult          shift and go to state 70
@@ -3507,8 +3517,7 @@ state 134
 
 state 135
 
-    (24) arrayfun -> TkOpenPar expression . TkTwoPoints expression TkClosePar arrayfun
-    (25) arrayfun -> TkOpenPar expression . TkTwoPoints expression TkClosePar
+    (22) assign -> TkId TkAsig array TkOBracket expression . TkCBracket
     (31) expression -> expression . TkPlus expression
     (32) expression -> expression . TkMinus expression
     (33) expression -> expression . TkMult expression
@@ -3523,7 +3532,7 @@ state 135
     (50) expression -> expression . TkEqual expression
     (51) expression -> expression . TkNEqual expression
 
-    TkTwoPoints     shift and go to state 155
+    TkCBracket      shift and go to state 155
     TkPlus          shift and go to state 68
     TkMinus         shift and go to state 69
     TkMult          shift and go to state 70
@@ -3545,6 +3554,7 @@ state 136
     (28) inarray -> TkNum .
 
     TkComma         shift and go to state 156
+    TkOBracket      reduce using rule 28 (inarray -> TkNum .)
     TkSemiColon     reduce using rule 28 (inarray -> TkNum .)
     TkCBlock        reduce using rule 28 (inarray -> TkNum .)
     TkGuard         reduce using rule 28 (inarray -> TkNum .)
@@ -3554,13 +3564,14 @@ state 136
 
 state 137
 
-    (22) array -> TkNum TkComma inarray .
+    (23) array -> TkNum TkComma inarray .
 
-    TkSemiColon     reduce using rule 22 (array -> TkNum TkComma inarray .)
-    TkCBlock        reduce using rule 22 (array -> TkNum TkComma inarray .)
-    TkGuard         reduce using rule 22 (array -> TkNum TkComma inarray .)
-    TkFi            reduce using rule 22 (array -> TkNum TkComma inarray .)
-    TkOd            reduce using rule 22 (array -> TkNum TkComma inarray .)
+    TkOBracket      reduce using rule 23 (array -> TkNum TkComma inarray .)
+    TkSemiColon     reduce using rule 23 (array -> TkNum TkComma inarray .)
+    TkCBlock        reduce using rule 23 (array -> TkNum TkComma inarray .)
+    TkGuard         reduce using rule 23 (array -> TkNum TkComma inarray .)
+    TkFi            reduce using rule 23 (array -> TkNum TkComma inarray .)
+    TkOd            reduce using rule 23 (array -> TkNum TkComma inarray .)
 
 
 state 138
@@ -3868,44 +3879,8 @@ state 153
 
 state 154
 
-    (42) expression -> TkId TkOBracket expression TkCBracket .
-    (26) arrayfun -> TkOBracket expression TkCBracket .
-
-  ! reduce/reduce conflict for TkSemiColon resolved using rule 26 (arrayfun -> TkOBracket expression TkCBracket .)
-  ! reduce/reduce conflict for TkCBlock resolved using rule 26 (arrayfun -> TkOBracket expression TkCBracket .)
-  ! reduce/reduce conflict for TkGuard resolved using rule 26 (arrayfun -> TkOBracket expression TkCBracket .)
-  ! reduce/reduce conflict for TkFi resolved using rule 26 (arrayfun -> TkOBracket expression TkCBracket .)
-  ! reduce/reduce conflict for TkOd resolved using rule 26 (arrayfun -> TkOBracket expression TkCBracket .)
-    TkPlus          reduce using rule 42 (expression -> TkId TkOBracket expression TkCBracket .)
-    TkMinus         reduce using rule 42 (expression -> TkId TkOBracket expression TkCBracket .)
-    TkMult          reduce using rule 42 (expression -> TkId TkOBracket expression TkCBracket .)
-    TkDiv           reduce using rule 42 (expression -> TkId TkOBracket expression TkCBracket .)
-    TkMod           reduce using rule 42 (expression -> TkId TkOBracket expression TkCBracket .)
-    TkLess          reduce using rule 42 (expression -> TkId TkOBracket expression TkCBracket .)
-    TkLeq           reduce using rule 42 (expression -> TkId TkOBracket expression TkCBracket .)
-    TkGeq           reduce using rule 42 (expression -> TkId TkOBracket expression TkCBracket .)
-    TkGreater       reduce using rule 42 (expression -> TkId TkOBracket expression TkCBracket .)
-    TkOr            reduce using rule 42 (expression -> TkId TkOBracket expression TkCBracket .)
-    TkAnd           reduce using rule 42 (expression -> TkId TkOBracket expression TkCBracket .)
-    TkEqual         reduce using rule 42 (expression -> TkId TkOBracket expression TkCBracket .)
-    TkNEqual        reduce using rule 42 (expression -> TkId TkOBracket expression TkCBracket .)
-    TkSemiColon     reduce using rule 26 (arrayfun -> TkOBracket expression TkCBracket .)
-    TkCBlock        reduce using rule 26 (arrayfun -> TkOBracket expression TkCBracket .)
-    TkGuard         reduce using rule 26 (arrayfun -> TkOBracket expression TkCBracket .)
-    TkFi            reduce using rule 26 (arrayfun -> TkOBracket expression TkCBracket .)
-    TkOd            reduce using rule 26 (arrayfun -> TkOBracket expression TkCBracket .)
-
-  ! TkSemiColon     [ reduce using rule 42 (expression -> TkId TkOBracket expression TkCBracket .) ]
-  ! TkCBlock        [ reduce using rule 42 (expression -> TkId TkOBracket expression TkCBracket .) ]
-  ! TkGuard         [ reduce using rule 42 (expression -> TkId TkOBracket expression TkCBracket .) ]
-  ! TkFi            [ reduce using rule 42 (expression -> TkId TkOBracket expression TkCBracket .) ]
-  ! TkOd            [ reduce using rule 42 (expression -> TkId TkOBracket expression TkCBracket .) ]
-
-
-state 155
-
-    (24) arrayfun -> TkOpenPar expression TkTwoPoints . expression TkClosePar arrayfun
-    (25) arrayfun -> TkOpenPar expression TkTwoPoints . expression TkClosePar
+    (25) arrayfun -> TkOpenPar expression TkTwoPoints . expression TkClosePar arrayfun
+    (26) arrayfun -> TkOpenPar expression TkTwoPoints . expression TkClosePar
     (31) expression -> . expression TkPlus expression
     (32) expression -> . expression TkMinus expression
     (33) expression -> . expression TkMult expression
@@ -3943,6 +3918,17 @@ state 155
     TkNot           shift and go to state 49
 
     expression                     shift and go to state 166
+
+state 155
+
+    (22) assign -> TkId TkAsig array TkOBracket expression TkCBracket .
+
+    TkSemiColon     reduce using rule 22 (assign -> TkId TkAsig array TkOBracket expression TkCBracket .)
+    TkCBlock        reduce using rule 22 (assign -> TkId TkAsig array TkOBracket expression TkCBracket .)
+    TkGuard         reduce using rule 22 (assign -> TkId TkAsig array TkOBracket expression TkCBracket .)
+    TkFi            reduce using rule 22 (assign -> TkId TkAsig array TkOBracket expression TkCBracket .)
+    TkOd            reduce using rule 22 (assign -> TkId TkAsig array TkOBracket expression TkCBracket .)
+
 
 state 156
 
@@ -4084,8 +4070,8 @@ state 165
 
 state 166
 
-    (24) arrayfun -> TkOpenPar expression TkTwoPoints expression . TkClosePar arrayfun
-    (25) arrayfun -> TkOpenPar expression TkTwoPoints expression . TkClosePar
+    (25) arrayfun -> TkOpenPar expression TkTwoPoints expression . TkClosePar arrayfun
+    (26) arrayfun -> TkOpenPar expression TkTwoPoints expression . TkClosePar
     (31) expression -> expression . TkPlus expression
     (32) expression -> expression . TkMinus expression
     (33) expression -> expression . TkMult expression
@@ -4120,6 +4106,7 @@ state 167
 
     (27) inarray -> TkNum TkComma inarray .
 
+    TkOBracket      reduce using rule 27 (inarray -> TkNum TkComma inarray .)
     TkSemiColon     reduce using rule 27 (inarray -> TkNum TkComma inarray .)
     TkCBlock        reduce using rule 27 (inarray -> TkNum TkComma inarray .)
     TkGuard         reduce using rule 27 (inarray -> TkNum TkComma inarray .)
@@ -4139,6 +4126,7 @@ state 168
     (19) assign -> . TkId TkAsig expression
     (20) assign -> . TkId TkAsig strexp
     (21) assign -> . TkId TkAsig array
+    (22) assign -> . TkId TkAsig array TkOBracket expression TkCBracket
     (77) gprint -> . TkPrint strprint
     (78) gprintln -> . TkPrintln strprint
 
@@ -4179,19 +4167,18 @@ state 171
 
 state 172
 
-    (24) arrayfun -> TkOpenPar expression TkTwoPoints expression TkClosePar . arrayfun
-    (25) arrayfun -> TkOpenPar expression TkTwoPoints expression TkClosePar .
-    (24) arrayfun -> . TkOpenPar expression TkTwoPoints expression TkClosePar arrayfun
-    (25) arrayfun -> . TkOpenPar expression TkTwoPoints expression TkClosePar
-    (26) arrayfun -> . TkOBracket expression TkCBracket
+    (25) arrayfun -> TkOpenPar expression TkTwoPoints expression TkClosePar . arrayfun
+    (26) arrayfun -> TkOpenPar expression TkTwoPoints expression TkClosePar .
+    (25) arrayfun -> . TkOpenPar expression TkTwoPoints expression TkClosePar arrayfun
+    (26) arrayfun -> . TkOpenPar expression TkTwoPoints expression TkClosePar
 
-    TkSemiColon     reduce using rule 25 (arrayfun -> TkOpenPar expression TkTwoPoints expression TkClosePar .)
-    TkCBlock        reduce using rule 25 (arrayfun -> TkOpenPar expression TkTwoPoints expression TkClosePar .)
-    TkGuard         reduce using rule 25 (arrayfun -> TkOpenPar expression TkTwoPoints expression TkClosePar .)
-    TkFi            reduce using rule 25 (arrayfun -> TkOpenPar expression TkTwoPoints expression TkClosePar .)
-    TkOd            reduce using rule 25 (arrayfun -> TkOpenPar expression TkTwoPoints expression TkClosePar .)
-    TkOpenPar       shift and go to state 99
-    TkOBracket      shift and go to state 179
+    TkOBracket      reduce using rule 26 (arrayfun -> TkOpenPar expression TkTwoPoints expression TkClosePar .)
+    TkSemiColon     reduce using rule 26 (arrayfun -> TkOpenPar expression TkTwoPoints expression TkClosePar .)
+    TkCBlock        reduce using rule 26 (arrayfun -> TkOpenPar expression TkTwoPoints expression TkClosePar .)
+    TkGuard         reduce using rule 26 (arrayfun -> TkOpenPar expression TkTwoPoints expression TkClosePar .)
+    TkFi            reduce using rule 26 (arrayfun -> TkOpenPar expression TkTwoPoints expression TkClosePar .)
+    TkOd            reduce using rule 26 (arrayfun -> TkOpenPar expression TkTwoPoints expression TkClosePar .)
+    TkOpenPar       shift and go to state 98
 
     arrayfun                       shift and go to state 178
 
@@ -4207,7 +4194,7 @@ state 173
     TkFi            reduce using rule 9 (empty -> .)
     TkOd            reduce using rule 9 (empty -> .)
 
-    guard                          shift and go to state 180
+    guard                          shift and go to state 179
     empty                          shift and go to state 146
 
 state 174
@@ -4222,14 +4209,14 @@ state 174
     TkFi            reduce using rule 9 (empty -> .)
     TkOd            reduce using rule 9 (empty -> .)
 
-    guard                          shift and go to state 181
+    guard                          shift and go to state 180
     empty                          shift and go to state 146
 
 state 175
 
     (56) gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block . TkRof
 
-    TkRof           shift and go to state 182
+    TkRof           shift and go to state 181
 
 
 state 176
@@ -4255,57 +4242,17 @@ state 177
 
 state 178
 
-    (24) arrayfun -> TkOpenPar expression TkTwoPoints expression TkClosePar arrayfun .
+    (25) arrayfun -> TkOpenPar expression TkTwoPoints expression TkClosePar arrayfun .
 
-    TkSemiColon     reduce using rule 24 (arrayfun -> TkOpenPar expression TkTwoPoints expression TkClosePar arrayfun .)
-    TkCBlock        reduce using rule 24 (arrayfun -> TkOpenPar expression TkTwoPoints expression TkClosePar arrayfun .)
-    TkGuard         reduce using rule 24 (arrayfun -> TkOpenPar expression TkTwoPoints expression TkClosePar arrayfun .)
-    TkFi            reduce using rule 24 (arrayfun -> TkOpenPar expression TkTwoPoints expression TkClosePar arrayfun .)
-    TkOd            reduce using rule 24 (arrayfun -> TkOpenPar expression TkTwoPoints expression TkClosePar arrayfun .)
+    TkOBracket      reduce using rule 25 (arrayfun -> TkOpenPar expression TkTwoPoints expression TkClosePar arrayfun .)
+    TkSemiColon     reduce using rule 25 (arrayfun -> TkOpenPar expression TkTwoPoints expression TkClosePar arrayfun .)
+    TkCBlock        reduce using rule 25 (arrayfun -> TkOpenPar expression TkTwoPoints expression TkClosePar arrayfun .)
+    TkGuard         reduce using rule 25 (arrayfun -> TkOpenPar expression TkTwoPoints expression TkClosePar arrayfun .)
+    TkFi            reduce using rule 25 (arrayfun -> TkOpenPar expression TkTwoPoints expression TkClosePar arrayfun .)
+    TkOd            reduce using rule 25 (arrayfun -> TkOpenPar expression TkTwoPoints expression TkClosePar arrayfun .)
 
 
 state 179
-
-    (26) arrayfun -> TkOBracket . expression TkCBracket
-    (31) expression -> . expression TkPlus expression
-    (32) expression -> . expression TkMinus expression
-    (33) expression -> . expression TkMult expression
-    (34) expression -> . expression TkDiv expression
-    (35) expression -> . expression TkMod expression
-    (36) expression -> . TkOpenPar expression TkClosePar
-    (37) expression -> . TkSize TkOpenPar TkId TkClosePar
-    (38) expression -> . TkMax TkOpenPar TkId TkClosePar
-    (39) expression -> . TkMin TkOpenPar TkId TkClosePar
-    (40) expression -> . TkAtoi TkOpenPar TkId TkClosePar
-    (41) expression -> . TkNum
-    (42) expression -> . TkId TkOBracket expression TkCBracket
-    (43) expression -> . TkId
-    (44) expression -> . expression TkLess expression
-    (45) expression -> . expression TkLeq expression
-    (46) expression -> . expression TkGeq expression
-    (47) expression -> . expression TkGreater expression
-    (48) expression -> . expression TkOr expression
-    (49) expression -> . expression TkAnd expression
-    (50) expression -> . expression TkEqual expression
-    (51) expression -> . expression TkNEqual expression
-    (52) expression -> . TkTrue
-    (53) expression -> . TkFalse
-    (54) expression -> . TkNot expression
-
-    TkOpenPar       shift and go to state 40
-    TkSize          shift and go to state 41
-    TkMax           shift and go to state 43
-    TkMin           shift and go to state 44
-    TkAtoi          shift and go to state 45
-    TkNum           shift and go to state 46
-    TkId            shift and go to state 42
-    TkTrue          shift and go to state 47
-    TkFalse         shift and go to state 48
-    TkNot           shift and go to state 49
-
-    expression                     shift and go to state 183
-
-state 180
 
     (74) guard -> TkGuard expression TkArrow unique guard .
 
@@ -4313,7 +4260,7 @@ state 180
     TkOd            reduce using rule 74 (guard -> TkGuard expression TkArrow unique guard .)
 
 
-state 181
+state 180
 
     (75) guard -> TkGuard expression TkArrow block guard .
 
@@ -4321,59 +4268,10 @@ state 181
     TkOd            reduce using rule 75 (guard -> TkGuard expression TkArrow block guard .)
 
 
-state 182
+state 181
 
     (56) gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof .
 
     TkSemiColon     reduce using rule 56 (gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof .)
     TkCBlock        reduce using rule 56 (gfor -> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof .)
 
-
-state 183
-
-    (26) arrayfun -> TkOBracket expression . TkCBracket
-    (31) expression -> expression . TkPlus expression
-    (32) expression -> expression . TkMinus expression
-    (33) expression -> expression . TkMult expression
-    (34) expression -> expression . TkDiv expression
-    (35) expression -> expression . TkMod expression
-    (44) expression -> expression . TkLess expression
-    (45) expression -> expression . TkLeq expression
-    (46) expression -> expression . TkGeq expression
-    (47) expression -> expression . TkGreater expression
-    (48) expression -> expression . TkOr expression
-    (49) expression -> expression . TkAnd expression
-    (50) expression -> expression . TkEqual expression
-    (51) expression -> expression . TkNEqual expression
-
-    TkCBracket      shift and go to state 184
-    TkPlus          shift and go to state 68
-    TkMinus         shift and go to state 69
-    TkMult          shift and go to state 70
-    TkDiv           shift and go to state 71
-    TkMod           shift and go to state 72
-    TkLess          shift and go to state 73
-    TkLeq           shift and go to state 74
-    TkGeq           shift and go to state 75
-    TkGreater       shift and go to state 76
-    TkOr            shift and go to state 77
-    TkAnd           shift and go to state 78
-    TkEqual         shift and go to state 79
-    TkNEqual        shift and go to state 80
-
-
-state 184
-
-    (26) arrayfun -> TkOBracket expression TkCBracket .
-
-    TkSemiColon     reduce using rule 26 (arrayfun -> TkOBracket expression TkCBracket .)
-    TkCBlock        reduce using rule 26 (arrayfun -> TkOBracket expression TkCBracket .)
-    TkGuard         reduce using rule 26 (arrayfun -> TkOBracket expression TkCBracket .)
-    TkFi            reduce using rule 26 (arrayfun -> TkOBracket expression TkCBracket .)
-    TkOd            reduce using rule 26 (arrayfun -> TkOBracket expression TkCBracket .)
-
-WARNING: 
-WARNING: Conflicts:
-WARNING: 
-WARNING: reduce/reduce conflict in state 154 resolved using rule (arrayfun -> TkOBracket expression TkCBracket)
-WARNING: rejected rule (expression -> TkId TkOBracket expression TkCBracket) in state 154

@@ -110,7 +110,8 @@ def p_assign_str(p):
         exit(1)
 
 def p_assign_arr(p):
-    'assign : TkId TkAsig array'
+    '''assign : TkId TkAsig array
+              | TkId TkAsig array TkOBracket expression TkCBracket'''
     try:
         p[0] = ids[p[1]]
         ids[p[1]] = p[3]
@@ -127,11 +128,9 @@ def p_array(p):
 
 def p_arrayfn(p):
     '''arrayfun : TkOpenPar expression TkTwoPoints expression TkClosePar arrayfun
-                | TkOpenPar expression TkTwoPoints expression TkClosePar
-                | TkOBracket expression TkCBracket'''
+                | TkOpenPar expression TkTwoPoints expression TkClosePar'''
     if len(p) == 7: p[0] = Node("  %s" % p[2], "  %s" % p[4], p[6])
-    elif len(p) == 6: p[0] = Node("  %s" % p[2], "  %s" % p[4], None)
-    else: p[0] = Node(" EvalArray\n  %s" % p[2], None, None)
+    else: p[0] = Node("  %s" % p[2], "  %s" % p[4], None)
 
 def p_iarray(p):
     '''inarray : TkNum TkComma inarray
