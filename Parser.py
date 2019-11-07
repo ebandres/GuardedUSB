@@ -105,15 +105,15 @@ def p_assign_expr(p):
         print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
         exit(1)
 
-def p_assign_str(p):
-    'assign : TkId TkAsig strexp'
-    try:
-        p[0] = ids[p[1]]
-        ids[p[1]] = p[3]
-        p[0] = Node("AsigStr", " Ident: %s" % p[1], " %s" % p[3])
-    except LookupError:
-        print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
-        exit(1)
+#def p_assign_str(p):
+#    'assign : TkId TkAsig strexp'
+#    try:
+#        p[0] = ids[p[1]]
+#        ids[p[1]] = p[3]
+#        p[0] = Node("AsigStr", " Ident: %s" % p[1], " %s" % p[3])
+#    except LookupError:
+#        print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
+#        exit(1)
 
 def p_assign_arr(p):
     '''assign : TkId TkAsig array
@@ -144,10 +144,10 @@ def p_iarray(p):
     if len(p) == 4: p[0] = Node(" Literal: %s" % p[1], " %s" % p[3], None)
     else: p[0] = Node(" Literal: %s" % p[1], None, None)
 
-def p_expression_str(p):
-    '''strexp : TkString TkConcat strexp
-              | TkString''' 
-    if len(p) == 4: p[0] = Node("Concat", p[1], p[3])
+#def p_expression_str(p):
+#    '''strexp : TkString TkConcat strexp
+#              | TkString''' 
+#    if len(p) == 4: p[0] = Node("Concat", p[1], p[3])
 
 def p_expression_bin(p):
     '''expression : expression TkPlus expression
