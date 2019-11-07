@@ -62,11 +62,15 @@ def p_empty(p):
 
 def p_declaration(p):
     '''declaration : TkId TkTwoPoints tipo TkSemiColon
-                   | TkId TkComma listaid TkTwoPoints tipo TkSemiColon'''
+                   | TkId TkComma listaid TkTwoPoints tipo TkSemiColon
+                   | TkId TkComma listaid TkTwoPoints tipo TkComma listatipo TkSemiColon'''
     ids[p[1]] = 0
     if len(p) == 5: p[0] = Node("  Ident: %s" % p[1], None, " Sequencing")
-    else: p[0] = Node("  Ident: %s" % p[1], p[3], " Sequencing")
-    #print("Ident: %s" % p[1])
+    elif len(p) == 7: p[0] = Node("  Ident: %s" % p[1], p[3], " Sequencing")
+    else:
+        p[0] = Node("  Ident: %s" % p[1], p[3], " Sequencing")
+        type_n = Node(p[5], p[7], None).depth_lc()
+        print("TEEEEEEEEEEST %d %d" % (type_n, p[0].depth_lc()))
 
 def p_listid(p):
     '''listaid : TkId TkComma listaid
@@ -80,6 +84,9 @@ def p_tipo(p):
     '''tipo : TkInt
             | TkBool
             | TkArray TkOBracket TkNum TkSoForth TkNum TkCBracket'''
+
+def p_listtipo(p):
+    '''listatipo : '''
 
 def p_assign_expr(p):
     'assign : TkId TkAsig expression'
@@ -113,17 +120,18 @@ def p_assign_arr(p):
         exit(1)
 
 def p_array(p):
-    '''array : inarray
+    '''array : TkNum TkComma inarray
              | TkId arrayfun'''
     if len(p) == 2: p[0] = Node(p[1], None, None)
     else: p[0] = Node(" AsigArray" , "  Ident: %s" % p[1], p[2])
 
 def p_arrayfn(p):
     '''arrayfun : TkOpenPar expression TkTwoPoints expression TkClosePar arrayfun
-                | TkOBracket expression TkCBracket
-                | empty'''
+                | TkOpenPar expression TkTwoPoints expression TkClosePar
+                | TkOBracket expression TkCBracket'''
     if len(p) == 7: p[0] = Node("  %s" % p[2], "  %s" % p[4], p[6])
-    elif len(p) == 4: p[0] = Node(" EvalArray\n  %s" % p[2], None, None)
+    elif len(p) == 6: p[0] = Node("  %s" % p[2], "  %s" % p[4], None)
+    else: p[0] = Node(" EvalArray\n  %s" % p[2], None, None)
 
 def p_iarray(p):
     '''inarray : TkNum TkComma inarray
@@ -276,7 +284,7 @@ def p_cycle_for(p):
  
 def p_cycle_do(p):
     '''gdo : TkDo expression TkArrow unique guard TkOd
-		   | TkDo expression TkArrow block guard TkOd'''
+           | TkDo expression TkArrow block guard TkOd'''
     p[0] = Node("Do\n %s" % p[2], p[4], p[5])
 
 def p_if(p):
