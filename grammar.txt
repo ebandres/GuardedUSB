@@ -1,0 +1,104 @@
+block --> TkOBlock TkDeclare start TkCBlock
+        | TkOBlock body TkCBlock
+
+body --> sentence body
+       | sentcond body
+       | unique
+       | terminal
+
+start --> declaration start
+        | declaration body
+
+empty --> lambda
+
+declaration --> TkId TkTwoPoints tipo TkSemiColon
+              | TkId TkComma listaid TkTwoPoints tipo TkSemiColon
+              | TkId TkComma listaid TkTwoPoints tipo TkComma listatipo TkSemiColon
+
+listaid --> TkId TkComma listaid
+		  | TkId
+
+listatipo --> tipo TkComma listatipo
+            | tipo
+
+tipo --> TkInt
+       | TkArray TkOBracket TkNum TkSoForth TkNum TkCBracket
+       | TkBool
+
+assign --> TkId TkAsig expression
+		 | TkId TkAsig array
+		 | TkId TkAsig array TkOBracket expression TkCBracket
+
+array --> TkNum TkComma inarray
+        | TkId arrayfun
+
+inarray --> TkNum TkComma inarray
+          | TkNum
+
+arrayfun --> TkOpenPar expression TkTwoPoints expression TkClosePar arrayfun
+            | TkOpenPar expression TkTwoPoints expression TkClosePar
+
+
+
+expression --> expression TkPlus expression
+             | expression TkMinus expression
+             | expression TkMult expression
+             | expression TkDiv expression
+             | expression TkMod expression
+             | TkSize TkOpenPar TkId TkClosePar
+             | TkMax TkOpenPar TkId TkClosePar
+             | TkMin TkOpenPar TkId TkClosePar
+             | TkAtoi TkOpenPar TkId TkClosePar
+			 | expression TkLess expression
+             | expression TkLeq expression
+             | expression TkGeq expression
+             | expression TkGreater expression
+             | expression TkOr expression
+             | expression TkAnd expression
+             | expression TkEqual expression
+             | expression TkNEqual expression
+             | TkNot expression
+             | TkNum
+             | TkId
+             | TkTrue
+             | TkFalse
+
+read --> TkRead TkId
+
+gfor --> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof
+
+gdo --> TkDo expression TkArrow unique guard TkOd
+	  | TkDo expression TkArrow block guard TkOd
+
+gif --> TkIf expression TkArrow unique guard TkFi  
+      | TkIf expression TkArrow block guard TkFi
+
+guard --> TkGuard expression TkArrow unique guard
+        | TkGuard expression TkArrow block guard
+        | empty
+
+sentence --> assign TkSemiColon
+           | gprint TkSemiColon
+           | gprintln TkSemiColon
+           | read TkSemiColon
+
+sentcond --> gif TkSemiColon
+           | gdo TkSemiColon
+           | gfor TkSemiColon
+
+terminal --> gif
+           | gdo
+           | gfor
+
+unique --> assign
+         | gprint
+         | gprintln
+
+gprint --> TkPrint strprint
+
+gprintln --> TkPrintln strprint
+
+strprint --> strprint TkConcat strprint
+		   | TkString
+		   | expression
+
