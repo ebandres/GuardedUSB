@@ -69,14 +69,18 @@ def p_declaration(p):
     elif len(p) == 7: p[0] = Node("  Ident: %s" % p[1], p[3], " Sequencing")
     else:
         p[0] = Node("  Ident: %s" % p[1], p[3], " Sequencing")
-        type_n = Node(p[5], p[7], None).depth_lc()
-        print("TEEEEEEEEEEST %d %d" % (type_n, p[0].depth_lc()))
+
+        type_n = Node(p[5], p[7], None).depth_lc() + 1
+        if p[0].depth_lc() != type_n: 
+            print("Syntax error: number of variables and types in declaration don't match")
+            exit(1)
+        
 
 def p_listid(p):
     '''listaid : TkId TkComma listaid
                | TkId'''
     ids[p[1]] = 0
-    if len(p) == 4: p[0] = Node(None, "  Ident: %s" % p[1], p[3])
+    if len(p) == 4: p[0] = Node("  Ident: %s" % p[1], p[3], None)
     else: p[0] = Node(None, "  Ident: %s" % p[1], None)
     #print("Ident: %s" % p[1])
 
@@ -86,7 +90,9 @@ def p_tipo(p):
             | TkArray TkOBracket TkNum TkSoForth TkNum TkCBracket'''
 
 def p_listtipo(p):
-    '''listatipo : '''
+    '''listatipo : tipo TkComma listatipo
+                 | tipo'''
+    if len(p) == 4: p[0] = Node(p[1], p[3], None)
 
 def p_assign_expr(p):
     'assign : TkId TkAsig expression'
