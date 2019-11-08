@@ -93,6 +93,7 @@ terminal --> gif
 unique --> assign
          | gprint
          | gprintln
+         | read
 
 gprint --> TkPrint strprint
 

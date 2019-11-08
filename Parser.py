@@ -70,6 +70,8 @@ def p_declaration(p):
     else:
         p[0] = Node("  Ident: %s" % p[1], p[3], " Sequencing")
 
+        # Revisamos que en caso de declarar varias variables de diferente tipo, que el numero
+        # de variables sea igual al numero de tipos
         type_n = Node(p[5], p[7], None).depth_lc() + 1
         if p[0].depth_lc() != type_n: 
             print("Syntax error: number of variables and types in declaration don't match")
@@ -98,6 +100,7 @@ def p_assign_expr(p):
     'assign : TkId TkAsig expression'
     #print("Asig")
     try:
+        # Revisamos que la id ya haya sido declarada, si no mostramos un error y terminamos
         p[0] = ids[p[1]]
         ids[p[1]] = p[3]
         p[0] = Node("Asig", " Ident: %s" % p[1], " %s" % p[3])
@@ -320,7 +323,8 @@ def p_terminal(p):
 def p_unique(p):
     '''unique : assign
               | gprint
-              | gprintln'''
+              | gprintln
+              | read'''
     p[0] = Node(p[1], None, None)
 
 def p_guard(p):

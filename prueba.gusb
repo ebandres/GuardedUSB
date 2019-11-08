@@ -38,9 +38,9 @@
   [] min(y) >= b \/ b >= max(y) -->
     |[
       declare z : array[2..3];
-      println a || b
-    //z := z(2:a)(3:b);
-    //println "array[" || min(z) || ".." || max(z) || "]"
+      println a || b;
+      z := z(2:a)(3:b);
+      println "array[" || min(z) || ".." || max(z) || "]"
     ]|
   fi;
 
