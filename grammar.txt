@@ -6,14 +6,16 @@ body --> sentence body
        | unique
        | terminal
 
-start --> declaration start
-        | declaration body
+start --> secd body
 
 empty --> lambda
 
-declaration --> TkId TkTwoPoints tipo TkSemiColon
-              | TkId TkComma listaid TkTwoPoints tipo TkSemiColon
-              | TkId TkComma listaid TkTwoPoints tipo TkComma listatipo TkSemiColon
+secd --> declaration TkSemiColon secd
+       | declaration
+
+declaration --> TkId TkTwoPoints tipo 
+              | TkId TkComma listaid TkTwoPoints tipo 
+              | TkId TkComma listaid TkTwoPoints tipo TkComma listatipo 
 
 listaid --> TkId TkComma listaid
 		      | TkId

@@ -51,22 +51,33 @@ def p_body(p):
 #            | sentcond'''
     # nodo??
 
+#def p_start(p):
+#    ''' start : declaration start
+#              | declaration body'''
+#    p[0] = Node(None, p[1], p[2])
+
 def p_start(p):
-    ''' start : declaration start
-              | declaration body'''
-    p[0] = Node(None, p[1], p[2])
+    '''start : secd body'''
+    p[0] = Node(None,p[1],p[2])
+
 
 def p_empty(p):
     'empty :'
     pass
 
+def p_sec_declare(p):
+    '''secd : declaration TkSemiColon secd
+            | declaration'''
+    if len(p) == 4: p[0] = Node(p[1],p[3],None)
+    else: p[0] = Node(p[1],None,None)
+
 def p_declaration(p):
-    '''declaration : TkId TkTwoPoints tipo TkSemiColon
-                   | TkId TkComma listaid TkTwoPoints tipo TkSemiColon
-                   | TkId TkComma listaid TkTwoPoints tipo TkComma listatipo TkSemiColon'''
+    '''declaration : TkId TkTwoPoints tipo 
+                   | TkId TkComma listaid TkTwoPoints tipo 
+                   | TkId TkComma listaid TkTwoPoints tipo TkComma listatipo'''
     ids[p[1]] = 0
-    if len(p) == 5: p[0] = Node("  Ident: %s" % p[1], None, " Sequencing")
-    elif len(p) == 7: p[0] = Node("  Ident: %s" % p[1], p[3], " Sequencing")
+    if len(p) == 4: p[0] = Node("  Ident: %s" % p[1], None, " Sequencing")
+    elif len(p) == 6: p[0] = Node("  Ident: %s" % p[1], p[3], " Sequencing")
     else:
         p[0] = Node("  Ident: %s" % p[1], p[3], " Sequencing")
 
