@@ -2,7 +2,7 @@
   declare
     a, b, i : int;
     x, y : array[2..5];
-    c, d, e, f, g : bool, int, int, array[2..5], bool;
+    c, d, e, f, g : bool, int, int, array[2..5], bool
 
   // iterar entre a y b
   read a;
@@ -37,7 +37,7 @@
   [] min(y) < b /\ b < max(y) --> println a
   [] min(y) >= b \/ b >= max(y) -->
     |[
-      declare z : array[2..3];
+      declare z : array[2..3]
       println a || b;
       z := z(2:a)(3:b);
       println "array[" || min(z) || ".." || max(z) || "]"

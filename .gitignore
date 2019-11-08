@@ -124,3 +124,5 @@ dmypy.json
 *.tar
 *.gz
 declaracion de autenticidad.jpeg
+parser.out
+parsetab.py
