@@ -126,3 +126,5 @@ dmypy.json
 declaracion de autenticidad.jpeg
 parser.out
 parsetab.py
+*.out
+*.py
