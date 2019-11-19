@@ -128,3 +128,5 @@ parser.out
 parsetab.py
 *.out
 *.py
+*.pdf
+*.pdf

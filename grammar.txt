@@ -18,7 +18,7 @@ declaration --> TkId TkTwoPoints tipo
               | TkId TkComma listaid TkTwoPoints tipo TkComma listatipo 
 
 listaid --> TkId TkComma listaid
-		      | TkId
+          | TkId
 
 listatipo --> tipo TkComma listatipo
             | tipo
@@ -28,8 +28,8 @@ tipo --> TkInt
        | TkBool
 
 assign --> TkId TkAsig expression
-		     | TkId TkAsig array
-		     | TkId TkAsig array TkOBracket expression TkCBracket
+         | TkId TkAsig array
+         | TkId TkAsig array TkOBracket expression TkCBracket
 
 array --> TkNum TkComma inarray
         | TkId arrayfun
@@ -70,7 +70,7 @@ read --> TkRead TkId
 gfor --> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof
 
 gdo --> TkDo expression TkArrow unique guard TkOd
-	    | TkDo expression TkArrow block guard TkOd
+      | TkDo expression TkArrow block guard TkOd
 
 gif --> TkIf expression TkArrow unique guard TkFi  
       | TkIf expression TkArrow block guard TkFi
@@ -102,6 +102,6 @@ gprint --> TkPrint strprint
 gprintln --> TkPrintln strprint
 
 strprint --> strprint TkConcat strprint
-		       | TkString
-		       | expression
+	   | TkString
+	   | expression
 
