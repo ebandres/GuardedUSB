@@ -23,6 +23,9 @@ class Node(object):
 			pass
 		return n
 
+	def list_lc(self):
+		
+
 # test
 if __name__ == '__main__':
 	ttt = Node('+', 3, 4)

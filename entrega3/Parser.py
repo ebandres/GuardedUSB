@@ -6,6 +6,7 @@ import ply.yacc as yacc
 import ply.lex as lex
 import sys
 from tree import Node
+from Symbols import Symbol
 # Del lexer importamos los tokens
 from Lexer import *
 
@@ -26,19 +27,43 @@ precedence = (
 # Ultima posicion es la mas reciente
 # Cuando termina el bloque se elimina su entrada respectiva
 ids_list = []
+def inIdsList(list, var):
+    for dic in reversed(list):
+        try:
+            tmp = dic[var]
+            print("id found, return", var, tmp)
+            return tmp
+        except LookupError:
+            pass
+    print("id NOT found", var)
+    return None
+
+def setIdsList(list, var, new):
+    for dic in reversed(list):
+        try:
+            tmp = dic[var]
+            dic[var] = new
+            return True
+        except LookupError:
+            pass
+    return False
 
 # Gramatica
 
 def p_code(p):
-    '''block : TkOBlock TkDeclare table start TkCBlock
-             | TkOBlock table body TkCBlock'''
-    if len(p) == 6: 
+    '''block : TkOBlock TkDeclare table start poptable TkCBlock
+             | TkOBlock table body poptable TkCBlock'''
+    if len(p) == 7: 
         p[0] = Node("Block\n Declare", None, "%s" % p[4])
     else: p[0] = Node("Block", None, p[3])
 
 def p_table(p):
     'table :'
     ids_list.append({})
+
+def p_poptable(p):
+    'poptable :'
+    ids_list.pop()
  
 def p_body(p):
     '''body : sentence body
@@ -66,15 +91,24 @@ def p_declaration(p):
     '''declaration : TkId TkTwoPoints tipo 
                    | TkId TkComma listaid TkTwoPoints tipo 
                    | TkId TkComma listaid TkTwoPoints tipo TkComma listatipo'''
+    #print("inIdsList", p[1])
+    #if inIdsList(ids_list, p[1]) != None:
+    #    print("Error: Variable %s already declared" % p[1])
+    #    exit(1)
     try:
         p[0] = ids_list[len(ids_list) - 1][p[1]]
-        print(p[1])
+        print("Error: Variable %s already declared" % p[1])
         exit(1)
     except LookupError:
         pass
     ids_list[len(ids_list) - 1][p[1]] = 0
-    if len(p) == 4: p[0] = Node("  Ident: %s" % p[1], None, " Sequencing")
-    elif len(p) == 6: p[0] = Node("  Ident: %s" % p[1], p[3], " Sequencing")
+    if len(p) == 4:
+        ids_list[len(ids_list) - 1][p[1]] = p[3]
+        p[0] = Node("  Ident: %s" % p[1], None, " Sequencing")
+    elif len(p) == 6:
+        ids_list[len(ids_list) - 1][p[1]] = p[5]
+        print(list_lc(p[3]))
+        p[0] = Node("  Ident: %s" % p[1], p[3], " Sequencing")
     else:
         p[0] = Node("  Ident: %s" % p[1], p[3], " Sequencing")
 
@@ -89,15 +123,35 @@ def p_declaration(p):
 def p_listid(p):
     '''listaid : TkId TkComma listaid
                | TkId'''
+    #print("inIdsList", p[1])
+    #if inIdsList(ids_list, p[1]) != None:
+    #    print("Error: Variable %s already declared" % p[1])
+    #    exit(1)
+    try:
+        p[0] = ids_list[len(ids_list) - 1][p[1]]
+        print("Error: Variable %s already declared" % p[1])
+        exit(1)
+    except LookupError:
+        pass
     ids_list[len(ids_list) - 1][p[1]] = 0
     if len(p) == 4: p[0] = Node("  Ident: %s" % p[1], p[3], None)
     else: p[0] = Node(None, "  Ident: %s" % p[1], None)
     #print("Ident: %s" % p[1])
 
-def p_tipo(p):
-    '''tipo : TkInt
-            | TkBool
-            | TkArray TkOBracket TkNum TkSoForth TkNum TkCBracket'''
+def p_tipo_int(p):
+    'tipo : TkInt'
+    p[0] = Symbol('int', 0)
+
+def p_tipo_bool(p):
+    'tipo : TkBool'
+    p[0] = Symbol('bool', False)
+
+def p_tipo_array(p):
+    'tipo : TkArray TkOBracket TkNum TkSoForth TkNum TkCBracket'
+    if p[3] > p[5]: 
+        print("Error in array declaration: %s < %s" % (p[5], p[3]))
+        exit(1)
+    p[0] = Symbol('array', [0] * (p[5] - p[3] + 1))
 
 def p_listtipo(p):
     '''listatipo : tipo TkComma listatipo
@@ -107,14 +161,17 @@ def p_listtipo(p):
 def p_assign_expr(p):
     'assign : TkId TkAsig expression'
     #print("Asig")
-    try:
-        # Revisamos que la id ya haya sido declarada, si no mostramos un error y terminamos
-        p[0] = ids_list[len(ids_list) - 1][p[1]]
-        ids_list[len(ids_list) - 1][p[1]] = p[3]
-        p[0] = Node("Asig", " Ident: %s" % p[1], " %s" % p[3])
-    except LookupError:
+    if inIdsList(ids_list, p[1]) == None:
         print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
         exit(1)
+    #try:
+    #    # Revisamos que la id ya haya sido declarada, si no mostramos un error y terminamos
+    #    p[0] = ids_list[len(ids_list) - 1][p[1]]
+    #    ids_list[len(ids_list) - 1][p[1]] = p[3]
+    #    p[0] = Node("Asig", " Ident: %s" % p[1], " %s" % p[3])
+    #except LookupError:
+    #    print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
+    #    exit(1)
 
 def p_assign_arr(p):
     '''assign : TkId TkAsig array
