@@ -1,58 +1,20 @@
 |[
   declare
-    a, b, i : int;
-    x, y : array[2..5];
-    c, d, e, f, g : bool, int, int, array[2..5], bool
+    x, y, z, p : int, int, array[0..2], int
 
-  // iterar entre a y b
-  read a;
-  read b;
-  //x := x(2:a)(3:b);
-  for i in a to b -->
+  x := 1;
+  y := 1;
+  z := 4, 3, 2;
+  if x==y -->
+    x := z[2]+1
+  [] x != y -->
     |[
-      println "Variable \"i\" es igual a: " || i
+      declare
+        a : int;
+        q : array[2..2]
+      a := 3;
+      q := atoi(q);
+      println a
     ]|
-  rof;
-
-  // iterar sobre los indices del segundo arreglo
-  read y;
-  a := y[min(y)];
-  for i in min(y) to max(y) -->
-    |[
-      print i || ":" || y[i] || " "
-    ]|
-  rof;
-
-  a := 3+b;
-  b := -4;
-
-  if  a > b --> println a
-  [] b < a -->
-    |[
-      b := 0
-    ]|
-  fi;
-
-  if min(x) <= b /\ b <= max(x) --> println b
-  [] min(y) < b /\ b < max(y) --> println a
-  [] min(y) >= b \/ b >= max(y) -->
-    |[
-      declare z : array[2..3]
-      println a || b;
-      z := z(2:a)(3:b);
-      println "array[" || min(z) || ".." || max(z) || "]"
-    ]|
-  fi;
-
-  i := 3;
-  x := x(2:a)(3:b)[1];
-  do i < 10 --> a := 5
-  [] a >= 4 --> println b
-  [] b == 6 -->
-    |[
-      read i;
-      print "Still here!";
-      i := i+1
-    ]|
-  od
+  fi
 ]|

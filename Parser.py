@@ -22,21 +22,23 @@ precedence = (
     ('right', 'TkArrow')
     )
 
-# Diccionario de ids
-ids = { }
+# Lista de tablas de simbolos (1 tabla por bloque)
+# Ultima posicion es la mas reciente
+# Cuando termina el bloque se elimina su entrada respectiva
+ids_list = []
 
 # Gramatica
 
 def p_code(p):
-    '''block : TkOBlock TkDeclare start TkCBlock
-             | TkOBlock body TkCBlock'''
-#            | TkOBlock body2 TkCBlock'''
-    #if len(p) == 5: print("Block\nDeclare")
-    #else: print("Block")
-    if len(p) == 5: 
-        p[0] = Node("Block\n Declare", None, "%s" % p[3])
-    else: p[0] = Node("Block", None, p[2])
-    # para len(p) == 4??
+    '''block : TkOBlock TkDeclare table start TkCBlock
+             | TkOBlock table body TkCBlock'''
+    if len(p) == 6: 
+        p[0] = Node("Block\n Declare", None, "%s" % p[4])
+    else: p[0] = Node("Block", None, p[3])
+
+def p_table(p):
+    'table :'
+    ids_list.append({})
  
 def p_body(p):
     '''body : sentence body
@@ -46,20 +48,9 @@ def p_body(p):
     if len(p) == 3: p[0] = Node(p[1], None, p[2])
     else: p[0] = Node(p[1], None, None)
 
-#def p_body2(p):
-#   '''body2 : sentence
-#            | sentcond'''
-    # nodo??
-
-#def p_start(p):
-#    ''' start : declaration start
-#              | declaration body'''
-#    p[0] = Node(None, p[1], p[2])
-
 def p_start(p):
     '''start : secd body'''
     p[0] = Node(None,p[1],p[2])
-
 
 def p_empty(p):
     'empty :'
@@ -75,7 +66,13 @@ def p_declaration(p):
     '''declaration : TkId TkTwoPoints tipo 
                    | TkId TkComma listaid TkTwoPoints tipo 
                    | TkId TkComma listaid TkTwoPoints tipo TkComma listatipo'''
-    ids[p[1]] = 0
+    try:
+        p[0] = ids_list[len(ids_list) - 1][p[1]]
+        print(p[1])
+        exit(1)
+    except LookupError:
+        pass
+    ids_list[len(ids_list) - 1][p[1]] = 0
     if len(p) == 4: p[0] = Node("  Ident: %s" % p[1], None, " Sequencing")
     elif len(p) == 6: p[0] = Node("  Ident: %s" % p[1], p[3], " Sequencing")
     else:
@@ -92,7 +89,7 @@ def p_declaration(p):
 def p_listid(p):
     '''listaid : TkId TkComma listaid
                | TkId'''
-    ids[p[1]] = 0
+    ids_list[len(ids_list) - 1][p[1]] = 0
     if len(p) == 4: p[0] = Node("  Ident: %s" % p[1], p[3], None)
     else: p[0] = Node(None, "  Ident: %s" % p[1], None)
     #print("Ident: %s" % p[1])
@@ -112,29 +109,19 @@ def p_assign_expr(p):
     #print("Asig")
     try:
         # Revisamos que la id ya haya sido declarada, si no mostramos un error y terminamos
-        p[0] = ids[p[1]]
-        ids[p[1]] = p[3]
+        p[0] = ids_list[len(ids_list) - 1][p[1]]
+        ids_list[len(ids_list) - 1][p[1]] = p[3]
         p[0] = Node("Asig", " Ident: %s" % p[1], " %s" % p[3])
     except LookupError:
         print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
         exit(1)
 
-#def p_assign_str(p):
-#    'assign : TkId TkAsig strexp'
-#    try:
-#        p[0] = ids[p[1]]
-#        ids[p[1]] = p[3]
-#        p[0] = Node("AsigStr", " Ident: %s" % p[1], " %s" % p[3])
-#    except LookupError:
-#        print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
-#        exit(1)
-
 def p_assign_arr(p):
     '''assign : TkId TkAsig array
               | TkId TkAsig array TkOBracket expression TkCBracket'''
     try:
-        p[0] = ids[p[1]]
-        ids[p[1]] = p[3]
+        p[0] = ids_list[len(ids_list) - 1][p[1]]
+        ids_list[len(ids_list) - 1][p[1]] = p[3]
         p[0] = Node("Asig", " Ident: %s" % p[1], p[3])
     except LookupError:
         print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
@@ -143,7 +130,7 @@ def p_assign_arr(p):
 def p_array(p):
     '''array : TkNum TkComma inarray
              | TkId arrayfun'''
-    if len(p) == 2: p[0] = Node(p[1], None, None)
+    if len(p) == 4: p[0] = Node(" Literal: %s" % p[1], p[3], None)
     else: p[0] = Node(" AsigArray" , "  Ident: %s" % p[1], p[2])
 
 def p_arrayfn(p):
@@ -156,7 +143,7 @@ def p_iarray(p):
     '''inarray : TkNum TkComma inarray
                | TkNum'''
     if len(p) == 4: p[0] = Node(" Literal: %s" % p[1], " %s" % p[3], None)
-    else: p[0] = Node(" Literal: %s" % p[1], None, None)
+    else: p[0] = Node("Literal: %s" % p[1], None, None)
 
 #def p_expression_str(p):
 #    '''strexp : TkString TkConcat strexp
@@ -201,7 +188,7 @@ def p_expression_fun(p):
                   | TkAtoi TkOpenPar TkId TkClosePar'''
     #print(p[1])
     try:
-        p[0] = ids[p[3]]
+        p[0] = ids_list[len(ids_list) - 1][p[3]]
         p[0] = Node("Exp\n %s" % p[1].capitalize(), "  Ident: %s" % p[3], None)
     except LookupError:
         print("Undefined id '%s' in line %s" % (p[3], p.lineno(3)))
@@ -217,7 +204,7 @@ def p_expression_number(p):
 def p_expression_id(p):
     'expression : TkId'
     try:
-        p[0] = ids[p[1]]
+        p[0] = ids_list[len(ids_list) - 1][p[1]]
         p[0] = Node("Ident: %s" % p[1], None, None)
     except LookupError:
         print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
@@ -286,7 +273,7 @@ def p_read(p):
     #print("Read\nIdent: %s" % p[2])
     # Sequencing en TkSemiColon?
     try:
-        p[0] = ids[p[2]]
+        p[0] = ids_list[len(ids_list) - 1][p[2]]
         p[0] = Node("Read", " Ident: %s" % p[2], None)
     except LookupError:
         print("Undefined id '%s' in line %s" % (p[2], p.lineno(2)))
@@ -295,7 +282,7 @@ def p_read(p):
 def p_cycle_for(p):
     'gfor : TkFor TkId TkIn expression TkTo expression TkArrow block TkRof'
     try:
-        p[0] = ids[p[2]]
+        p[0] = ids_list[len(ids_list) - 1][p[2]]
         p[0] = Node("For\n In\n  Ident: %s\n  Exp\n   %s\n  Exp\n   %s" % (p[2], p[4], p[6]), " %s" % p[8], None)
     except LookupError:
         print("Undefined id '%s' in line %s" % (p[2], p.lineno(2)))
