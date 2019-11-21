@@ -61,7 +61,10 @@ def p_table(p):
 
 def p_poptable(p):
     'poptable :'
-    ids_list.pop()
+    tmp = ids_list.pop()
+    print("POPPED LIST")
+    print(tmp)
+    print("-----------")
  
 def p_body(p):
     '''body : sentence body
@@ -137,7 +140,7 @@ def p_declaration(p):
             exit(1)
 
         tmp1 = str(p[3])
-        tmp2 = p[7].list_lc()
+        tmp2 = p[7].list_lc([])
         while "Ident:" in tmp1: tmp1 = tmp1.replace("Ident:", "")
         tmp1 = tmp1.split()
         for var, typ in zip(tmp1, tmp2):
@@ -193,30 +196,47 @@ def p_assign_expr(p):
         exit(1)
     print("AAAAA")
     print(p[3])
-    #try:
-    #    # Revisamos que la id ya haya sido declarada, si no mostramos un error y terminamos
-    #    p[0] = ids_list[len(ids_list) - 1][p[1]]
-    #    ids_list[len(ids_list) - 1][p[1]] = p[3]
-    #    p[0] = Node("Asig", " Ident: %s" % p[1], " %s" % p[3])
-    #except LookupError:
-    #    print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
-    #    exit(1)
+    # Revisamos que la id ya haya sido declarada, si no mostramos un error y terminamos
+    try:
+        if inIdsList(ids_list, p[1]).var_type == p[3].p.var_type:
+            print("!! TRUE !!")
+            setIdsList(ids_list, p[1], p[3])
+            print("SET", p[1])
+            print(ids_list)
+            print("---")
+        else:
+            print("Error: wrong type")
+    except:
+        print("!! except !!")
+    
+    p[0] = Node("Asig", " Ident: %s" % p[1], " %s" % p[3])
+
 
 def p_assign_arr(p):
     '''assign : TkId TkAsig array
               | TkId TkAsig array TkOBracket expression TkCBracket'''
-    try:
-        p[0] = ids_list[len(ids_list) - 1][p[1]]
-        ids_list[len(ids_list) - 1][p[1]] = p[3]
-        p[0] = Node("Asig", " Ident: %s" % p[1], p[3])
-    except LookupError:
+    found_id = inIdsList(ids_list, p[1])
+    if found_id == None:
         print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
         exit(1)
+    elif found_id.var_type != p[3].sp.var_type:
+        print("Error: wrong type")
+
+    #try:
+    #    p[0] = ids_list[len(ids_list) - 1][p[1]]
+    #    ids_list[len(ids_list) - 1][p[1]] = p[3]
+    #    p[0] = Node("Asig", " Ident: %s" % p[1], p[3])
+    #except LookupError:
+    #    print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
+    #    exit(1)
 
 def p_array(p):
     '''array : TkNum TkComma inarray
              | TkId arrayfun'''
-    if len(p) == 4: p[0] = Node(" Literal: %s" % p[1], p[3], None)
+    if len(p) == 4: 
+        p[0] = Node(Symbol('int', p[1]), p[3], None)
+        tmp = Symbol('array', [p[0].p] + p[3].list_lc())
+        p[0].set_sp(tmp)
     else: p[0] = Node(" AsigArray" , "  Ident: %s" % p[1], p[2])
 
 def p_arrayfn(p):
@@ -228,8 +248,8 @@ def p_arrayfn(p):
 def p_iarray(p):
     '''inarray : TkNum TkComma inarray
                | TkNum'''
-    if len(p) == 4: p[0] = Node(" Literal: %s" % p[1], " %s" % p[3], None)
-    else: p[0] = Node("Literal: %s" % p[1], None, None)
+    if len(p) == 4: p[0] = Node(Symbol('int', p[1]), p[3], None)
+    else: p[0] = Node(Symbol('int', p[1]), None, None)
 
 #def p_expression_str(p):
 #    '''strexp : TkString TkConcat strexp
@@ -285,8 +305,8 @@ def p_expression_number(p):
                   | TkId TkOBracket expression TkCBracket'''
     #p[0] = p[1]
     if len(p) == 2: 
-        p[0] = Node("Literal: %d" % p[1], None, None)
 
+        p[0] = Node(Symbol('int', p[1]), None, None)
     else: p[0] = Node("EvalArray", "  Ident: %s " % p[1], "  %s" % p[3])
 
 def p_expression_id(p):
@@ -343,13 +363,13 @@ def p_expression_true(p):
     'expression : TkTrue'
     #p[0] = True
     #print("True")
-    p[0] = Node("True", None, None)
+    p[0] = Node(Symbol('bool', True), None, None)
 
 def p_expression_false(p):
     'expression : TkFalse'
     #p[0] = False
     #print("False")
-    p[0] = Node("False", None, None)
+    p[0] = Node(Symbol('bool', False), None, None)
 
 
 def p_expression_not(p):
@@ -448,3 +468,4 @@ def parsear(content):
     out = str(parser.parse(content, lexer=lexer))
     while "\n\n" in out: out = out.replace("\n\n", "\n")
     print(out)
+

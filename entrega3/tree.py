@@ -1,8 +1,11 @@
 class Node(object):
-	def __init__(self, p, lc, rc):
+	def __init__(self, p, lc, rc, sp = None, slc = None, src = None):
 		self.p = p
 		self.lc = lc
 		self.rc = rc
+		self.sp = sp
+		self.slc = slc
+		self.src = src
 
 	def __repr__(self):
 		ret = ""
@@ -15,7 +18,25 @@ class Node(object):
 			ret += str(self.rc)
 
 		return ret
+
+	def set_p(self, new):
+		self.p = new
 		
+	def set_lc(self, new):
+		self.lc = new
+
+	def set_rc(self, new):
+		self.rc = new
+
+	def set_sp(self, new):
+		self.sp = new
+
+	def set_slc(self, new):
+		self.slc = new
+
+	def set_src(self, new):
+		self.src = new
+
 	def depth_lc(self, n = 1):
 		try:
 			n = self.lc.depth_lc(n + 1)
