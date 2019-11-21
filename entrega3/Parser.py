@@ -31,11 +31,9 @@ def inIdsList(list, var):
     for dic in reversed(list):
         try:
             tmp = dic[var]
-            print("id found, return", var, tmp)
             return tmp
         except LookupError:
             pass
-    print("id NOT found", var)
     return None
 
 def setIdsList(list, var, new):
@@ -105,20 +103,48 @@ def p_declaration(p):
     if len(p) == 4:
         ids_list[len(ids_list) - 1][p[1]] = p[3]
         p[0] = Node("  Ident: %s" % p[1], None, " Sequencing")
+        print("LEN 4")
+        print(ids_list)
+        print("-----")
     elif len(p) == 6:
+        # Agregamos la primera id a la tabla
         ids_list[len(ids_list) - 1][p[1]] = p[5]
-        print(list_lc(p[3]))
+
+        # Creamos el arbol para imprimir
         p[0] = Node("  Ident: %s" % p[1], p[3], " Sequencing")
+
+        # Tomamos las ids y las convertimos en una lista
+        tmp = str(p[3])
+        while "Ident:" in tmp: tmp = tmp.replace("Ident:", "")
+        tmp = tmp.split()
+        # Agregamos cada id a la tabla
+        for var in tmp:
+            ids_list[len(ids_list) - 1][var] = p[5]
+        print("LEN 6")
+        print(ids_list)
+        print("-----")
     else:
+        # Agregamos la primera id a la tabla
+        ids_list[len(ids_list) - 1][p[1]] = p[5]
+
         p[0] = Node("  Ident: %s" % p[1], p[3], " Sequencing")
 
         # Revisamos que en caso de declarar varias variables de diferente tipo, que el numero
         # de variables sea igual al numero de tipos
-        type_n = Node(p[5], p[7], None).depth_lc() + 1
+        type_n = Node(p[5], p[7], None).depth_lc()
         if p[0].depth_lc() != type_n: 
             print("Syntax error: number of variables and types in declaration don't match")
             exit(1)
-        
+
+        tmp1 = str(p[3])
+        tmp2 = p[7].list_lc()
+        while "Ident:" in tmp1: tmp1 = tmp1.replace("Ident:", "")
+        tmp1 = tmp1.split()
+        for var, typ in zip(tmp1, tmp2):
+            ids_list[len(ids_list) - 1][var] = typ
+        print("ELSE")
+        print(ids_list)
+        print("-----")
 
 def p_listid(p):
     '''listaid : TkId TkComma listaid
@@ -157,6 +183,7 @@ def p_listtipo(p):
     '''listatipo : tipo TkComma listatipo
                  | tipo'''
     if len(p) == 4: p[0] = Node(p[1], p[3], None)
+    else: p[0] = Node(p[1], None, None)
 
 def p_assign_expr(p):
     'assign : TkId TkAsig expression'
@@ -164,6 +191,8 @@ def p_assign_expr(p):
     if inIdsList(ids_list, p[1]) == None:
         print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
         exit(1)
+    print("AAAAA")
+    print(p[3])
     #try:
     #    # Revisamos que la id ya haya sido declarada, si no mostramos un error y terminamos
     #    p[0] = ids_list[len(ids_list) - 1][p[1]]
@@ -255,7 +284,9 @@ def p_expression_number(p):
     '''expression : TkNum
                   | TkId TkOBracket expression TkCBracket'''
     #p[0] = p[1]
-    if len(p) == 2: p[0] = Node("Literal: %d" % p[1], None, None)
+    if len(p) == 2: 
+        p[0] = Node("Literal: %d" % p[1], None, None)
+
     else: p[0] = Node("EvalArray", "  Ident: %s " % p[1], "  %s" % p[3])
 
 def p_expression_id(p):

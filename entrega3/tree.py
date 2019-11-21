@@ -23,8 +23,13 @@ class Node(object):
 			pass
 		return n
 
-	def list_lc(self):
-		
+	def list_lc(self, l = []):
+		l.append(self.p)
+		try:
+			self.lc.list_lc(l)	
+		except:
+			pass
+		return l	
 
 # test
 if __name__ == '__main__':
