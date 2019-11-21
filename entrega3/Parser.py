@@ -200,9 +200,10 @@ def p_assign_expr(p):
     try:
         if inIdsList(ids_list, p[1]).var_type == p[3].p.var_type:
             print("!! TRUE !!")
-            setIdsList(ids_list, p[1], p[3])
+            setIdsList(ids_list, p[1], p[3].p)
             print("SET", p[1])
             print(ids_list)
+            print(type(p[3].p))
             print("---")
         else:
             print("Error: wrong type")
@@ -219,7 +220,14 @@ def p_assign_arr(p):
     if found_id == None:
         print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
         exit(1)
-    elif found_id.var_type != p[3].sp.var_type:
+    elif found_id.var_type == p[3].sp.var_type:
+        print("!! TRUE array !!")
+        setIdsList(ids_list, p[1], p[3].sp)
+        print("SET", p[1])
+        print(ids_list)
+        print(p[3].sp)
+        print("---")
+    else:
         print("Error: wrong type")
 
     #try:
