@@ -4,11 +4,11 @@
     a, b, c, d : int
 
   x := 1;
-  y := 1;
+  y := 3 + 2;
   p := true;
   z := 4, 3, 2;
   if x==y -->
-    x := z[2]+1
+    x := 1 + true
   [] x != y -->
     |[
       declare

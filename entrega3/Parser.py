@@ -198,15 +198,18 @@ def p_assign_expr(p):
     print(p[3])
     # Revisamos que la id ya haya sido declarada, si no mostramos un error y terminamos
     try:
-        if inIdsList(ids_list, p[1]).var_type == p[3].p.var_type:
+        if inIdsList(ids_list, p[1]).var_type == p[3].sp.var_type:
             print("!! TRUE !!")
-            setIdsList(ids_list, p[1], p[3].p)
+            setIdsList(ids_list, p[1], p[3].sp)
             print("SET", p[1])
             print(ids_list)
-            print(type(p[3].p))
+            print(type(p[3].sp))
             print("---")
         else:
-            print("Error: wrong type")
+            print("Error: TypeError in line %s" % p.lineno(1))
+            exit(1)
+    except SystemExit:
+        exit(1)
     except:
         print("!! except !!")
     
@@ -221,14 +224,15 @@ def p_assign_arr(p):
         print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
         exit(1)
     elif found_id.var_type == p[3].sp.var_type:
-        print("!! TRUE array !!")
+        print("!! TRUE array asig !!")
         setIdsList(ids_list, p[1], p[3].sp)
         print("SET", p[1])
         print(ids_list)
         print(p[3].sp)
         print("---")
     else:
-        print("Error: wrong type")
+        print("Error: TypeError in line %s" % p.lineno(1))
+        exit(1)
 
     #try:
     #    p[0] = ids_list[len(ids_list) - 1][p[1]]
@@ -270,30 +274,33 @@ def p_expression_bin(p):
                   | expression TkMult expression
                   | expression TkDiv expression
                   | expression TkMod expression'''
-                                                
-    #print("Exp")
+         
+    # Revisamos que el tipo de las expresiones sea entero                                      
+    if p[1].sp.var_type != 'int' or p[3].sp.var_type != 'int':
+        print("Error: TypeError in line %s" % p.lineno(0))
+        exit(1)
+
     if p[2] == '+'   :
-        #print("Plus")
         #p[0] = p[1] + p[3]
-        p[0] = Node("Exp\n Plus", "  %s" % p[1], "  %s" % p[3])
+        p[0] = Node("Exp\n Plus", "  %s" % p[1], "  %s" % p[3], Symbol('int', p[1].sp.value + p[3].sp.value), p[1].sp, p[3].sp)
     elif p[2] == '-' : 
         #p[0] = p[1] - p[3]
-        p[0] = Node("Exp\n Minus", "  %s" % p[1], "  %s" % p[3])
+        p[0] = Node("Exp\n Minus", "  %s" % p[1], "  %s" % p[3], Symbol('int', p[1].sp.value - p[3].sp.value), p[1].sp, p[3].sp)
     elif p[2] == '*' : 
         #p[0] = p[1] * p[3]
-        p[0] = Node("Exp\n Mult", "  %s" % p[1], "  %s" % p[3])
+        p[0] = Node("Exp\n Mult", "  %s" % p[1], "  %s" % p[3], Symbol('int', p[1].sp.value * p[3].sp.value), p[1].sp, p[3].sp)
     elif p[2] == '/' : 
         #p[0] = p[1] / p[3]
-        p[0] = Node("Exp\n Div", "  %s" % p[1], "  %s" % p[3])
+        p[0] = Node("Exp\n Div", "  %s" % p[1], "  %s" % p[3], Symbol('int', p[1].sp.value / p[3].sp.value), p[1].sp, p[3].sp)
     elif p[2] == '%' : 
         #p[0] = p[1] % p[3]
-        p[0] = Node("Exp\n Mod", "  %s" % p[1], "  %s" % p[3])
+        p[0] = Node("Exp\n Mod", "  %s" % p[1], "  %s" % p[3], Symbol('int', p[1].sp.value % p[3].sp.value), p[1].sp, p[3].sp)
 
 
 def p_expression_group(p):
     'expression : TkOpenPar expression TkClosePar'
     #p[0] = p[2]
-    p[0] = Node(None, p[2], None)
+    p[0] = Node(p[2], None, None, p[2].sp)
 
 def p_expression_fun(p):
     '''expression : TkSize TkOpenPar TkId TkClosePar
@@ -313,8 +320,7 @@ def p_expression_number(p):
                   | TkId TkOBracket expression TkCBracket'''
     #p[0] = p[1]
     if len(p) == 2: 
-
-        p[0] = Node(Symbol('int', p[1]), None, None)
+        p[0] = Node(" Literal: %s" % p[1], None, None, Symbol('int', p[1]))
     else: p[0] = Node("EvalArray", "  Ident: %s " % p[1], "  %s" % p[3])
 
 def p_expression_id(p):
@@ -371,13 +377,13 @@ def p_expression_true(p):
     'expression : TkTrue'
     #p[0] = True
     #print("True")
-    p[0] = Node(Symbol('bool', True), None, None)
+    p[0] = Node(" Bool: true", None, None, Symbol('bool', True))
 
 def p_expression_false(p):
     'expression : TkFalse'
     #p[0] = False
     #print("False")
-    p[0] = Node(Symbol('bool', False), None, None)
+    p[0] = Node(" Bool: false", None, None, Symbol('bool', False))
 
 
 def p_expression_not(p):
