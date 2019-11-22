@@ -300,26 +300,23 @@ def p_expression_bin(p):
         print("Error: TypeError1 in line %s" % p.lineno(2))
         exit(1)
 
+    # Creamos el arbol y le asignamos los Symbol de las expresiones correspondientes (lc y rc)
+    # y un Symbol nuevo con el resultado de la op
     if p[2] == '+'   :
-        # 
         p[0] = Node("Exp\n Plus", "  %s" % p[1], "  %s" % p[3], Symbol('int', p[1].sp.value + p[3].sp.value), p[1].sp, p[3].sp)
     elif p[2] == '-' : 
-        #p[0] = p[1] - p[3]
         p[0] = Node("Exp\n Minus", "  %s" % p[1], "  %s" % p[3], Symbol('int', p[1].sp.value - p[3].sp.value), p[1].sp, p[3].sp)
     elif p[2] == '*' : 
-        #p[0] = p[1] * p[3]
         p[0] = Node("Exp\n Mult", "  %s" % p[1], "  %s" % p[3], Symbol('int', p[1].sp.value * p[3].sp.value), p[1].sp, p[3].sp)
     elif p[2] == '/' : 
-        #p[0] = p[1] / p[3]
         p[0] = Node("Exp\n Div", "  %s" % p[1], "  %s" % p[3], Symbol('int', p[1].sp.value / p[3].sp.value), p[1].sp, p[3].sp)
     elif p[2] == '%' : 
-        #p[0] = p[1] % p[3]
         p[0] = Node("Exp\n Mod", "  %s" % p[1], "  %s" % p[3], Symbol('int', p[1].sp.value % p[3].sp.value), p[1].sp, p[3].sp)
 
 
 def p_expression_group(p):
     'expression : TkOpenPar expression TkClosePar'
-    #p[0] = p[2]
+    # Creamos el arbol con el valor del Symbol
     p[0] = Node(p[2], None, None, p[2].sp)
 
 def p_expression_fun(p):
@@ -327,7 +324,7 @@ def p_expression_fun(p):
                   | TkMax TkOpenPar TkId TkClosePar
                   | TkMin TkOpenPar TkId TkClosePar
                   | TkAtoi TkOpenPar TkId TkClosePar'''
-    #print(p[1])
+    # POR COMPLETAR
     try:
         p[0] = ids_list[len(ids_list) - 1][p[3]]
         p[0] = Node("Exp\n %s" % p[1].capitalize(), "  Ident: %s" % p[3], None)
@@ -338,13 +335,16 @@ def p_expression_fun(p):
 def p_expression_number(p):
     '''expression : TkNum
                   | TkId TkOBracket expression TkCBracket'''
-    #p[0] = p[1]
     if len(p) == 2: 
+        # Caso 1 Creamos el arbol con el Symbol del int
         p[0] = Node(" Literal: %s" % p[1], None, None, Symbol('int', p[1]))
-    else: p[0] = Node("EvalArray", "  Ident: %s " % p[1], "  %s" % p[3])
+    else: 
+        # Caso array[exp] - POR TERMINAR
+        p[0] = Node("EvalArray", "  Ident: %s " % p[1], "  %s" % p[3])
 
 def p_expression_id(p):
     'expression : TkId'
+    # POR TERMINAR Buscar valor de la id para asignar
     try:
         p[0] = ids_list[len(ids_list) - 1][p[1]]
         p[0] = Node("Ident: %s" % p[1], None, None)
@@ -362,7 +362,7 @@ def p_boolean_exp(p):
                   | expression TkEqual expression
                   | expression TkNEqual expression'''
 
-    #print("Bool")
+    # POR TERMINAR Igual que exp bin pero con booleanos
     if p[2] == '<'    : 
         #p[0] = p[1] < p[3]
         p[0] = Node("Less", "  %s" % p[1], "  %s" % p[3])
@@ -388,32 +388,26 @@ def p_boolean_exp(p):
         #p[0] = p[1] != p[3]
         p[0] = Node("NEqual", "  %s" % p[1], "  %s" % p[3])
 
-#def p_boolean_group(p):
-#    'boolean : TkOpenPar boolean TkClosePar'
-    #p[0] = p[2]
-#    p[0] = Node(None, p[2], None)
-
 def p_expression_true(p):
     'expression : TkTrue'
-    #p[0] = True
-    #print("True")
+    # Creamos el arbol y un Symbol con True
     p[0] = Node(" Bool: true", None, None, Symbol('bool', True))
 
 def p_expression_false(p):
     'expression : TkFalse'
-    #p[0] = False
-    #print("False")
+    # Creamos el arbol y un Symbol con False
     p[0] = Node(" Bool: false", None, None, Symbol('bool', False))
-
 
 def p_expression_not(p):
     'expression : TkNot expression'
+    # POR TERMINAR
     p[0] = Node("Not", p[2], None)
+
+# DE AQUI PA BAJO NI IDEA
 
 def p_read(p):
     'read : TkRead TkId'
-    #print("Read\nIdent: %s" % p[2])
-    # Sequencing en TkSemiColon?
+    # NI IDEA
     try:
         p[0] = ids_list[len(ids_list) - 1][p[2]]
         p[0] = Node("Read", " Ident: %s" % p[2], None)
