@@ -26,7 +26,13 @@ precedence = (
 # Lista de tablas de simbolos (1 tabla por bloque)
 # Ultima posicion es la mas reciente
 # Cuando termina el bloque se elimina su entrada respectiva
+# Los elementos de las tablas tienen la forma 'var' : SYMBOL
+# SYMBOL contiene tipo y valor de la variable
 ids_list = []
+
+# Funciones para la lista de tablas
+
+# Busca una entrada en la lista y lo regresa
 def inIdsList(list, var):
     for dic in reversed(list):
         try:
@@ -36,6 +42,7 @@ def inIdsList(list, var):
             pass
     return None
 
+# Busca una entrada y la cambia
 def setIdsList(list, var, new):
     for dic in reversed(list):
         try:
@@ -57,10 +64,12 @@ def p_code(p):
 
 def p_table(p):
     'table :'
+    # Creamos una tabla para el bloque actual antes de explorar el resto del arbol
     ids_list.append({})
 
 def p_poptable(p):
     'poptable :'
+    # Al salir de un bloque sacamos la ultima tabla
     tmp = ids_list.pop()
     print("POPPED LIST")
     print(tmp)
@@ -92,24 +101,26 @@ def p_declaration(p):
     '''declaration : TkId TkTwoPoints tipo 
                    | TkId TkComma listaid TkTwoPoints tipo 
                    | TkId TkComma listaid TkTwoPoints tipo TkComma listatipo'''
-    #print("inIdsList", p[1])
-    #if inIdsList(ids_list, p[1]) != None:
-    #    print("Error: Variable %s already declared" % p[1])
-    #    exit(1)
+    # Revisamos que la variable no haya sido declarada en la tabla actual
     try:
         p[0] = ids_list[len(ids_list) - 1][p[1]]
         print("Error: Variable %s already declared" % p[1])
         exit(1)
     except LookupError:
         pass
-    ids_list[len(ids_list) - 1][p[1]] = 0
+
     if len(p) == 4:
+        # Caso 1 var, 1 tipo
+        # Creamos una entrada en la tabla con un valor por defecto
+        # p[3] es del tipo Symbol, contiene tipo y valor
         ids_list[len(ids_list) - 1][p[1]] = p[3]
+
         p[0] = Node("  Ident: %s" % p[1], None, " Sequencing")
         print("LEN 4")
         print(ids_list)
         print("-----")
     elif len(p) == 6:
+        # Caso n vars, 1 tipo
         # Agregamos la primera id a la tabla
         ids_list[len(ids_list) - 1][p[1]] = p[5]
 
@@ -117,16 +128,18 @@ def p_declaration(p):
         p[0] = Node("  Ident: %s" % p[1], p[3], " Sequencing")
 
         # Tomamos las ids y las convertimos en una lista
+        # Por como se crea el arbol hay que manipularla como string - revisar manera de mejorar?
         tmp = str(p[3])
         while "Ident:" in tmp: tmp = tmp.replace("Ident:", "")
         tmp = tmp.split()
-        # Agregamos cada id a la tabla
+        # Agregamos cada id a la tabla con el valor por defecto
         for var in tmp:
             ids_list[len(ids_list) - 1][var] = p[5]
         print("LEN 6")
         print(ids_list)
         print("-----")
     else:
+        # Caso n vars, n tipos
         # Agregamos la primera id a la tabla
         ids_list[len(ids_list) - 1][p[1]] = p[5]
 
@@ -135,14 +148,18 @@ def p_declaration(p):
         # Revisamos que en caso de declarar varias variables de diferente tipo, que el numero
         # de variables sea igual al numero de tipos
         type_n = Node(p[5], p[7], None).depth_lc()
+        # Si el numero no es igual damos error
         if p[0].depth_lc() != type_n: 
             print("Syntax error: number of variables and types in declaration don't match")
             exit(1)
 
+        # Obtenemos la lista de ids como en el caso anterior
         tmp1 = str(p[3])
+        # Obtenemos la lista de tipos
         tmp2 = p[7].list_lc([])
         while "Ident:" in tmp1: tmp1 = tmp1.replace("Ident:", "")
         tmp1 = tmp1.split()
+        # Le asignamos cada tipo a la variable respectiva en la tabla
         for var, typ in zip(tmp1, tmp2):
             ids_list[len(ids_list) - 1][var] = typ
         print("ELSE")
@@ -152,31 +169,33 @@ def p_declaration(p):
 def p_listid(p):
     '''listaid : TkId TkComma listaid
                | TkId'''
-    #print("inIdsList", p[1])
-    #if inIdsList(ids_list, p[1]) != None:
-    #    print("Error: Variable %s already declared" % p[1])
-    #    exit(1)
+    # Obtenemos la lista de ids y revisamos si ya fue declarada
     try:
         p[0] = ids_list[len(ids_list) - 1][p[1]]
         print("Error: Variable %s already declared" % p[1])
         exit(1)
     except LookupError:
         pass
-    ids_list[len(ids_list) - 1][p[1]] = 0
+    
+    # Creamos el arbol
     if len(p) == 4: p[0] = Node("  Ident: %s" % p[1], p[3], None)
     else: p[0] = Node(None, "  Ident: %s" % p[1], None)
     #print("Ident: %s" % p[1])
 
 def p_tipo_int(p):
     'tipo : TkInt'
+    # Creamos un simbolo de tipo int con valor por defecto 0
     p[0] = Symbol('int', 0)
 
 def p_tipo_bool(p):
     'tipo : TkBool'
+    # Creamos un simbolo de tipo bool con valor por defecto false
     p[0] = Symbol('bool', False)
 
 def p_tipo_array(p):
     'tipo : TkArray TkOBracket TkNum TkSoForth TkNum TkCBracket'
+    # Creamos un simbolo de tipo array con valor por defecto 0
+    # Verificamos que el segundo numero de la declaracion del array sea mayor al primero
     if p[3] > p[5]: 
         print("Error in array declaration: %s < %s" % (p[5], p[3]))
         exit(1)
@@ -185,19 +204,21 @@ def p_tipo_array(p):
 def p_listtipo(p):
     '''listatipo : tipo TkComma listatipo
                  | tipo'''
+    # Creamos el arbol. Como p[1] lleva a tipo, p[1] es un Symbol
     if len(p) == 4: p[0] = Node(p[1], p[3], None)
     else: p[0] = Node(p[1], None, None)
 
 def p_assign_expr(p):
     'assign : TkId TkAsig expression'
-    #print("Asig")
+    # Revisamos que la variable en p[1] haya sido declarada
     if inIdsList(ids_list, p[1]) == None:
         print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
         exit(1)
     print("AAAAA")
     print(p[3])
-    # Revisamos que la id ya haya sido declarada, si no mostramos un error y terminamos
+
     try:
+        # Revisamos que el tipo de p[1] sea igual al tipo de p[3] - REVISAR QUITAR TRY CUANDO SE TENGAN TODOS LOS TIPOS LISTOS
         if inIdsList(ids_list, p[1]).var_type == p[3].sp.var_type:
             print("!! TRUE !!")
             setIdsList(ids_list, p[1], p[3].sp)
@@ -219,12 +240,15 @@ def p_assign_expr(p):
 def p_assign_arr(p):
     '''assign : TkId TkAsig array
               | TkId TkAsig array TkOBracket expression TkCBracket'''
+    # Buscamos la id en las tablas
     found_id = inIdsList(ids_list, p[1])
     if found_id == None:
         print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
         exit(1)
+    # Si existe, revisamos el tipo
     elif found_id.var_type == 'array' and p[3].sp.var_type == 'array':
         if len(found_id.value) != len(p[3].sp.value):
+            # Si los tamanos de arreglos no son iguales damos error
             print("Error: array length mismatch in line %s" % p.lineno(2))
             exit(1)
         print("!! TRUE array asig !!")
@@ -237,22 +261,19 @@ def p_assign_arr(p):
         print("Error: TypeError3 in line %s" % p.lineno(1))
         exit(1)
 
-    #try:
-    #    p[0] = ids_list[len(ids_list) - 1][p[1]]
-    #    ids_list[len(ids_list) - 1][p[1]] = p[3]
-    #    p[0] = Node("Asig", " Ident: %s" % p[1], p[3])
-    #except LookupError:
-    #    print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
-    #    exit(1)
-
 def p_array(p):
     '''array : TkNum TkComma inarray
              | TkId arrayfun'''
     if len(p) == 4: 
+        # Caso lista de numeros
         p[0] = Node(Symbol('int', p[1]), p[3], None)
+        # Creamos un Symbol de tipo array con el arreglo nuevo
         tmp = Symbol('array', [p[0].p] + p[3].list_lc())
+        # Se lo asignamos al nodo en el arbol
         p[0].set_sp(tmp)
-    else: p[0] = Node(" AsigArray" , "  Ident: %s" % p[1], p[2])
+    else: 
+        # Caso array fun - POR TERMINAR
+        p[0] = Node(" AsigArray" , "  Ident: %s" % p[1], p[2])
 
 def p_arrayfn(p):
     '''arrayfun : TkOpenPar expression TkTwoPoints expression TkClosePar arrayfun
@@ -263,13 +284,9 @@ def p_arrayfn(p):
 def p_iarray(p):
     '''inarray : TkNum TkComma inarray
                | TkNum'''
+    # Creamos simbolos con los numeros dados - CAMBIAR PARA QUE FUNCIONE CON EXPRESIONES Y NO SOLO NUM
     if len(p) == 4: p[0] = Node(Symbol('int', p[1]), p[3], None)
     else: p[0] = Node(Symbol('int', p[1]), None, None)
-
-#def p_expression_str(p):
-#    '''strexp : TkString TkConcat strexp
-#              | TkString''' 
-#    if len(p) == 4: p[0] = Node("Concat", p[1], p[3])
 
 def p_expression_bin(p):
     '''expression : expression TkPlus expression
@@ -284,7 +301,7 @@ def p_expression_bin(p):
         exit(1)
 
     if p[2] == '+'   :
-        #p[0] = p[1] + p[3]
+        # 
         p[0] = Node("Exp\n Plus", "  %s" % p[1], "  %s" % p[3], Symbol('int', p[1].sp.value + p[3].sp.value), p[1].sp, p[3].sp)
     elif p[2] == '-' : 
         #p[0] = p[1] - p[3]
