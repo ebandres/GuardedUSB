@@ -311,15 +311,15 @@ def p_expression_bin(p):
     # Creamos el arbol y le asignamos los Symbol de las expresiones correspondientes (lc y rc)
     # y un Symbol nuevo con el resultado de la op
     if p[2] == '+'   :
-        p[0] = Node("Exp\n Plus", "  %s" % p[1], "  %s" % p[3], Symbol('int', p[1].sp.value + p[3].sp.value), p[1].sp, p[3].sp)
+        p[0] = Node("Exp\n Plus", "  %s" % p[1], "  %s" % p[3], Symbol('int', p[1].sp.value + p[3].sp.value))
     elif p[2] == '-' : 
-        p[0] = Node("Exp\n Minus", "  %s" % p[1], "  %s" % p[3], Symbol('int', p[1].sp.value - p[3].sp.value), p[1].sp, p[3].sp)
+        p[0] = Node("Exp\n Minus", "  %s" % p[1], "  %s" % p[3], Symbol('int', p[1].sp.value - p[3].sp.value))
     elif p[2] == '*' : 
-        p[0] = Node("Exp\n Mult", "  %s" % p[1], "  %s" % p[3], Symbol('int', p[1].sp.value * p[3].sp.value), p[1].sp, p[3].sp)
+        p[0] = Node("Exp\n Mult", "  %s" % p[1], "  %s" % p[3], Symbol('int', p[1].sp.value * p[3].sp.value))
     elif p[2] == '/' : 
-        p[0] = Node("Exp\n Div", "  %s" % p[1], "  %s" % p[3], Symbol('int', p[1].sp.value / p[3].sp.value), p[1].sp, p[3].sp)
+        p[0] = Node("Exp\n Div", "  %s" % p[1], "  %s" % p[3], Symbol('int', p[1].sp.value / p[3].sp.value))
     elif p[2] == '%' : 
-        p[0] = Node("Exp\n Mod", "  %s" % p[1], "  %s" % p[3], Symbol('int', p[1].sp.value % p[3].sp.value), p[1].sp, p[3].sp)
+        p[0] = Node("Exp\n Mod", "  %s" % p[1], "  %s" % p[3], Symbol('int', p[1].sp.value % p[3].sp.value))
 
 
 def p_expression_group(p):
@@ -381,13 +381,14 @@ def p_expression_number(p):
 
 def p_expression_id(p):
     'expression : TkId'
-    # POR TERMINAR Buscar valor de la id para asignar
-    try:
-        p[0] = ids_list[len(ids_list) - 1][p[1]]
-        p[0] = Node("Ident: %s" % p[1], None, None)
-    except LookupError:
+    # Buscamos valor de la id para asignar
+    found_id = inIdsList(ids_list, p[1])
+    if found_id == None:
         print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
         exit(1)
+
+    p[0] = Node("Ident: %s" % p[1], None, None, found_id)
+
 
 def p_boolean_exp(p):
     '''expression : expression TkLess expression
@@ -398,32 +399,42 @@ def p_boolean_exp(p):
                   | expression TkAnd expression
                   | expression TkEqual expression
                   | expression TkNEqual expression'''
+    # Revisamos que el tipo de las expresiones sea entero                                      
+    if p[1].sp.var_type != p[3].sp.var_type:
+        print("Error: TypeError4 in line %s" % p.lineno(2))
+        exit(1)
 
-    # POR TERMINAR Igual que exp bin pero con booleanos
-    if p[2] == '<'    : 
-        #p[0] = p[1] < p[3]
-        p[0] = Node("Less", "  %s" % p[1], "  %s" % p[3])
-    elif p[2] == '<=' : 
-        #p[0] = p[1] <= p[3]
-        p[0] = Node("Leq", "  %s" % p[1], "  %s" % p[3])
-    elif p[2] == '>=' : 
-        #p[0] = p[1] >= p[3]
-        p[0] = Node("Geq", "  %s" % p[1], "  %s" % p[3])
-    elif p[2] == '>'  : 
-        #p[0] = p[1] > p[3]
-        p[0] = Node("Greater", "  %s" % p[1], "  %s" % p[3])
-    elif p[2] == '\\/': 
-        #p[0] = p[1] or p[3]
-        p[0] = Node("Or", "  %s" % p[1], "  %s" % p[3])
-    elif p[2] == '/\\': 
-        #p[0] = p[1] and p[3]
-        p[0] = Node("And", "  %s" % p[1], "  %s" % p[3])
-    elif p[2] == '==' : 
-        #p[0] = p[1] == p[3]
-        p[0] = Node("Equal", "  %s" % p[1], "  %s" % p[3])
-    elif p[2] == '!=' : 
-        #p[0] = p[1] != p[3]
-        p[0] = Node("NEqual", "  %s" % p[1], "  %s" % p[3])
+    if p[1].sp.var_type == 'int':
+        if p[2] == '<': 
+            p[0] = Node("BoolExp\n ArithLess", "  %s" % p[1], "  %s" % p[3], Symbol('bool', p[1].sp.value < p[3].sp.value))
+        elif p[2] == '<=': 
+            #p[0] = p[1] <= p[3]
+            p[0] = Node("BoolExp\n ArithLeq", "  %s" % p[1], "  %s" % p[3], Symbol('bool', p[1].sp.value <= p[3].sp.value))
+        elif p[2] == '>=': 
+            #p[0] = p[1] >= p[3]
+            p[0] = Node("BoolExp\n ArithGeq", "  %s" % p[1], "  %s" % p[3], Symbol('bool', p[1].sp.value >= p[3].sp.value))
+        elif p[2] == '>' : 
+            #p[0] = p[1] > p[3]
+            p[0] = Node("BoolExp\n ArithGreater", "  %s" % p[1], "  %s" % p[3], Symbol('bool', p[1].sp.value > p[3].sp.value))
+        elif p[2] == '==': 
+            #p[0] = p[1] == p[3]
+            p[0] = Node("BoolExp\n ArithEqual", "  %s" % p[1], "  %s" % p[3], Symbol('bool', p[1].sp.value == p[3].sp.value))
+        elif p[2] == '!=': 
+            #p[0] = p[1] != p[3]
+            p[0] = Node("BoolExp\n ArithNotEqual", "  %s" % p[1], "  %s" % p[3], Symbol('bool', p[1].sp.value != p[3].sp.value))
+    else:
+        if p[2] == '\\/': 
+            #p[0] = p[1] or p[3]
+            p[0] = Node("BoolExp\n BoolOr", "  %s" % p[1], "  %s" % p[3], Symbol('bool', p[1].sp.value or p[3].sp.value))
+        elif p[2] == '/\\': 
+            #p[0] = p[1] and p[3]
+            p[0] = Node("BoolExp\n BoolAnd", "  %s" % p[1], "  %s" % p[3], Symbol('bool', p[1].sp.value and p[3].sp.value))
+        elif p[2] == '==': 
+            #p[0] = p[1] == p[3]
+            p[0] = Node("BoolExp\n BoolEqual", "  %s" % p[1], "  %s" % p[3], Symbol('bool', p[1].sp.value == p[3].sp.value))
+        elif p[2] == '!=': 
+            #p[0] = p[1] != p[3]
+            p[0] = Node("BoolExp\n BoolNotEqual", "  %s" % p[1], "  %s" % p[3], Symbol('bool', p[1].sp.value != p[3].sp.value))
 
 def p_expression_true(p):
     'expression : TkTrue'
