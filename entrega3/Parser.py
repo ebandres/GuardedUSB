@@ -62,6 +62,7 @@ def p_code(p):
     '''block : TkOBlock TkDeclare table start poptable TkCBlock
              | TkOBlock table body poptable TkCBlock'''
     if len(p) == 7: 
+        #for
         p[0] = Node("Block\n Declare", None, "%s" % p[4])
     else: p[0] = Node("Block", None, p[3])
 
@@ -204,7 +205,7 @@ def p_tipo_array(p):
     if p[3] > p[5]: 
         print("Error in array declaration: %s < %s" % (p[5], p[3]))
         exit(1)
-    p[0] = Symbol('array', [0] * (p[5] - p[3] + 1))
+    p[0] = Symbol('array', [0] * (p[5] - p[3] + 1), p[3], p[5])
 
 def p_listtipo(p):
     '''listatipo : tipo TkComma listatipo
@@ -247,15 +248,14 @@ def p_assign_expr(p):
 
 
 def p_assign_arr(p):
-    '''assign : TkId TkAsig array
-              | TkId TkAsig array TkOBracket expression TkCBracket'''
+    'assign : TkId TkAsig array'
     # Buscamos la id en las tablas
     found_id = inIdsList(ids_list, p[1])
     if found_id == None:
         print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
         exit(1)
     # Si existe, revisamos el tipo
-    elif len(p) == 4 and found_id.var_type == 'array' and p[3].sp.var_type == 'array':
+    elif found_id.var_type == 'array' and p[3].sp.var_type == 'array':
         # Asignamos un array a otro array
         if len(found_id.value) != len(p[3].sp.value):
             # Si los tamanos de arreglos no son iguales damos error
@@ -270,10 +270,6 @@ def p_assign_arr(p):
         print("---")
 
         p[0] = Node("Asig", " Ident: %s" % p[1], p[3])
-
-    elif len(p) == 7 and found_id.var_type == 'int' and p[3].sp.var_type == 'int':
-        # En este caso estamos tomando un elemento de un indice p[5] de un array p[3]
-        pass
     else:
         print("Error: TypeError3 in line %s" % p.lineno(1))
         exit(1)
@@ -285,7 +281,8 @@ def p_array(p):
         # Caso lista de numeros
         p[0] = Node(Symbol('int', p[1]), p[3], None)
         # Creamos un Symbol de tipo array con el arreglo nuevo
-        tmp = Symbol('array', [p[0].p] + p[3].list_lc())
+        found_id = inIdsList(ids_list, p[-2])
+        tmp = Symbol('array', [p[0].p] + p[3].list_lc(), found_id.n, found_id.m)
         # Se lo asignamos al nodo en el arbol
         p[0].set_sp(tmp)
     else: 
