@@ -1,11 +1,11 @@
 class Node(object):
 	def __init__(self, p, lc, rc, sp = None, slc = None, src = None):
-		self.p = p
-		self.lc = lc
-		self.rc = rc
-		self.sp = sp
-		self.slc = slc
-		self.src = src
+		self.p = p 		# Parent
+		self.lc = lc	# Left Child
+		self.rc = rc	# Right Child
+		self.sp = sp	# Symbol Parent
+		self.slc = slc	# Symbol Left Child
+		self.src = src	# Symbol Right Child
 
 	def __repr__(self):
 		ret = ""
@@ -38,6 +38,7 @@ class Node(object):
 		self.src = new
 
 	def depth_lc(self, n = 1):
+		# Devuelve la profundidad del arbol en la rama del hijo izq
 		try:
 			n = self.lc.depth_lc(n + 1)
 		except:
@@ -45,6 +46,7 @@ class Node(object):
 		return n
 
 	def list_lc(self, l = []):
+		# Devuelve una lista de los elementos del arbol en la rama del hijo izq
 		l.append(self.p)
 		try:
 			self.lc.list_lc(l)	
