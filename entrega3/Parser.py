@@ -404,36 +404,29 @@ def p_boolean_exp(p):
         print("Error: TypeError4 in line %s" % p.lineno(2))
         exit(1)
 
+    # Operaciones booleanas para los ints
     if p[1].sp.var_type == 'int':
         if p[2] == '<': 
             p[0] = Node("BoolExp\n ArithLess", "  %s" % p[1], "  %s" % p[3], Symbol('bool', p[1].sp.value < p[3].sp.value))
         elif p[2] == '<=': 
-            #p[0] = p[1] <= p[3]
             p[0] = Node("BoolExp\n ArithLeq", "  %s" % p[1], "  %s" % p[3], Symbol('bool', p[1].sp.value <= p[3].sp.value))
         elif p[2] == '>=': 
-            #p[0] = p[1] >= p[3]
             p[0] = Node("BoolExp\n ArithGeq", "  %s" % p[1], "  %s" % p[3], Symbol('bool', p[1].sp.value >= p[3].sp.value))
         elif p[2] == '>' : 
-            #p[0] = p[1] > p[3]
             p[0] = Node("BoolExp\n ArithGreater", "  %s" % p[1], "  %s" % p[3], Symbol('bool', p[1].sp.value > p[3].sp.value))
         elif p[2] == '==': 
-            #p[0] = p[1] == p[3]
             p[0] = Node("BoolExp\n ArithEqual", "  %s" % p[1], "  %s" % p[3], Symbol('bool', p[1].sp.value == p[3].sp.value))
         elif p[2] == '!=': 
-            #p[0] = p[1] != p[3]
             p[0] = Node("BoolExp\n ArithNotEqual", "  %s" % p[1], "  %s" % p[3], Symbol('bool', p[1].sp.value != p[3].sp.value))
     else:
+        # Operaciones entre bools
         if p[2] == '\\/': 
-            #p[0] = p[1] or p[3]
             p[0] = Node("BoolExp\n BoolOr", "  %s" % p[1], "  %s" % p[3], Symbol('bool', p[1].sp.value or p[3].sp.value))
         elif p[2] == '/\\': 
-            #p[0] = p[1] and p[3]
             p[0] = Node("BoolExp\n BoolAnd", "  %s" % p[1], "  %s" % p[3], Symbol('bool', p[1].sp.value and p[3].sp.value))
         elif p[2] == '==': 
-            #p[0] = p[1] == p[3]
             p[0] = Node("BoolExp\n BoolEqual", "  %s" % p[1], "  %s" % p[3], Symbol('bool', p[1].sp.value == p[3].sp.value))
         elif p[2] == '!=': 
-            #p[0] = p[1] != p[3]
             p[0] = Node("BoolExp\n BoolNotEqual", "  %s" % p[1], "  %s" % p[3], Symbol('bool', p[1].sp.value != p[3].sp.value))
 
 def p_expression_true(p):
