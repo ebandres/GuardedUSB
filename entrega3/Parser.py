@@ -206,7 +206,7 @@ def p_assign_expr(p):
             print(type(p[3].sp))
             print("---")
         else:
-            print("Error: TypeError in line %s" % p.lineno(1))
+            print("Error: TypeError2 in line %s" % p.lineno(1))
             exit(1)
     except SystemExit:
         exit(1)
@@ -223,7 +223,10 @@ def p_assign_arr(p):
     if found_id == None:
         print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
         exit(1)
-    elif found_id.var_type == p[3].sp.var_type:
+    elif found_id.var_type == 'array' and p[3].sp.var_type == 'array':
+        if len(found_id.value) != len(p[3].sp.value):
+            print("Error: array length mismatch in line %s" % p.lineno(2))
+            exit(1)
         print("!! TRUE array asig !!")
         setIdsList(ids_list, p[1], p[3].sp)
         print("SET", p[1])
@@ -231,7 +234,7 @@ def p_assign_arr(p):
         print(p[3].sp)
         print("---")
     else:
-        print("Error: TypeError in line %s" % p.lineno(1))
+        print("Error: TypeError3 in line %s" % p.lineno(1))
         exit(1)
 
     #try:
@@ -277,7 +280,7 @@ def p_expression_bin(p):
          
     # Revisamos que el tipo de las expresiones sea entero                                      
     if p[1].sp.var_type != 'int' or p[3].sp.var_type != 'int':
-        print("Error: TypeError in line %s" % p.lineno(0))
+        print("Error: TypeError1 in line %s" % p.lineno(2))
         exit(1)
 
     if p[2] == '+'   :

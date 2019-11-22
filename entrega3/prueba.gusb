@@ -8,7 +8,7 @@
   p := true;
   z := 4, 3, 2;
   if x==y -->
-    x := 1 + true
+    x := 1 + 2
   [] x != y -->
     |[
       declare
