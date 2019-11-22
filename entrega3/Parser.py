@@ -366,7 +366,18 @@ def p_expression_number(p):
         p[0] = Node(" Literal: %s" % p[1], None, None, Symbol('int', p[1]))
     else: 
         # Caso array[exp] - POR TERMINAR
-        p[0] = Node("EvalArray", "  Ident: %s " % p[1], "  %s" % p[3])
+        found_id = inIdsList(ids_list, p[1])
+        if found_id == None:
+            print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
+            exit(1)
+        elif found_id.var_type == 'array' and p[3].sp.var_type == 'int':
+            # La variable es de tipo array y la expresion es int
+            try:
+                # REVISAR - cambiar por una funcion que busque en el arreglo basado en los numeros con los que se declaro
+                p[0] = Node("EvalArray", "  Ident: %s " % p[1], " %s" % p[3], Symbol('int', found_id.value[p[3].sp.value].value))
+            except IndexError:
+                print("Error: Index out of bounds in line %s" % p.lineno(1))
+                exit(1)
 
 def p_expression_id(p):
     'expression : TkId'
