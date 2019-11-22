@@ -55,6 +55,9 @@ def setIdsList(list, var, new):
 
 # Gramatica
 
+# Variable para crear una tabla, es false cuando se tiene un for ya que creamos la tabla antes
+create_table = True
+
 def p_code(p):
     '''block : TkOBlock TkDeclare table start poptable TkCBlock
              | TkOBlock table body poptable TkCBlock'''
@@ -64,8 +67,10 @@ def p_code(p):
 
 def p_table(p):
     'table :'
+    global create_table
     # Creamos una tabla para el bloque actual antes de explorar el resto del arbol
-    ids_list.append({})
+    if create_table: ids_list.append({})
+    else: create_table = True
 
 def p_poptable(p):
     'poptable :'
@@ -211,8 +216,12 @@ def p_listtipo(p):
 def p_assign_expr(p):
     'assign : TkId TkAsig expression'
     # Revisamos que la variable en p[1] haya sido declarada
-    if inIdsList(ids_list, p[1]) == None:
+    found_id = inIdsList(ids_list, p[1])
+    if found_id == None:
         print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
+        exit(1)
+    elif found_id.restricted:
+        print("Error: control variable %s is being modified in line %s" % (p[1], p.lineno(2)))
         exit(1)
     print("AAAAA")
     print(p[3])
@@ -457,13 +466,27 @@ def p_read(p):
         exit(1)
 
 def p_cycle_for(p):
-    'gfor : TkFor TkId TkIn expression TkTo expression TkArrow block TkRof'
-    try:
-        p[0] = ids_list[len(ids_list) - 1][p[2]]
-        p[0] = Node("For\n In\n  Ident: %s\n  Exp\n   %s\n  Exp\n   %s" % (p[2], p[4], p[6]), " %s" % p[8], None)
-    except LookupError:
-        print("Undefined id '%s' in line %s" % (p[2], p.lineno(2)))
+    'gfor : TkFor TkId TkIn expression table2 TkTo expression TkArrow block TkRof'
+    # Por ahora no se como se haran las iteraciones, pero permite utilizar una variable
+    # que no ha sido declarada
+    # Posiblemente necesitaremos modificar las gramaticas para la porxima entrega
+
+    if p[4].sp.value > p[7].sp.value: 
+        print("Error: Iteration range error in line %s" % p.lineno(1))
         exit(1)
+    p[0] = Node("For\n In\n  Ident: %s\n  Exp\n   %s\n  Exp\n   %s" % (p[2], p[4], p[7]), " %s" % p[9], None)
+
+def p_table_for(p):
+    'table2 :'
+    # Utilizamos esto para crear la tabla que sera utilizada en el for y no crear una adicional
+    global create_table
+    create_table = False
+    ids_list.append({})
+    # Creamos la variable de control en su estado inicial 
+    tmp = p[-1].sp
+    # La restringimos para que no sea modificada
+    tmp.restricted = True
+    ids_list[len(ids_list) - 1][p[-3]] = tmp
  
 def p_cycle_do(p):
     '''gdo : TkDo expression TkArrow unique guard TkOd

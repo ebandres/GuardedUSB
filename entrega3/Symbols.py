@@ -1,7 +1,8 @@
 class Symbol(object):
-	def __init__(self, var_type, value):
+	def __init__(self, var_type, value, restricted = False):
 		self.var_type = var_type
 		self.value = value
+		self.restricted = restricted
 
 	def __repr__(self):
 		if self.var_type == 'int':
