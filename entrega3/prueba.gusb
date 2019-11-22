@@ -15,7 +15,7 @@
         z : int;
         q : array[-1..3]
       z := 3;
-      q := atoi(q);
+      z := atoi(q);
       println z
     ]|
   fi

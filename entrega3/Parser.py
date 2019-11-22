@@ -246,17 +246,25 @@ def p_assign_arr(p):
         print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
         exit(1)
     # Si existe, revisamos el tipo
-    elif found_id.var_type == 'array' and p[3].sp.var_type == 'array':
+    elif len(p) == 4 and found_id.var_type == 'array' and p[3].sp.var_type == 'array':
+        # Asignamos un array a otro array
         if len(found_id.value) != len(p[3].sp.value):
             # Si los tamanos de arreglos no son iguales damos error
             print("Error: array length mismatch in line %s" % p.lineno(2))
             exit(1)
         print("!! TRUE array asig !!")
+        # Actualizamos la tabla
         setIdsList(ids_list, p[1], p[3].sp)
         print("SET", p[1])
         print(ids_list)
         print(p[3].sp)
         print("---")
+
+        p[0] = Node("Asig", " Ident: %s" % p[1], p[3])
+
+    elif len(p) == 7 and found_id.var_type == 'int' and p[3].sp.var_type == 'int':
+        # En este caso estamos tomando un elemento de un indice p[5] de un array p[3]
+        pass
     else:
         print("Error: TypeError3 in line %s" % p.lineno(1))
         exit(1)
@@ -325,12 +333,30 @@ def p_expression_fun(p):
                   | TkMin TkOpenPar TkId TkClosePar
                   | TkAtoi TkOpenPar TkId TkClosePar'''
     # POR COMPLETAR
-    try:
-        p[0] = ids_list[len(ids_list) - 1][p[3]]
-        p[0] = Node("Exp\n %s" % p[1].capitalize(), "  Ident: %s" % p[3], None)
-    except LookupError:
-        print("Undefined id '%s' in line %s" % (p[3], p.lineno(3)))
+    #try:
+    #    p[0] = ids_list[len(ids_list) - 1][p[3]]
+    #    p[0] = Node("Exp\n %s" % p[1].capitalize(), "  Ident: %s" % p[3], None)
+    #except LookupError:
+    #    print("Undefined id '%s' in line %s" % (p[3], p.lineno(3)))
+    #    exit(1)
+    found_id = inIdsList(ids_list, p[3])
+    if found_id == None:
+        print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
         exit(1)
+    elif found_id.var_type == 'array':
+        # Si la variable a la que se le aplica la funcion es un arreglo vemos cual fun usamos
+        if p[1] == 'size':
+            # Devuelve el tamano del arreglo
+            p[0] = Node("ArithExp\n %s" % p[1], " Ident: %s" % p[3], None, Symbol('int', len(found_id.value)))
+        elif p[1] == 'max':
+            # Devuelve el maximo (asumimos que se devuelve es el valor maximo, no el indice en donde esta)
+            p[0] = Node("ArithExp\n %s" % p[1], " Ident: %s" % p[3], None, Symbol('int', max(found_id.value)))
+        elif p[1] == 'min':
+            # Igual que en max pero para el min
+            p[0] = Node("ArithExp\n %s" % p[1], " Ident: %s" % p[3], None, Symbol('int', min(found_id.value)))
+        elif p[1] == 'atoi':
+            # REVISAR EN ENUNCIADO - devuelve int si el arreglo es de tamano 1?
+            p[0] = Node("ArithExp\n %s" % p[1], " Ident: %s" % p[3], None, Symbol('int', len(found_id.value)))
 
 def p_expression_number(p):
     '''expression : TkNum
