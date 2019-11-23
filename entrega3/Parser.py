@@ -380,7 +380,7 @@ def p_expression_number(p):
             # La variable es de tipo array y la expresion es int
             try:
                 # REVISAR - cambiar por una funcion que busque en el arreglo basado en los numeros con los que se declaro
-                p[0] = Node("EvalArray", "  Ident: %s " % p[1], " %s" % p[3], Symbol('int', found_id.value[p[3].sp.value].value))
+                p[0] = Node("EvalArray", "  Ident: %s " % p[1], " %s" % p[3], Symbol('int', found_id.search(p[3].sp.value)))
             except IndexError:
                 print("Error: Index out of bounds in line %s" % p.lineno(1))
                 exit(1)

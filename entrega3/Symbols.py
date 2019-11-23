@@ -19,3 +19,12 @@ class Symbol(object):
 		elif self.var_type == 'bool':
 			return "  Bool: " + str(self.value)
 		return "SYMBOL " + str(self.value)
+
+	def search(self, i):
+		# Funcion que busca el indice i (en el rango declarado)
+		# Revisamos que el indice este dentro del rango
+		if i < self.n or i > self.m:
+			raise IndexError
+		# Convertimos el indice al rango usado por python 
+		i = i + abs(self.n)
+		return self.value[i].value
