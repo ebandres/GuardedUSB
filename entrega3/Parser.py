@@ -76,9 +76,9 @@ def p_table(p):
 def p_poptable(p):
     'poptable :'
     # Al salir de un bloque sacamos la ultima tabla
-    tmp = ids_list.pop()
+    p[0] = ids_list.pop()
     print("POPPED LIST")
-    print(tmp)
+    print(p[0])
     print("-----------")
  
 def p_body(p):
@@ -205,7 +205,10 @@ def p_tipo_array(p):
     if p[3] > p[5]: 
         print("Error in array declaration: %s < %s" % (p[5], p[3]))
         exit(1)
-    p[0] = Symbol('array', [0] * (p[5] - p[3] + 1), p[3], p[5])
+    tmp = []
+    for i in range(p[3], p[5] + 1):
+        tmp.append(Symbol('int', 0))
+    p[0] = Symbol('array', tmp, p[3], p[5])
 
 def p_listtipo(p):
     '''listatipo : tipo TkComma listatipo
