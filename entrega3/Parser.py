@@ -275,9 +275,12 @@ def p_assign_arr(p):
         exit(1)
 
 def p_array(p):
-    '''array : TkNum TkComma inarray
+    '''array : expression TkComma inarray
              | TkId arrayfun'''
     if len(p) == 4: 
+        if p[1].sp.var_type != 'int':
+            print("Error: TypeError6 in line %d" % p.lineno(2))
+            exit(1)
         # Caso lista de numeros
         p[0] = Node(Symbol('int', p[1]), p[3], None)
         # Creamos un Symbol de tipo array con el arreglo nuevo
@@ -287,20 +290,42 @@ def p_array(p):
         p[0].set_sp(tmp)
     else: 
         # Caso array fun - POR TERMINAR
-        p[0] = Node(" AsigArray" , "  Ident: %s" % p[1], p[2])
+        print("ARRAY FUN SP ", p[2].sp)
+        p[0] = Node(" AsigArray" , "  Ident: %s" % p[1], p[2], p[2].sp)
 
 def p_arrayfn(p):
-    '''arrayfun : TkOpenPar expression TkTwoPoints expression TkClosePar arrayfun
+    '''arrayfun : TkOpenPar expression TkTwoPoints expression TkClosePar arrayfunhelper arrayfun
                 | TkOpenPar expression TkTwoPoints expression TkClosePar'''
-    if len(p) == 7: p[0] = Node("  %s" % p[2], "  %s" % p[4], p[6])
-    else: p[0] = Node("  %s" % p[2], "  %s" % p[4], None)
+    # Revisamos que las expresiones sean enteros
+    if p[2].sp.var_type != 'int' or p[4].sp.var_type != 'int':
+        print("Error: TypeError5 in line %d" % p.lineno(1))
+        exit(1)
+
+    # Revisamos que el indice este en el rango
+    try:
+        inIdsList(ids_list, p[-1]).search(p[2].sp.value)
+    except IndexError:
+        print("Error: array index out of bounds in line %d" % p.lineno(1))
+        exit(1)
+
+    # Como en esta entrega no nos importa el resultado solo creamos el arbol con el Symbol original
+    if len(p) == 8: p[0] = Node("  %s" % p[2], "  %s" % p[4], p[6], inIdsList(ids_list, p[-1]))
+    else: p[0] = Node("  %s" % p[2], "  %s" % p[4], None, inIdsList(ids_list, p[-1]))
+
+def p_arrayfnh(p):
+    'arrayfunhelper :'
+    p[0] = p[-6]
 
 def p_iarray(p):
-    '''inarray : TkNum TkComma inarray
-               | TkNum'''
+    '''inarray : expression TkComma inarray
+               | expression'''
+    # Revisamos el tipo de la expression
+    if p[1].sp.var_type != 'int':
+        print("Error: TypeError7 in line %d" % p.lineno(2))
+        exit(1)
     # Creamos simbolos con los numeros dados - CAMBIAR PARA QUE FUNCIONE CON EXPRESIONES Y NO SOLO NUM
-    if len(p) == 4: p[0] = Node(Symbol('int', p[1]), p[3], None)
-    else: p[0] = Node(Symbol('int', p[1]), None, None)
+    if len(p) == 4: p[0] = Node(p[1].sp, p[3], None)
+    else: p[0] = Node(p[1].sp, None, None)
 
 def p_expression_bin(p):
     '''expression : expression TkPlus expression
@@ -338,13 +363,6 @@ def p_expression_fun(p):
                   | TkMax TkOpenPar TkId TkClosePar
                   | TkMin TkOpenPar TkId TkClosePar
                   | TkAtoi TkOpenPar TkId TkClosePar'''
-    # POR COMPLETAR
-    #try:
-    #    p[0] = ids_list[len(ids_list) - 1][p[3]]
-    #    p[0] = Node("Exp\n %s" % p[1].capitalize(), "  Ident: %s" % p[3], None)
-    #except LookupError:
-    #    print("Undefined id '%s' in line %s" % (p[3], p.lineno(3)))
-    #    exit(1)
     found_id = inIdsList(ids_list, p[3])
     if found_id == None:
         print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
@@ -379,7 +397,7 @@ def p_expression_number(p):
         elif found_id.var_type == 'array' and p[3].sp.var_type == 'int':
             # La variable es de tipo array y la expresion es int
             try:
-                # REVISAR - cambiar por una funcion que busque en el arreglo basado en los numeros con los que se declaro
+                # Buscamos la expresion en el arreglo
                 p[0] = Node("EvalArray", "  Ident: %s " % p[1], " %s" % p[3], Symbol('int', found_id.search(p[3].sp.value)))
             except IndexError:
                 print("Error: Index out of bounds in line %s" % p.lineno(1))
