@@ -62,8 +62,15 @@ def p_code(p):
     '''block : TkOBlock TkDeclare table start poptable TkCBlock
              | TkOBlock table body poptable TkCBlock'''
     if len(p) == 7: 
-        #for
-        p[0] = Node("Block\n Declare", None, "%s" % p[4])
+        dic = p[5]
+        tmp = "    Symbols Table\n"
+        for key in dic:
+            symb = dic[key]
+            if symb.var_type == 'array':
+                tmp += "    variable: %s | type: %s[%d..%d]\n" % (key, symb.var_type, symb.n, symb.m)
+            else:
+                tmp += "    variable: %s | type: %s\n" % (key, symb.var_type)
+        p[0] = Node("Block\n Declare\n%s" % tmp, None, "%s" % p[4])
     else: p[0] = Node("Block", None, p[3])
 
 def p_table(p):
