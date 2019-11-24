@@ -20,6 +20,26 @@ class Symbol(object):
 			return "  Bool: " + str(self.value)
 		return "SYMBOL " + str(self.value)
 
+	def __lt__(self, other):
+		if self.value < other.value:
+			return True
+		else: return False
+
+	def __le__(self, other):
+		if self.value <= other.value:
+			return True
+		else: return False
+
+	def __gt__(self, other):
+		if self.value > other.value:
+			return True
+		else: return False
+
+	def __ge__(self, other):
+		if self.value >= other.value:
+			return True
+		else: return False
+
 	def search(self, i):
 		# Funcion que busca el indice i (en el rango declarado)
 		# Revisamos que el indice este dentro del rango

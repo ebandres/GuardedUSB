@@ -62,6 +62,7 @@ def p_code(p):
     '''block : TkOBlock TkDeclare table start poptable TkCBlock
              | TkOBlock table body poptable TkCBlock'''
     if len(p) == 7: 
+        # Creamos la tabla de simbolos para imprimir
         dic = p[5]
         tmp = "    Symbols Table\n"
         for key in dic:
@@ -71,7 +72,17 @@ def p_code(p):
             else:
                 tmp += "    variable: %s | type: %s\n" % (key, symb.var_type)
         p[0] = Node("Block\n Declare\n%s" % tmp, None, "%s" % p[4])
-    else: p[0] = Node("Block", None, p[3])
+    else: 
+        # Creamos la tabla de simbolos para imprimir
+        dic = p[4]
+        tmp = "    Symbols Table\n"
+        for key in dic:
+            symb = dic[key]
+            if symb.var_type == 'array':
+                tmp += "    variable: %s | type: %s[%d..%d]\n" % (key, symb.var_type, symb.n, symb.m)
+            else:
+                tmp += "    variable: %s | type: %s\n" % (key, symb.var_type)
+        p[0] = Node("Block\n%s" % tmp, None, p[3])
 
 def p_table(p):
     'table :'
@@ -84,9 +95,6 @@ def p_poptable(p):
     'poptable :'
     # Al salir de un bloque sacamos la ultima tabla
     p[0] = ids_list.pop()
-    print("POPPED LIST")
-    print(p[0])
-    print("-----------")
  
 def p_body(p):
     '''body : sentence body
@@ -125,13 +133,11 @@ def p_declaration(p):
     if len(p) == 4:
         # Caso 1 var, 1 tipo
         # Creamos una entrada en la tabla con un valor por defecto
-        # p[3] es del tipo Symbol, contiene tipo y valor
+        # p[3] es del tipo Symbol, contiene los atributos tipo y valor
         ids_list[len(ids_list) - 1][p[1]] = p[3]
 
         p[0] = Node("  Ident: %s" % p[1], None, " Sequencing")
-        print("LEN 4")
-        print(ids_list)
-        print("-----")
+
     elif len(p) == 6:
         # Caso n vars, 1 tipo
         # Agregamos la primera id a la tabla
@@ -148,9 +154,7 @@ def p_declaration(p):
         # Agregamos cada id a la tabla con el valor por defecto
         for var in tmp:
             ids_list[len(ids_list) - 1][var] = p[5]
-        print("LEN 6")
-        print(ids_list)
-        print("-----")
+
     else:
         # Caso n vars, n tipos
         # Agregamos la primera id a la tabla
@@ -175,9 +179,6 @@ def p_declaration(p):
         # Le asignamos cada tipo a la variable respectiva en la tabla
         for var, typ in zip(tmp1, tmp2):
             ids_list[len(ids_list) - 1][var] = typ
-        print("ELSE")
-        print(ids_list)
-        print("-----")
 
 def p_listid(p):
     '''listaid : TkId TkComma listaid
@@ -193,7 +194,6 @@ def p_listid(p):
     # Creamos el arbol
     if len(p) == 4: p[0] = Node("  Ident: %s" % p[1], p[3], None)
     else: p[0] = Node(None, "  Ident: %s" % p[1], None)
-    #print("Ident: %s" % p[1])
 
 def p_tipo_int(p):
     'tipo : TkInt'
@@ -234,26 +234,15 @@ def p_assign_expr(p):
     elif found_id.restricted:
         print("Error: control variable %s is being modified in line %s" % (p[1], p.lineno(2)))
         exit(1)
-    print("AAAAA")
-    print(p[3])
 
-    try:
-        # Revisamos que el tipo de p[1] sea igual al tipo de p[3] - REVISAR QUITAR TRY CUANDO SE TENGAN TODOS LOS TIPOS LISTOS
-        if inIdsList(ids_list, p[1]).var_type == p[3].sp.var_type:
-            print("!! TRUE !!")
-            setIdsList(ids_list, p[1], p[3].sp)
-            print("SET", p[1])
-            print(ids_list)
-            print(type(p[3].sp))
-            print("---")
-        else:
-            print("Error: TypeError2 in line %s" % p.lineno(1))
-            exit(1)
-    except SystemExit:
+    # Revisamos que el tipo de p[1] sea igual al tipo de p[3]
+    if inIdsList(ids_list, p[1]).var_type == p[3].sp.var_type:
+        # Asignamos el valor
+        setIdsList(ids_list, p[1], p[3].sp)
+    else:
+        print("Error: TypeError in line %s" % p.lineno(1))
         exit(1)
-    except:
-        print("!! except !!")
-    
+
     p[0] = Node("Asig", " Ident: %s" % p[1], " %s" % p[3])
 
 
@@ -271,17 +260,12 @@ def p_assign_arr(p):
             # Si los tamanos de arreglos no son iguales damos error
             print("Error: array length mismatch in line %s" % p.lineno(2))
             exit(1)
-        print("!! TRUE array asig !!")
         # Actualizamos la tabla
         setIdsList(ids_list, p[1], p[3].sp)
-        print("SET", p[1])
-        print(ids_list)
-        print(p[3].sp)
-        print("---")
 
         p[0] = Node("Asig", " Ident: %s" % p[1], p[3])
     else:
-        print("Error: TypeError3 in line %s" % p.lineno(1))
+        print("Error: TypeError in line %s" % p.lineno(1))
         exit(1)
 
 def p_array(p):
@@ -289,26 +273,26 @@ def p_array(p):
              | TkId arrayfun'''
     if len(p) == 4: 
         if p[1].sp.var_type != 'int':
-            print("Error: TypeError6 in line %d" % p.lineno(2))
+            print("Error: TypeError in line %d" % p.lineno(2))
             exit(1)
         # Caso lista de numeros
-        p[0] = Node(Symbol('int', p[1]), p[3], None)
+        p[0] = Node(Symbol('int', p[1].sp.value), p[3], None)
+
         # Creamos un Symbol de tipo array con el arreglo nuevo
         found_id = inIdsList(ids_list, p[-2])
         tmp = Symbol('array', [p[0].p] + p[3].list_lc(), found_id.n, found_id.m)
         # Se lo asignamos al nodo en el arbol
         p[0].set_sp(tmp)
     else: 
-        # Caso array fun - POR TERMINAR
-        print("ARRAY FUN SP ", p[2].sp)
-        p[0] = Node(" AsigArray" , "  Ident: %s" % p[1], p[2], p[2].sp)
+        # Caso array fun
+        p[0] = Node(None , None, p[2], p[2].sp)
 
 def p_arrayfn(p):
     '''arrayfun : TkOpenPar expression TkTwoPoints expression TkClosePar arrayfunhelper arrayfun
                 | TkOpenPar expression TkTwoPoints expression TkClosePar'''
     # Revisamos que las expresiones sean enteros
     if p[2].sp.var_type != 'int' or p[4].sp.var_type != 'int':
-        print("Error: TypeError5 in line %d" % p.lineno(1))
+        print("Error: TypeError in line %d" % p.lineno(1))
         exit(1)
 
     # Revisamos que el indice este en el rango
@@ -319,11 +303,12 @@ def p_arrayfn(p):
         exit(1)
 
     # Como en esta entrega no nos importa el resultado solo creamos el arbol con el Symbol original
-    if len(p) == 8: p[0] = Node("  %s" % p[2], "  %s" % p[4], p[6], inIdsList(ids_list, p[-1]))
-    else: p[0] = Node("  %s" % p[2], "  %s" % p[4], None, inIdsList(ids_list, p[-1]))
+    if len(p) == 8: p[0] = Node(" AsigArray\n  Ident: %s\n  %s" % (p[-1], p[2]), "  %s" % p[4], p[7], inIdsList(ids_list, p[-1]))
+    else: p[0] = Node(" AsigArray\n  Ident: %s\n  %s" % (p[-1], p[2]), "  %s" % p[4], None, inIdsList(ids_list, p[-1]))
 
 def p_arrayfnh(p):
     'arrayfunhelper :'
+    # Guardamos la id para usarla en las arrayfun recursivas
     p[0] = p[-6]
 
 def p_iarray(p):
@@ -331,9 +316,9 @@ def p_iarray(p):
                | expression'''
     # Revisamos el tipo de la expression
     if p[1].sp.var_type != 'int':
-        print("Error: TypeError7 in line %d" % p.lineno(2))
+        print("Error: TypeError in line %d" % p.lineno(2))
         exit(1)
-    # Creamos simbolos con los numeros dados - CAMBIAR PARA QUE FUNCIONE CON EXPRESIONES Y NO SOLO NUM
+    # Creamos simbolos con los numeros dados
     if len(p) == 4: p[0] = Node(p[1].sp, p[3], None)
     else: p[0] = Node(p[1].sp, None, None)
 
@@ -346,11 +331,10 @@ def p_expression_bin(p):
          
     # Revisamos que el tipo de las expresiones sea entero                                      
     if p[1].sp.var_type != 'int' or p[3].sp.var_type != 'int':
-        print("Error: TypeError1 in line %s" % p.lineno(2))
+        print("Error: TypeError in line %s" % p.lineno(2))
         exit(1)
 
-    # Creamos el arbol y le asignamos los Symbol de las expresiones correspondientes (lc y rc)
-    # y un Symbol nuevo con el resultado de la op
+    # Creamos el arbol y le asignamos un Symbol nuevo con el resultado de la op
     if p[2] == '+'   :
         p[0] = Node("Exp\n Plus", "  %s" % p[1], "  %s" % p[3], Symbol('int', p[1].sp.value + p[3].sp.value))
     elif p[2] == '-' : 
@@ -384,12 +368,15 @@ def p_expression_fun(p):
             p[0] = Node("ArithExp\n %s" % p[1], " Ident: %s" % p[3], None, Symbol('int', len(found_id.value)))
         elif p[1] == 'max':
             # Devuelve el maximo (asumimos que se devuelve es el valor maximo, no el indice en donde esta)
-            p[0] = Node("ArithExp\n %s" % p[1], " Ident: %s" % p[3], None, Symbol('int', max(found_id.value)))
+            p[0] = Node("ArithExp\n %s" % p[1], " Ident: %s" % p[3], None, Symbol('int', max(found_id.value).value))
         elif p[1] == 'min':
             # Igual que en max pero para el min
-            p[0] = Node("ArithExp\n %s" % p[1], " Ident: %s" % p[3], None, Symbol('int', min(found_id.value)))
+            p[0] = Node("ArithExp\n %s" % p[1], " Ident: %s" % p[3], None, Symbol('int', min(found_id.value).value))
         elif p[1] == 'atoi':
             # REVISAR EN ENUNCIADO - devuelve int si el arreglo es de tamano 1?
+            if len(found_id.value) > 1:
+                print("Error: atoi recieves an array of length = 1. Array length mismatch in line %d" % p.lineno(1))
+                exit(1)
             p[0] = Node("ArithExp\n %s" % p[1], " Ident: %s" % p[3], None, Symbol('int', len(found_id.value)))
 
 def p_expression_number(p):
@@ -399,7 +386,7 @@ def p_expression_number(p):
         # Caso 1 Creamos el arbol con el Symbol del int
         p[0] = Node(" Literal: %s" % p[1], None, None, Symbol('int', p[1]))
     else: 
-        # Caso array[exp] - POR TERMINAR
+        # Caso array[exp]
         found_id = inIdsList(ids_list, p[1])
         if found_id == None:
             print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
@@ -435,33 +422,33 @@ def p_boolean_exp(p):
                   | expression TkNEqual expression'''
     # Revisamos que el tipo de las expresiones sea entero                                      
     if p[1].sp.var_type != p[3].sp.var_type:
-        print("Error: TypeError4 in line %s" % p.lineno(2))
+        print("Error: TypeError in line %s" % p.lineno(2))
         exit(1)
 
     # Operaciones booleanas para los ints
     if p[1].sp.var_type == 'int':
         if p[2] == '<': 
-            p[0] = Node("BoolExp\n ArithLess", "  %s" % p[1], "  %s" % p[3], Symbol('bool', p[1].sp.value < p[3].sp.value))
+            p[0] = Node("BoolExp\n  ArithLess", "   %s" % p[1], "   %s" % p[3], Symbol('bool', p[1].sp.value < p[3].sp.value))
         elif p[2] == '<=': 
-            p[0] = Node("BoolExp\n ArithLeq", "  %s" % p[1], "  %s" % p[3], Symbol('bool', p[1].sp.value <= p[3].sp.value))
+            p[0] = Node("BoolExp\n  ArithLeq", "   %s" % p[1], "   %s" % p[3], Symbol('bool', p[1].sp.value <= p[3].sp.value))
         elif p[2] == '>=': 
-            p[0] = Node("BoolExp\n ArithGeq", "  %s" % p[1], "  %s" % p[3], Symbol('bool', p[1].sp.value >= p[3].sp.value))
+            p[0] = Node("BoolExp\n  ArithGeq", "   %s" % p[1], "   %s" % p[3], Symbol('bool', p[1].sp.value >= p[3].sp.value))
         elif p[2] == '>' : 
-            p[0] = Node("BoolExp\n ArithGreater", "  %s" % p[1], "  %s" % p[3], Symbol('bool', p[1].sp.value > p[3].sp.value))
+            p[0] = Node("BoolExp\n  ArithGreater", "   %s" % p[1], "   %s" % p[3], Symbol('bool', p[1].sp.value > p[3].sp.value))
         elif p[2] == '==': 
-            p[0] = Node("BoolExp\n ArithEqual", "  %s" % p[1], "  %s" % p[3], Symbol('bool', p[1].sp.value == p[3].sp.value))
+            p[0] = Node("BoolExp\n  ArithEqual", "   %s" % p[1], "   %s" % p[3], Symbol('bool', p[1].sp.value == p[3].sp.value))
         elif p[2] == '!=': 
-            p[0] = Node("BoolExp\n ArithNotEqual", "  %s" % p[1], "  %s" % p[3], Symbol('bool', p[1].sp.value != p[3].sp.value))
+            p[0] = Node("BoolExp\n  ArithNotEqual", "   %s" % p[1], "   %s" % p[3], Symbol('bool', p[1].sp.value != p[3].sp.value))
     else:
         # Operaciones entre bools
         if p[2] == '\\/': 
-            p[0] = Node("BoolExp\n BoolOr", "  %s" % p[1], "  %s" % p[3], Symbol('bool', p[1].sp.value or p[3].sp.value))
+            p[0] = Node("BoolExp\n  BoolOr", "   %s" % p[1], "   %s" % p[3], Symbol('bool', p[1].sp.value or p[3].sp.value))
         elif p[2] == '/\\': 
-            p[0] = Node("BoolExp\n BoolAnd", "  %s" % p[1], "  %s" % p[3], Symbol('bool', p[1].sp.value and p[3].sp.value))
+            p[0] = Node("BoolExp\n  BoolAnd", "   %s" % p[1], "   %s" % p[3], Symbol('bool', p[1].sp.value and p[3].sp.value))
         elif p[2] == '==': 
-            p[0] = Node("BoolExp\n BoolEqual", "  %s" % p[1], "  %s" % p[3], Symbol('bool', p[1].sp.value == p[3].sp.value))
+            p[0] = Node("BoolExp\n  BoolEqual", "   %s" % p[1], "   %s" % p[3], Symbol('bool', p[1].sp.value == p[3].sp.value))
         elif p[2] == '!=': 
-            p[0] = Node("BoolExp\n BoolNotEqual", "  %s" % p[1], "  %s" % p[3], Symbol('bool', p[1].sp.value != p[3].sp.value))
+            p[0] = Node("BoolExp\n  BoolNotEqual", "   %s" % p[1], "   %s" % p[3], Symbol('bool', p[1].sp.value != p[3].sp.value))
 
 def p_expression_true(p):
     'expression : TkTrue'
@@ -475,14 +462,14 @@ def p_expression_false(p):
 
 def p_expression_not(p):
     'expression : TkNot expression'
-    # POR TERMINAR
-    p[0] = Node("Not", p[2], None)
-
-# DE AQUI PA BAJO NI IDEA
+    if p[2].sp.var_type != 'bool':
+        print("Error: TypeError in line %d" % p.lineno(1))
+        exit(1)
+    p[0] = Node("Not", p[2], None, Symbol('bool', not p[2].sp.value))
 
 def p_read(p):
     'read : TkRead TkId'
-    # NI IDEA
+    # Lo reviso para la proxima entrega
     try:
         p[0] = ids_list[len(ids_list) - 1][p[2]]
         p[0] = Node("Read", " Ident: %s" % p[2], None)
@@ -528,7 +515,6 @@ def p_sentence(p):
                 | gprint TkSemiColon
                 | gprintln TkSemiColon
                 | read TkSemiColon''' 
-    # Sequencing en TkSemicolon?
     p[0] = Node(p[1], None, "Sequencing")
 
 def p_sentence_cond(p):
@@ -570,7 +556,6 @@ def p_strprint(p):
                 | TkString
                 | expression'''
     if len(p) == 4: 
-        #print("Concat\n%s" % p[1])
         p[0] = Node("Concat", "  %s" % p[1], "  %s" % p[3])
     else: p[0] = Node(" %s" % p[1], None, None)
 
