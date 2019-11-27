@@ -5,9 +5,6 @@ class Symbol(object):
 		self.restricted = restricted
 		if self.var_type == 'array':
 			# Si es del tipo array guardamos sus indices
-			# ----------
-			# --01234---
-			# -10123----
 			self.n = n
 			self.m = m
 

@@ -19,6 +19,7 @@ class Node(object):
 
 		return ret
 
+	# Innecesario - lo quito despues
 	def set_p(self, new):
 		self.p = new
 		

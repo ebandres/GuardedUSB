@@ -1,0 +1,114 @@
+block --> TkOBlock TkDeclare table start poptable TkCBlock
+        | TkOBlock table body poptable TkCBlock
+
+table --> lambda
+
+poptable --> lambda
+
+body --> sentence body
+       | sentcond body
+       | unique
+       | terminal
+
+start --> secd body
+
+empty --> lambda
+
+secd --> declaration TkSemiColon secd
+       | declaration
+
+declaration --> TkId TkTwoPoints tipo 
+              | TkId TkComma listaid TkTwoPoints tipo 
+              | TkId TkComma listaid TkTwoPoints tipo TkComma listatipo 
+
+listaid --> TkId TkComma listaid
+          | TkId
+
+tipo --> TkInt
+       | TkBool
+       | TkArray TkOBracket TkNum TkSoForth TkNum TkCBracket
+
+listatipo --> tipo TkComma listatipo
+            | tipo
+
+assign --> TkId TkAsig expression
+         | TkId TkAsig array
+
+array --> expression TkComma inarray
+        | TkId arrayfun
+
+arrayfun --> TkOpenPar expression TkTwoPoints expression TkClosePar arrayfunhelper arrayfun
+           | TkOpenPar expression TkTwoPoints expression TkClosePar
+
+arrayfunhelper --> lambda
+
+inarray --> expression TkComma inarray
+          | expression
+
+expression --> expression TkPlus expression
+             | expression TkMinus expression
+             | expression TkMult expression
+             | expression TkDiv expression
+             | expression TkMod expression
+             | TkOpenPar expression TkClosePar
+             | TkSize TkOpenPar TkId TkClosePar
+             | TkMax TkOpenPar TkId TkClosePar
+             | TkMin TkOpenPar TkId TkClosePar
+             | TkAtoi TkOpenPar TkId TkClosePar
+			       | expression TkLess expression
+             | expression TkLeq expression
+             | expression TkGeq expression
+             | expression TkGreater expression
+             | expression TkOr expression
+             | expression TkAnd expression
+             | expression TkEqual expression
+             | expression TkNEqual expression
+             | TkId TkOBracket expression TkCBracket
+             | TkNot expression
+             | TkNum
+             | TkId
+             | TkTrue
+             | TkFalse
+
+read --> TkRead TkId
+
+gfor --> TkFor TkId TkIn expression table2 TkTo expression TkArrow block TkRof
+
+table2 --> lambda
+
+gdo --> TkDo expression TkArrow unique guard TkOd
+      | TkDo expression TkArrow block guard TkOd
+
+gif --> TkIf expression TkArrow unique guard TkFi  
+      | TkIf expression TkArrow block guard TkFi
+
+guard --> TkGuard expression TkArrow unique guard
+        | TkGuard expression TkArrow block guard
+        | empty
+
+sentence --> assign TkSemiColon
+           | gprint TkSemiColon
+           | gprintln TkSemiColon
+           | read TkSemiColon
+
+sentcond --> gif TkSemiColon
+           | gdo TkSemiColon
+           | gfor TkSemiColon
+
+terminal --> gif
+           | gdo
+           | gfor
+
+unique --> assign
+         | gprint
+         | gprintln
+         | read
+
+gprint --> TkPrint strprint
+
+gprintln --> TkPrintln strprint
+
+strprint --> strprint TkConcat strprint
+	         | TkString
+	         | expression
+
