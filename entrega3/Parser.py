@@ -228,7 +228,7 @@ def p_assign_expr(p):
     'assign : TkId TkAsig expression'
     # Revisamos que la variable en p[1] haya sido declarada
     found_id = inIdsList(ids_list, p[1])
-    if found_id == None:
+    if found_id is None:
         print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
         exit(1)
     elif found_id.restricted:
@@ -250,7 +250,7 @@ def p_assign_arr(p):
     'assign : TkId TkAsig array'
     # Buscamos la id en las tablas
     found_id = inIdsList(ids_list, p[1])
-    if found_id == None:
+    if found_id is None:
         print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
         exit(1)
     # Si existe, revisamos el tipo
@@ -342,7 +342,10 @@ def p_expression_bin(p):
     elif p[2] == '*' : 
         p[0] = Node("Exp\n Mult", "  %s" % p[1], "  %s" % p[3], Symbol('int', p[1].sp.value * p[3].sp.value))
     elif p[2] == '/' : 
-        p[0] = Node("Exp\n Div", "  %s" % p[1], "  %s" % p[3], Symbol('int', p[1].sp.value / p[3].sp.value))
+        if p[3].sp.value == 0:
+            print("Error: Divide by zero in line %d" % p.lineno(2))
+            exit(1)
+        p[0] = Node("Exp\n Div", "  %s" % p[1], "  %s" % p[3], Symbol('int', int(p[1].sp.value / p[3].sp.value)))
     elif p[2] == '%' : 
         p[0] = Node("Exp\n Mod", "  %s" % p[1], "  %s" % p[3], Symbol('int', p[1].sp.value % p[3].sp.value))
 
@@ -358,7 +361,7 @@ def p_expression_fun(p):
                   | TkMin TkOpenPar TkId TkClosePar
                   | TkAtoi TkOpenPar TkId TkClosePar'''
     found_id = inIdsList(ids_list, p[3])
-    if found_id == None:
+    if found_id is None:
         print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
         exit(1)
     elif found_id.var_type == 'array':
@@ -388,7 +391,7 @@ def p_expression_number(p):
     else: 
         # Caso array[exp]
         found_id = inIdsList(ids_list, p[1])
-        if found_id == None:
+        if found_id is None:
             print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
             exit(1)
         elif found_id.var_type == 'array' and p[3].sp.var_type == 'int':
@@ -404,7 +407,7 @@ def p_expression_id(p):
     'expression : TkId'
     # Buscamos valor de la id para asignar
     found_id = inIdsList(ids_list, p[1])
-    if found_id == None:
+    if found_id is None:
         print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
         exit(1)
 

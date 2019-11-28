@@ -10,11 +10,11 @@ class Node(object):
 	def __repr__(self):
 		ret = ""
 
-		if self.p != None: 
+		if self.p is not None: 
 			ret += str(self.p) + "\n"
-		if self.lc != None: 
+		if self.lc is not None: 
 			ret += str(self.lc) + "\n"
-		if self.rc != None: 
+		if self.rc is not None: 
 			ret += str(self.rc)
 
 		return ret

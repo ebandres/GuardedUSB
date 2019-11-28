@@ -17,25 +17,20 @@ class Symbol(object):
 			return "  Bool: " + str(self.value)
 		return "SYMBOL " + str(self.value)
 
+	def __eq__(self, other):
+		return self.value == other.value
+
 	def __lt__(self, other):
-		if self.value < other.value:
-			return True
-		else: return False
+		return self.value < other.value
 
 	def __le__(self, other):
-		if self.value <= other.value:
-			return True
-		else: return False
+		return self.value <= other.value
 
 	def __gt__(self, other):
-		if self.value > other.value:
-			return True
-		else: return False
+		return self.value > other.value
 
 	def __ge__(self, other):
-		if self.value >= other.value:
-			return True
-		else: return False
+		return self.value >= other.value
 
 	def search(self, i):
 		# Funcion que busca el indice i (en el rango declarado)
