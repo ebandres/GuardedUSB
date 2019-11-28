@@ -1,5 +1,9 @@
-block --> TkOBlock TkDeclare start TkCBlock
-        | TkOBlock body TkCBlock
+block --> TkOBlock TkDeclare table start poptable TkCBlock
+        | TkOBlock table body poptable TkCBlock
+
+table --> lambda
+
+poptable --> lambda
 
 body --> sentence body
        | sentcond body
@@ -20,33 +24,33 @@ declaration --> TkId TkTwoPoints tipo
 listaid --> TkId TkComma listaid
           | TkId
 
+tipo --> TkInt
+       | TkBool
+       | TkArray TkOBracket TkNum TkSoForth TkNum TkCBracket
+
 listatipo --> tipo TkComma listatipo
             | tipo
 
-tipo --> TkInt
-       | TkArray TkOBracket TkNum TkSoForth TkNum TkCBracket
-       | TkBool
-
 assign --> TkId TkAsig expression
          | TkId TkAsig array
-         | TkId TkAsig array TkOBracket expression TkCBracket
 
-array --> TkNum TkComma inarray
+array --> expression TkComma inarray
         | TkId arrayfun
 
-inarray --> TkNum TkComma inarray
-          | TkNum
-
-arrayfun --> TkOpenPar expression TkTwoPoints expression TkClosePar arrayfun
+arrayfun --> TkOpenPar expression TkTwoPoints expression TkClosePar arrayfunhelper arrayfun
            | TkOpenPar expression TkTwoPoints expression TkClosePar
 
+arrayfunhelper --> lambda
 
+inarray --> expression TkComma inarray
+          | expression
 
 expression --> expression TkPlus expression
              | expression TkMinus expression
              | expression TkMult expression
              | expression TkDiv expression
              | expression TkMod expression
+             | TkOpenPar expression TkClosePar
              | TkSize TkOpenPar TkId TkClosePar
              | TkMax TkOpenPar TkId TkClosePar
              | TkMin TkOpenPar TkId TkClosePar
@@ -59,6 +63,7 @@ expression --> expression TkPlus expression
              | expression TkAnd expression
              | expression TkEqual expression
              | expression TkNEqual expression
+             | TkId TkOBracket expression TkCBracket
              | TkNot expression
              | TkNum
              | TkId
@@ -67,7 +72,9 @@ expression --> expression TkPlus expression
 
 read --> TkRead TkId
 
-gfor --> TkFor TkId TkIn expression TkTo expression TkArrow block TkRof
+gfor --> TkFor TkId TkIn expression table2 TkTo expression TkArrow block TkRof
+
+table2 --> lambda
 
 gdo --> TkDo expression TkArrow unique guard TkOd
       | TkDo expression TkArrow block guard TkOd
@@ -102,6 +109,6 @@ gprint --> TkPrint strprint
 gprintln --> TkPrintln strprint
 
 strprint --> strprint TkConcat strprint
-	   | TkString
-	   | expression
+	         | TkString
+	         | expression
 

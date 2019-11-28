@@ -1,20 +1,36 @@
 |[
   declare
-    x, y, z, p : int, int, array[0..2], int
+    x, y, z, p : int, int, array[-1..2], bool;
+    a, b, c, d : int
 
   x := 1;
-  y := 1;
-  z := 4, 3, 2;
-  if x==y -->
-    x := z[2]+1
+  y := 3 + 2;
+  p := !true;
+  z := 4, 3 - 1, 2, 1;
+  z := z(2:5)(1:3)(2:1);
+  a := z[2];
+  b := - (3 + 1);
+  c := size(z);
+  //d := size(c);
+
+  for i in 2 to 10 -->
+    |[
+      //i := 2;
+      println i || "Hola mundo! \n Esto es una comilla escapada \" y un backslash \\"
+    ]|
+  rof;
+
+  if x == y -->
+    x := 1 + 2
   [] x != y -->
     |[
       declare
-        a : int;
-        q : array[2..2]
-      a := 3;
-      q := atoi(q);
-      println a
+        z : int;
+        q : array[-1..3]
+      z := x;
+      z := max(q);
+      println z
     ]|
   fi
+  //a := 2
 ]|

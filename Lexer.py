@@ -83,7 +83,7 @@ def t_newline(t):
 error_found = False
 def t_error(t):
 	global error_found
-	print("Error: Unexpected character '%s' in row %d, column %d" % (t.value[0], t.lineno, find_column(data, t)))
+	print("Error: Unexpected character '%s' in line %d" % (t.value[0], t.lineno))
 	error_found = True
 	t.lexer.skip(1)
 
