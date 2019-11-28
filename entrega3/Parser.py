@@ -95,6 +95,9 @@ def p_poptable(p):
     'poptable :'
     # Al salir de un bloque sacamos la ultima tabla
     p[0] = ids_list.pop()
+    print("POPPED TABLE")
+    print(p[0])
+    print("------------")
  
 def p_body(p):
     '''body : sentence body
@@ -236,7 +239,7 @@ def p_assign_expr(p):
         exit(1)
 
     # Revisamos que el tipo de p[1] sea igual al tipo de p[3]
-    if inIdsList(ids_list, p[1]).var_type == p[3].sp.var_type:
+    if found_id.var_type == p[3].sp.var_type:
         # Asignamos el valor
         setIdsList(ids_list, p[1], p[3].sp)
     else:
@@ -336,19 +339,22 @@ def p_expression_bin(p):
 
     # Creamos el arbol y le asignamos un Symbol nuevo con el resultado de la op
     if p[2] == '+'   :
-        p[0] = Node("Exp\n Plus", "  %s" % p[1], "  %s" % p[3], Symbol('int', p[1].sp.value + p[3].sp.value))
+        p[0] = Node("Exp\n Plus", "  %s" % p[1], "  %s" % p[3], p[1].sp + p[3].sp)
     elif p[2] == '-' : 
-        p[0] = Node("Exp\n Minus", "  %s" % p[1], "  %s" % p[3], Symbol('int', p[1].sp.value - p[3].sp.value))
+        p[0] = Node("Exp\n Minus", "  %s" % p[1], "  %s" % p[3], p[1].sp - p[3].sp)
     elif p[2] == '*' : 
-        p[0] = Node("Exp\n Mult", "  %s" % p[1], "  %s" % p[3], Symbol('int', p[1].sp.value * p[3].sp.value))
+        p[0] = Node("Exp\n Mult", "  %s" % p[1], "  %s" % p[3], p[1].sp * p[3].sp)
     elif p[2] == '/' : 
         if p[3].sp.value == 0:
             print("Error: Divide by zero in line %d" % p.lineno(2))
             exit(1)
-        p[0] = Node("Exp\n Div", "  %s" % p[1], "  %s" % p[3], Symbol('int', int(p[1].sp.value / p[3].sp.value)))
+        p[0] = Node("Exp\n Div", "  %s" % p[1], "  %s" % p[3], p[1].sp / p[3].sp)
     elif p[2] == '%' : 
-        p[0] = Node("Exp\n Mod", "  %s" % p[1], "  %s" % p[3], Symbol('int', p[1].sp.value % p[3].sp.value))
+        p[0] = Node("Exp\n Mod", "  %s" % p[1], "  %s" % p[3], p[1].sp % p[3].sp)
 
+def p_expression_umins(p):
+    'expression : TkMinus expression'
+    p[0] = Node("Exp\n UMinus", "  %s" % p[2], None, - p[2].sp)
 
 def p_expression_group(p):
     'expression : TkOpenPar expression TkClosePar'
@@ -381,6 +387,9 @@ def p_expression_fun(p):
                 print("Error: atoi recieves an array of length = 1. Array length mismatch in line %d" % p.lineno(1))
                 exit(1)
             p[0] = Node("ArithExp\n %s" % p[1], " Ident: %s" % p[3], None, Symbol('int', len(found_id.value)))
+    else: 
+        print("Error: TypeError in line %d" % p.lineno(1))
+        exit(1)
 
 def p_expression_number(p):
     '''expression : TkNum
@@ -549,18 +558,33 @@ def p_guard(p):
 def p_print(p):
     'gprint : TkPrint strprint'
     p[0] = Node(" Print", "  %s" % p[2], None)
+    print("PRINT")
+    print(p[2].string)
+    print("-----")
 
 def p_println(p):
     'gprintln : TkPrintln strprint'
     p[0] = Node(" Println", "  %s" % p[2], None)
+    print("PRINTLN")
+    tmp = r'%s' % p[2].string
+    tmp = tmp.replace('\\\\', '\\').replace('\\n', '\n').replace('\\"', '\"') + '\n'
+    print(tmp)
+    print("-------")
 
 def p_strprint(p):
     '''strprint : strprint TkConcat strprint
-                | TkString
-                | expression'''
+                | TkString'''
     if len(p) == 4: 
         p[0] = Node("Concat", "  %s" % p[1], "  %s" % p[3])
-    else: p[0] = Node(" %s" % p[1], None, None)
+        p[0].string = p[1].string + p[3].string
+    else: 
+        p[0] = Node(" %s" % p[1], None, None)
+        p[0].string = "%s" % p[1][1:-1]
+
+def p_strprint_exp(p):
+    'strprint : expression'
+    p[0] = Node(" %s" % p[1], None, None)
+    p[0].string = str(p[1].sp.value)
 
 def p_error(p):
     print("Syntax error at '%s' in line: %s" % (p.value, p.lineno))

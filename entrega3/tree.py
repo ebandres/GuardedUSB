@@ -1,11 +1,12 @@
 class Node(object):
-	def __init__(self, p, lc, rc, sp = None, slc = None, src = None):
+	def __init__(self, p, lc, rc, sp = None, slc = None, src = None, string = None):
 		self.p = p 		# Parent
 		self.lc = lc	# Left Child
 		self.rc = rc	# Right Child
 		self.sp = sp	# Symbol Parent
 		self.slc = slc	# Symbol Left Child
 		self.src = src	# Symbol Right Child
+		self.string = string 
 
 	def __repr__(self):
 		ret = ""
