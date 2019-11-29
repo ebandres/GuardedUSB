@@ -20,29 +20,18 @@ class Node(object):
 
 		return ret
 
-	# Innecesario - lo quito despues
-	def set_p(self, new):
-		self.p = new
-		
-	def set_lc(self, new):
-		self.lc = new
-
-	def set_rc(self, new):
-		self.rc = new
-
-	def set_sp(self, new):
-		self.sp = new
-
-	def set_slc(self, new):
-		self.slc = new
-
-	def set_src(self, new):
-		self.src = new
-
 	def depth_lc(self, n = 1):
 		# Devuelve la profundidad del arbol en la rama del hijo izq
 		try:
 			n = self.lc.depth_lc(n + 1)
+		except:
+			pass
+		return n
+
+	def depth_rc(self, n = 1):
+		# Devuelve la profundidad del arbol en la rama del hijo izq
+		try:
+			n = self.rc.depth_rc(n + 1)
 		except:
 			pass
 		return n
@@ -52,6 +41,15 @@ class Node(object):
 		l.append(self.p)
 		try:
 			self.lc.list_lc(l)	
+		except:
+			pass
+		return l	
+
+	def list_rc(self, l = []):
+		# Devuelve una lista de los elementos del arbol en la rama del hijo izq
+		l.append(self.p)
+		try:
+			self.rc.list_rc(l)	
 		except:
 			pass
 		return l	

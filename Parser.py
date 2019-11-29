@@ -62,27 +62,28 @@ def p_code(p):
     '''block : TkOBlock TkDeclare table start poptable TkCBlock
              | TkOBlock table body poptable TkCBlock'''
     if len(p) == 7: 
-        # Creamos la tabla de simbolos para imprimir
+        # Por las reglas, se crea todo el arbol de start y tenemos las ids en la ultima entrada de ids_list
+        # luego en poptable obtenemos el diccionario de este bloque
         dic = p[5]
-        tmp = "    Symbols Table\n"
-        for key in dic:
-            symb = dic[key]
-            if symb.var_type == 'array':
-                tmp += "    variable: %s | type: %s[%d..%d]\n" % (key, symb.var_type, symb.n, symb.m)
-            else:
-                tmp += "    variable: %s | type: %s\n" % (key, symb.var_type)
-        p[0] = Node("Block\n Declare\n%s" % tmp, None, "%s" % p[4])
+        #tmp = "    Symbols Table\n"
+        #for key in dic:
+        #    symb = dic[key]
+        #    if symb.var_type == 'array':
+        #        tmp += "    variable: %s | type: %s[%d..%d]\n" % (key, symb.var_type, symb.n, symb.m)
+        #    else:
+        #        tmp += "    variable: %s | type: %s\n" % (key, symb.var_type)
+        p[0] = Node("BLOCK", p[4], dic) # p[4]: arbol, tmp: symbols table
     else: 
         # Creamos la tabla de simbolos para imprimir
         dic = p[4]
-        tmp = "    Symbols Table\n"
-        for key in dic:
-            symb = dic[key]
-            if symb.var_type == 'array':
-                tmp += "    variable: %s | type: %s[%d..%d]\n" % (key, symb.var_type, symb.n, symb.m)
-            else:
-                tmp += "    variable: %s | type: %s\n" % (key, symb.var_type)
-        p[0] = Node("Block\n%s" % tmp, None, p[3])
+        #tmp = "    Symbols Table\n"
+        #for key in dic:
+        #    symb = dic[key]
+        #    if symb.var_type == 'array':
+        #        tmp += "    variable: %s | type: %s[%d..%d]\n" % (key, symb.var_type, symb.n, symb.m)
+        #    else:
+        #        tmp += "    variable: %s | type: %s\n" % (key, symb.var_type)
+        p[0] = Node("BLOCK", p[3], dic) # p[3]: arbol, tmp: symbols table
 
 def p_table(p):
     'table :'
@@ -95,6 +96,7 @@ def p_poptable(p):
     'poptable :'
     # Al salir de un bloque sacamos la ultima tabla
     p[0] = ids_list.pop()
+    # debug
     print("POPPED TABLE")
     print(p[0])
     print("------------")
@@ -104,12 +106,12 @@ def p_body(p):
             | sentcond body
             | unique
             | terminal'''
-    if len(p) == 3: p[0] = Node(p[1], None, p[2])
+    if len(p) == 3: p[0] = Node(p[1], p[2], None)
     else: p[0] = Node(p[1], None, None)
 
 def p_start(p):
     '''start : secd body'''
-    p[0] = Node(None,p[1],p[2])
+    p[0] = Node(p[1], p[2], None)
 
 def p_empty(p):
     'empty :'
@@ -118,8 +120,8 @@ def p_empty(p):
 def p_sec_declare(p):
     '''secd : declaration TkSemiColon secd
             | declaration'''
-    if len(p) == 4: p[0] = Node(p[1],p[3],None)
-    else: p[0] = Node(p[1],None,None)
+    if len(p) == 4: p[0] = Node(p[1], p[3], None)
+    else: p[0] = Node(p[1], None, None)
 
 def p_declaration(p):
     '''declaration : TkId TkTwoPoints tipo 
@@ -139,7 +141,7 @@ def p_declaration(p):
         # p[3] es del tipo Symbol, contiene los atributos tipo y valor
         ids_list[len(ids_list) - 1][p[1]] = p[3]
 
-        p[0] = Node("  Ident: %s" % p[1], None, " Sequencing")
+        #p[0] = Node("  Ident: %s" % p[1], None, " Sequencing")
 
     elif len(p) == 6:
         # Caso n vars, 1 tipo
@@ -147,12 +149,12 @@ def p_declaration(p):
         ids_list[len(ids_list) - 1][p[1]] = p[5]
 
         # Creamos el arbol para imprimir
-        p[0] = Node("  Ident: %s" % p[1], p[3], " Sequencing")
+        #p[0] = Node("  Ident: %s" % p[1], p[3], " Sequencing")
 
         # Tomamos las ids y las convertimos en una lista
         # Por como se crea el arbol hay que manipularla como string - revisar manera de mejorar?
         tmp = str(p[3])
-        while "Ident:" in tmp: tmp = tmp.replace("Ident:", "")
+        #while "Ident:" in tmp: tmp = tmp.replace("Ident:", "")
         tmp = tmp.split()
         # Agregamos cada id a la tabla con el valor por defecto
         for var in tmp:
@@ -163,21 +165,22 @@ def p_declaration(p):
         # Agregamos la primera id a la tabla
         ids_list[len(ids_list) - 1][p[1]] = p[5]
 
-        p[0] = Node("  Ident: %s" % p[1], p[3], " Sequencing")
+        #p[0] = Node("  Ident: %s" % p[1], p[3], " Sequencing")
 
         # Revisamos que en caso de declarar varias variables de diferente tipo, que el numero
         # de variables sea igual al numero de tipos
-        type_n = Node(p[5], p[7], None).depth_lc()
+        type_n = Node(None, p[3], p[7])
+
         # Si el numero no es igual damos error
-        if p[0].depth_lc() != type_n: 
+        if type_n.depth_lc() != type_n.depth_rc(): 
             print("Syntax error: number of variables and types in declaration don't match")
             exit(1)
 
         # Obtenemos la lista de ids como en el caso anterior
         tmp1 = str(p[3])
         # Obtenemos la lista de tipos
-        tmp2 = p[7].list_lc([])
-        while "Ident:" in tmp1: tmp1 = tmp1.replace("Ident:", "")
+        tmp2 = p[7].list_rc([])
+        #while "Ident:" in tmp1: tmp1 = tmp1.replace("Ident:", "")
         tmp1 = tmp1.split()
         # Le asignamos cada tipo a la variable respectiva en la tabla
         for var, typ in zip(tmp1, tmp2):
@@ -195,8 +198,8 @@ def p_listid(p):
         pass
     
     # Creamos el arbol
-    if len(p) == 4: p[0] = Node("  Ident: %s" % p[1], p[3], None)
-    else: p[0] = Node(None, "  Ident: %s" % p[1], None)
+    if len(p) == 4: p[0] = Node(p[1], p[3], None)
+    else: p[0] = Node(p[1], None, None)
 
 def p_tipo_int(p):
     'tipo : TkInt'
@@ -216,6 +219,7 @@ def p_tipo_array(p):
         print("Error in array declaration: %s < %s" % (p[5], p[3]))
         exit(1)
     tmp = []
+    # CAMBIAR a no inicializado
     for i in range(p[3], p[5] + 1):
         tmp.append(Symbol('int', 0))
     p[0] = Symbol('array', tmp, p[3], p[5])
@@ -224,7 +228,7 @@ def p_listtipo(p):
     '''listatipo : tipo TkComma listatipo
                  | tipo'''
     # Creamos el arbol. Como p[1] lleva a tipo, p[1] es un Symbol
-    if len(p) == 4: p[0] = Node(p[1], p[3], None)
+    if len(p) == 4: p[0] = Node(p[1], None, p[3])
     else: p[0] = Node(p[1], None, None)
 
 def p_assign_expr(p):
@@ -239,14 +243,17 @@ def p_assign_expr(p):
         exit(1)
 
     # Revisamos que el tipo de p[1] sea igual al tipo de p[3]
+    # ARREGLAR DESPUES si no lo necesitamos
     if found_id.var_type == p[3].sp.var_type:
         # Asignamos el valor
-        setIdsList(ids_list, p[1], p[3].sp)
+        #setIdsList(ids_list, p[1], p[3].sp)
+        pass
     else:
         print("Error: TypeError in line %s" % p.lineno(1))
         exit(1)
 
-    p[0] = Node("Asig", " Ident: %s" % p[1], " %s" % p[3])
+    # LUEGO en la funcion de eval crear los symbols en p[3], asig sp a p[1] en dic
+    p[0] = Node("ASIG", p[1], p[3])
 
 
 def p_assign_arr(p):
@@ -264,9 +271,9 @@ def p_assign_arr(p):
             print("Error: array length mismatch in line %s" % p.lineno(2))
             exit(1)
         # Actualizamos la tabla
-        setIdsList(ids_list, p[1], p[3].sp)
+        #setIdsList(ids_list, p[1], p[3].sp)
 
-        p[0] = Node("Asig", " Ident: %s" % p[1], p[3])
+        p[0] = Node("ASIG", p[1], p[3])
     else:
         print("Error: TypeError in line %s" % p.lineno(1))
         exit(1)
@@ -279,20 +286,28 @@ def p_array(p):
             print("Error: TypeError in line %d" % p.lineno(2))
             exit(1)
         # Caso lista de numeros
-        p[0] = Node(Symbol('int', p[1].sp.value), p[3], None)
+        #p[0] = Node(Symbol('int', p[1].sp.value), p[3], None)
+        p[0] = Node(p[1], p[3], None)
+
+        # PROBABLEMENTE INNECESARIO - REVISAR
+        # Ya el arbol tiene las expresiones, calcular con el eval los sp y asignar al arreglo
 
         # Creamos un Symbol de tipo array con el arreglo nuevo
         found_id = inIdsList(ids_list, p[-2])
         tmp = Symbol('array', [p[0].p] + p[3].list_lc(), found_id.n, found_id.m)
         # Se lo asignamos al nodo en el arbol
-        p[0].set_sp(tmp)
+        p[0].sp = tmp
     else: 
         # Caso array fun
-        p[0] = Node(None , None, p[2], p[2].sp)
+        p[0] = Node("ARRFUN" , p[1], p[2], p[2].sp)
 
 def p_arrayfn(p):
     '''arrayfun : TkOpenPar expression TkTwoPoints expression TkClosePar arrayfunhelper arrayfun
                 | TkOpenPar expression TkTwoPoints expression TkClosePar'''
+    found_id = inIdsList(ids_list, p[-1])
+    if found_id is None:
+        print("Error: Undefined id %s in line %d" % (p[-1], p.lineno(-1)))
+        exit(1)
     # Revisamos que las expresiones sean enteros
     if p[2].sp.var_type != 'int' or p[4].sp.var_type != 'int':
         print("Error: TypeError in line %d" % p.lineno(1))
@@ -300,14 +315,15 @@ def p_arrayfn(p):
 
     # Revisamos que el indice este en el rango
     try:
-        inIdsList(ids_list, p[-1]).search(p[2].sp.value)
+        found_id.search(p[2].sp.value)
     except IndexError:
         print("Error: array index out of bounds in line %d" % p.lineno(1))
         exit(1)
 
     # Como en esta entrega no nos importa el resultado solo creamos el arbol con el Symbol original
-    if len(p) == 8: p[0] = Node(" AsigArray\n  Ident: %s\n  %s" % (p[-1], p[2]), "  %s" % p[4], p[7], inIdsList(ids_list, p[-1]))
-    else: p[0] = Node(" AsigArray\n  Ident: %s\n  %s" % (p[-1], p[2]), "  %s" % p[4], None, inIdsList(ids_list, p[-1]))
+    if len(p) == 8: 
+        p[0] = Node(p[2], p[4], p[7], found_id)
+    else: p[0] = Node(p[2], p[4], None, found_id)
 
 def p_arrayfnh(p):
     'arrayfunhelper :'
@@ -322,8 +338,8 @@ def p_iarray(p):
         print("Error: TypeError in line %d" % p.lineno(2))
         exit(1)
     # Creamos simbolos con los numeros dados
-    if len(p) == 4: p[0] = Node(p[1].sp, p[3], None)
-    else: p[0] = Node(p[1].sp, None, None)
+    if len(p) == 4: p[0] = Node(p[1], p[3], None)
+    else: p[0] = Node(p[1], None, None)
 
 def p_expression_bin(p):
     '''expression : expression TkPlus expression
@@ -337,24 +353,21 @@ def p_expression_bin(p):
         print("Error: TypeError in line %s" % p.lineno(2))
         exit(1)
 
-    # Creamos el arbol y le asignamos un Symbol nuevo con el resultado de la op
-    if p[2] == '+'   :
-        p[0] = Node("Exp\n Plus", "  %s" % p[1], "  %s" % p[3], p[1].sp + p[3].sp)
-    elif p[2] == '-' : 
-        p[0] = Node("Exp\n Minus", "  %s" % p[1], "  %s" % p[3], p[1].sp - p[3].sp)
-    elif p[2] == '*' : 
-        p[0] = Node("Exp\n Mult", "  %s" % p[1], "  %s" % p[3], p[1].sp * p[3].sp)
+    # Creamos el arbol - el symbol resultado lo crearemos en Eval
+    if p[2] == '+'   : p[0] = Node("PLUS", p[1], p[3], Symbol('int', 0))
+    elif p[2] == '-' : p[0] = Node("MINUS", p[1], p[3], Symbol('int', 0))
+    elif p[2] == '*' : p[0] = Node("MULT", p[1], p[3], Symbol('int', 0))
     elif p[2] == '/' : 
         if p[3].sp.value == 0:
             print("Error: Divide by zero in line %d" % p.lineno(2))
             exit(1)
-        p[0] = Node("Exp\n Div", "  %s" % p[1], "  %s" % p[3], p[1].sp / p[3].sp)
-    elif p[2] == '%' : 
-        p[0] = Node("Exp\n Mod", "  %s" % p[1], "  %s" % p[3], p[1].sp % p[3].sp)
+        p[0] = Node("DIV", p[1], p[3], Symbol('int', 0))
+    elif p[2] == '%' : p[0] = Node("MOD", p[1], p[3], Symbol('int', 0))
 
 def p_expression_umins(p):
     'expression : TkMinus expression'
-    p[0] = Node("Exp\n UMinus", "  %s" % p[2], None, - p[2].sp)
+    # El cambio de signo se lo asignaremos en Eval
+    p[0] = Node("UMINUS", p[2], None, p[2].sp)
 
 def p_expression_group(p):
     'expression : TkOpenPar expression TkClosePar'
@@ -374,19 +387,22 @@ def p_expression_fun(p):
         # Si la variable a la que se le aplica la funcion es un arreglo vemos cual fun usamos
         if p[1] == 'size':
             # Devuelve el tamano del arreglo
-            p[0] = Node("ArithExp\n %s" % p[1], " Ident: %s" % p[3], None, Symbol('int', len(found_id.value)))
+            # Como el tamano no cambia, calculamos de una y se lo asignamos al sp
+            p[0] = Node("SIZE", p[3], None, Symbol('int', len(found_id.value)))
         elif p[1] == 'max':
             # Devuelve el maximo (asumimos que se devuelve es el valor maximo, no el indice en donde esta)
-            p[0] = Node("ArithExp\n %s" % p[1], " Ident: %s" % p[3], None, Symbol('int', max(found_id.value).value))
+            # Calcular en Eval por si se hace un cambio de los valores del arreglo
+            p[0] = Node("MAX", p[3], None, Symbol('int', max(found_id.value).value))
         elif p[1] == 'min':
             # Igual que en max pero para el min
-            p[0] = Node("ArithExp\n %s" % p[1], " Ident: %s" % p[3], None, Symbol('int', min(found_id.value).value))
+            # Calcular en Eval por si se hace un cambio de los valores del arreglo
+            p[0] = Node("MIN", p[3], None, Symbol('int', min(found_id.value).value))
         elif p[1] == 'atoi':
-            # REVISAR EN ENUNCIADO - devuelve int si el arreglo es de tamano 1?
+            # Calcular en Eval por si se hace un cambio de los valores del arreglo
             if len(found_id.value) > 1:
                 print("Error: atoi recieves an array of length = 1. Array length mismatch in line %d" % p.lineno(1))
                 exit(1)
-            p[0] = Node("ArithExp\n %s" % p[1], " Ident: %s" % p[3], None, Symbol('int', len(found_id.value)))
+            p[0] = Node("ATOI", p[3], None, Symbol('int', found_id.value[0]))
     else: 
         print("Error: TypeError in line %d" % p.lineno(1))
         exit(1)
@@ -396,7 +412,7 @@ def p_expression_number(p):
                   | TkId TkOBracket expression TkCBracket'''
     if len(p) == 2: 
         # Caso 1 Creamos el arbol con el Symbol del int
-        p[0] = Node(" Literal: %s" % p[1], None, None, Symbol('int', p[1]))
+        p[0] = Node(p[1], None, None, Symbol('int', p[1]))
     else: 
         # Caso array[exp]
         found_id = inIdsList(ids_list, p[1])
@@ -405,9 +421,10 @@ def p_expression_number(p):
             exit(1)
         elif found_id.var_type == 'array' and p[3].sp.var_type == 'int':
             # La variable es de tipo array y la expresion es int
+            # REVISAR TRY - hacer en Eval?
             try:
                 # Buscamos la expresion en el arreglo
-                p[0] = Node("EvalArray", "  Ident: %s " % p[1], " %s" % p[3], Symbol('int', found_id.search(p[3].sp.value)))
+                p[0] = Node("ARREV", p[1], p[3], Symbol('int', 0))
             except IndexError:
                 print("Error: Index out of bounds in line %s" % p.lineno(1))
                 exit(1)
@@ -420,7 +437,7 @@ def p_expression_id(p):
         print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
         exit(1)
 
-    p[0] = Node("Ident: %s" % p[1], None, None, found_id)
+    p[0] = Node(p[1], None, None, found_id)
 
 
 def p_boolean_exp(p):
@@ -440,65 +457,62 @@ def p_boolean_exp(p):
     # Operaciones booleanas para los ints
     if p[1].sp.var_type == 'int':
         if p[2] == '<': 
-            p[0] = Node("BoolExp\n  ArithLess", "   %s" % p[1], "   %s" % p[3], Symbol('bool', p[1].sp.value < p[3].sp.value))
+            p[0] = Node("ALE", p[1], p[3], Symbol('bool', p[1].sp.value < p[3].sp.value))
         elif p[2] == '<=': 
-            p[0] = Node("BoolExp\n  ArithLeq", "   %s" % p[1], "   %s" % p[3], Symbol('bool', p[1].sp.value <= p[3].sp.value))
+            p[0] = Node("ALQ", p[1], p[3], Symbol('bool', p[1].sp.value <= p[3].sp.value))
         elif p[2] == '>=': 
-            p[0] = Node("BoolExp\n  ArithGeq", "   %s" % p[1], "   %s" % p[3], Symbol('bool', p[1].sp.value >= p[3].sp.value))
+            p[0] = Node("AGQ", p[1], p[3], Symbol('bool', p[1].sp.value >= p[3].sp.value))
         elif p[2] == '>' : 
-            p[0] = Node("BoolExp\n  ArithGreater", "   %s" % p[1], "   %s" % p[3], Symbol('bool', p[1].sp.value > p[3].sp.value))
+            p[0] = Node("AGT", p[1], p[3], Symbol('bool', p[1].sp.value > p[3].sp.value))
         elif p[2] == '==': 
-            p[0] = Node("BoolExp\n  ArithEqual", "   %s" % p[1], "   %s" % p[3], Symbol('bool', p[1].sp.value == p[3].sp.value))
+            p[0] = Node("AEQ", p[1], p[3], Symbol('bool', p[1].sp.value == p[3].sp.value))
         elif p[2] == '!=': 
-            p[0] = Node("BoolExp\n  ArithNotEqual", "   %s" % p[1], "   %s" % p[3], Symbol('bool', p[1].sp.value != p[3].sp.value))
+            p[0] = Node("ANE", p[1], p[3], Symbol('bool', p[1].sp.value != p[3].sp.value))
     else:
         # Operaciones entre bools
         if p[2] == '\\/': 
-            p[0] = Node("BoolExp\n  BoolOr", "   %s" % p[1], "   %s" % p[3], Symbol('bool', p[1].sp.value or p[3].sp.value))
+            p[0] = Node("BOR", p[1], p[3], Symbol('bool', p[1].sp.value or p[3].sp.value))
         elif p[2] == '/\\': 
-            p[0] = Node("BoolExp\n  BoolAnd", "   %s" % p[1], "   %s" % p[3], Symbol('bool', p[1].sp.value and p[3].sp.value))
+            p[0] = Node("BAND", p[1], p[3], Symbol('bool', p[1].sp.value and p[3].sp.value))
         elif p[2] == '==': 
-            p[0] = Node("BoolExp\n  BoolEqual", "   %s" % p[1], "   %s" % p[3], Symbol('bool', p[1].sp.value == p[3].sp.value))
+            p[0] = Node("BEQ", p[1], p[3], Symbol('bool', p[1].sp.value == p[3].sp.value))
         elif p[2] == '!=': 
-            p[0] = Node("BoolExp\n  BoolNotEqual", "   %s" % p[1], "   %s" % p[3], Symbol('bool', p[1].sp.value != p[3].sp.value))
+            p[0] = Node("BNE", p[1], p[3], Symbol('bool', p[1].sp.value != p[3].sp.value))
 
 def p_expression_true(p):
     'expression : TkTrue'
     # Creamos el arbol y un Symbol con True
-    p[0] = Node(" Bool: true", None, None, Symbol('bool', True))
+    p[0] = Node("TRUE", None, None, Symbol('bool', True))
 
 def p_expression_false(p):
     'expression : TkFalse'
     # Creamos el arbol y un Symbol con False
-    p[0] = Node(" Bool: false", None, None, Symbol('bool', False))
+    p[0] = Node("FALSE", None, None, Symbol('bool', False))
 
 def p_expression_not(p):
     'expression : TkNot expression'
     if p[2].sp.var_type != 'bool':
         print("Error: TypeError in line %d" % p.lineno(1))
         exit(1)
-    p[0] = Node("Not", p[2], None, Symbol('bool', not p[2].sp.value))
+    p[0] = Node("NOT", p[2], None, Symbol('bool', not p[2].sp.value))
 
 def p_read(p):
     'read : TkRead TkId'
-    # Lo reviso para la proxima entrega
-    try:
-        p[0] = ids_list[len(ids_list) - 1][p[2]]
-        p[0] = Node("Read", " Ident: %s" % p[2], None)
-    except LookupError:
+    if inIdsList(ids_list, p[2]) is None:
         print("Undefined id '%s' in line %s" % (p[2], p.lineno(2)))
         exit(1)
 
+    p[0] = Node("READ", p[2], None)
+        
+
 def p_cycle_for(p):
     'gfor : TkFor TkId TkIn expression table2 TkTo expression TkArrow block TkRof'
-    # Por ahora no se como se haran las iteraciones, pero permite utilizar una variable
-    # que no ha sido declarada
-    # Posiblemente necesitaremos modificar las gramaticas para la porxima entrega
 
     if p[4].sp.value > p[7].sp.value: 
         print("Error: Iteration range error in line %s" % p.lineno(1))
         exit(1)
-    p[0] = Node("For\n In\n  Ident: %s\n  Exp\n   %s\n  Exp\n   %s" % (p[2], p[4], p[7]), " %s" % p[9], None)
+    # Guardamos el rango en el sp - en Eval calcular p[4], p[7] luego crear range() y hacer for
+    p[0] = Node("FOR", p[2], p[9], [p[4], p[7]])
 
 def p_table_for(p):
     'table2 :'
@@ -515,31 +529,31 @@ def p_table_for(p):
 def p_cycle_do(p):
     '''gdo : TkDo expression TkArrow unique guard TkOd
            | TkDo expression TkArrow block guard TkOd'''
-    p[0] = Node("Do\n %s" % p[2], p[4], p[5])
+    p[0] = Node("DO", p[2], p[4], p[5])
 
 def p_if(p):
     '''gif : TkIf expression TkArrow unique guard TkFi  
            | TkIf expression TkArrow block guard TkFi '''
-    p[0] = Node("If\n Guard\n  %s" % p[2], p[4], p[5])
+    p[0] = Node("IF", p[2], p[4], p[5])
 
 def p_sentence(p):
     '''sentence : assign TkSemiColon
                 | gprint TkSemiColon
                 | gprintln TkSemiColon
                 | read TkSemiColon''' 
-    p[0] = Node(p[1], None, "Sequencing")
+    p[0] = Node(p[1], None, None)
 
 def p_sentence_cond(p):
     '''sentcond : gif TkSemiColon
                 | gdo TkSemiColon
                 | gfor TkSemiColon'''
-    p[0] = Node(p[1],None,"Sequencing")
+    p[0] = Node(p[1], None, None)
 
 def p_terminal(p):
     '''terminal : gif
                 | gdo
                 | gfor'''
-    p[0] = Node(p[1],None,None)
+    p[0] = Node(p[1], None, None)
 
 def p_unique(p):
     '''unique : assign
@@ -553,37 +567,41 @@ def p_guard(p):
              | TkGuard expression TkArrow block guard
              | empty'''
     if len(p) == 6: 
-        p[0] = Node(" Guard\n  %s" % p[2], p[4], p[5])
+        p[0] = Node("GUARD", p[2], p[4], p[5])
 
 def p_print(p):
     'gprint : TkPrint strprint'
-    p[0] = Node(" Print", "  %s" % p[2], None)
-    print("PRINT")
-    print(p[2].string)
-    print("-----")
+    p[0] = Node("PRINT", p[2], None)
+    # HACER ESTO EN EVAL
+    #print("PRINT")
+    #print(p[2].string)
+    #print("-----")
 
 def p_println(p):
     'gprintln : TkPrintln strprint'
-    p[0] = Node(" Println", "  %s" % p[2], None)
-    print("PRINTLN")
-    tmp = r'%s' % p[2].string
-    tmp = tmp.replace('\\\\', '\\').replace('\\n', '\n').replace('\\"', '\"') + '\n'
-    print(tmp)
-    print("-------")
+    p[0] = Node("PRINTLN", p[2], None)
+    # HACER ESTO EN EVAL
+    #print("PRINTLN")
+    #tmp = r'%s' % p[2].string
+    #tmp = tmp.replace('\\\\', '\\').replace('\\n', '\n').replace('\\"', '\"') + '\n'
+    #print(tmp)
+    #print("-------")
 
 def p_strprint(p):
     '''strprint : strprint TkConcat strprint
                 | TkString'''
     if len(p) == 4: 
-        p[0] = Node("Concat", "  %s" % p[1], "  %s" % p[3])
+        p[0] = Node("CONCAT", p[1], p[3])
         p[0].string = p[1].string + p[3].string
     else: 
-        p[0] = Node(" %s" % p[1], None, None)
+        p[0] = Node(p[1], None, None)
+        # REVISAR SI NECESITO ESTO - estaba jurungando a ver como solucionar algo
+        # y se me olvido porque hice esto asi
         p[0].string = "%s" % p[1][1:-1]
 
 def p_strprint_exp(p):
     'strprint : expression'
-    p[0] = Node(" %s" % p[1], None, None)
+    p[0] = Node(p[1], None, None)
     p[0].string = str(p[1].sp.value)
 
 def p_error(p):
