@@ -2,7 +2,7 @@
 # Emmanuel Bandres, 14-10071
 # Daniela Caballero, 14-10140
 
-import sys, Parser
+import sys, Parser, Eval
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
@@ -17,4 +17,7 @@ if __name__ == '__main__':
     with open(sys.argv[1], 'r') as file:
         content = file.read()
 
-    Parser.parsear(content)
+    ast = Parser.parsear(content)
+    test = str(ast)
+    while "\n\n" in test: test = test.replace("\n\n", "\n")
+    print(test)

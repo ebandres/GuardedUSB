@@ -96,22 +96,18 @@ def p_poptable(p):
     'poptable :'
     # Al salir de un bloque sacamos la ultima tabla
     p[0] = ids_list.pop()
-    # debug
-    print("POPPED TABLE")
-    print(p[0])
-    print("------------")
  
 def p_body(p):
     '''body : sentence body
             | sentcond body
             | unique
             | terminal'''
-    if len(p) == 3: p[0] = Node(p[1], p[2], None)
-    else: p[0] = Node(p[1], None, None)
+    if len(p) == 3: p[0] = Node("BODY", p[1], p[2])
+    else: p[0] = Node("BODY", p[1], None)
 
 def p_start(p):
     '''start : secd body'''
-    p[0] = Node(p[1], p[2], None)
+    p[0] = Node("START", p[1], p[2])
 
 def p_empty(p):
     'empty :'
@@ -120,8 +116,9 @@ def p_empty(p):
 def p_sec_declare(p):
     '''secd : declaration TkSemiColon secd
             | declaration'''
-    if len(p) == 4: p[0] = Node(p[1], p[3], None)
-    else: p[0] = Node(p[1], None, None)
+    # Ignoraremos estos en el Eval ya que ya fueron declaradas y estan en la tabla
+    if len(p) == 4: p[0] = Node("DECLARE", p[1], p[3])
+    else: p[0] = Node("DECLARE", p[1], None)
 
 def p_declaration(p):
     '''declaration : TkId TkTwoPoints tipo 
@@ -273,7 +270,7 @@ def p_assign_arr(p):
         # Actualizamos la tabla
         #setIdsList(ids_list, p[1], p[3].sp)
 
-        p[0] = Node("ASIG", p[1], p[3])
+        p[0] = Node("ASIGARR", p[1], p[3])
     else:
         print("Error: TypeError in line %s" % p.lineno(1))
         exit(1)
@@ -287,7 +284,7 @@ def p_array(p):
             exit(1)
         # Caso lista de numeros
         #p[0] = Node(Symbol('int', p[1].sp.value), p[3], None)
-        p[0] = Node(p[1], p[3], None)
+        p[0] = Node("ARRAY", p[1], p[3])
 
         # PROBABLEMENTE INNECESARIO - REVISAR
         # Ya el arbol tiene las expresiones, calcular con el eval los sp y asignar al arreglo
@@ -372,7 +369,7 @@ def p_expression_umins(p):
 def p_expression_group(p):
     'expression : TkOpenPar expression TkClosePar'
     # Creamos el arbol con el valor del Symbol
-    p[0] = Node(p[2], None, None, p[2].sp)
+    p[0] = Node("GROUP", p[2], None, p[2].sp)
 
 def p_expression_fun(p):
     '''expression : TkSize TkOpenPar TkId TkClosePar
@@ -412,7 +409,7 @@ def p_expression_number(p):
                   | TkId TkOBracket expression TkCBracket'''
     if len(p) == 2: 
         # Caso 1 Creamos el arbol con el Symbol del int
-        p[0] = Node(p[1], None, None, Symbol('int', p[1]))
+        p[0] = Node("NUM", p[1], None, Symbol('int', p[1]))
     else: 
         # Caso array[exp]
         found_id = inIdsList(ids_list, p[1])
@@ -437,7 +434,7 @@ def p_expression_id(p):
         print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
         exit(1)
 
-    p[0] = Node(p[1], None, None, found_id)
+    p[0] = Node("ID", p[1], None, found_id)
 
 
 def p_boolean_exp(p):
@@ -529,45 +526,45 @@ def p_table_for(p):
 def p_cycle_do(p):
     '''gdo : TkDo expression TkArrow unique guard TkOd
            | TkDo expression TkArrow block guard TkOd'''
-    p[0] = Node("DO", p[2], p[4], p[5])
+    p[0] = Node("DO", p[2], [p[4], p[5]])
 
 def p_if(p):
     '''gif : TkIf expression TkArrow unique guard TkFi  
            | TkIf expression TkArrow block guard TkFi '''
-    p[0] = Node("IF", p[2], p[4], p[5])
+    p[0] = Node("IF", p[2], [p[4], p[5]])
 
 def p_sentence(p):
     '''sentence : assign TkSemiColon
                 | gprint TkSemiColon
                 | gprintln TkSemiColon
                 | read TkSemiColon''' 
-    p[0] = Node(p[1], None, None)
+    p[0] = Node("SENTENCE", p[1], None)
 
 def p_sentence_cond(p):
     '''sentcond : gif TkSemiColon
                 | gdo TkSemiColon
                 | gfor TkSemiColon'''
-    p[0] = Node(p[1], None, None)
+    p[0] = Node("SENTCOND", p[1], None)
 
 def p_terminal(p):
     '''terminal : gif
                 | gdo
                 | gfor'''
-    p[0] = Node(p[1], None, None)
+    p[0] = Node("TERMINAL", p[1], None)
 
 def p_unique(p):
     '''unique : assign
               | gprint
               | gprintln
               | read'''
-    p[0] = Node(p[1], None, None)
+    p[0] = Node("UNIQUE", p[1], None)
 
 def p_guard(p):
     '''guard : TkGuard expression TkArrow unique guard
              | TkGuard expression TkArrow block guard
              | empty'''
     if len(p) == 6: 
-        p[0] = Node("GUARD", p[2], p[4], p[5])
+        p[0] = Node("GUARD", p[2], [p[4], p[5]])
 
 def p_print(p):
     'gprint : TkPrint strprint'
@@ -592,17 +589,17 @@ def p_strprint(p):
                 | TkString'''
     if len(p) == 4: 
         p[0] = Node("CONCAT", p[1], p[3])
-        p[0].string = p[1].string + p[3].string
+        #p[0].string = p[1].string + p[3].string
     else: 
-        p[0] = Node(p[1], None, None)
+        p[0] = Node("STRING", str(p[1])[1:-1], None)
         # REVISAR SI NECESITO ESTO - estaba jurungando a ver como solucionar algo
         # y se me olvido porque hice esto asi
-        p[0].string = "%s" % p[1][1:-1]
+        #p[0].string = "%s" % p[1][1:-1]
 
 def p_strprint_exp(p):
     'strprint : expression'
-    p[0] = Node(p[1], None, None)
-    p[0].string = str(p[1].sp.value)
+    p[0] = Node("STREXP", p[1], None)
+    #p[0].string = str(p[1].sp.value)
 
 def p_error(p):
     print("Syntax error at '%s' in line: %s" % (p.value, p.lineno))
@@ -612,7 +609,7 @@ def parsear(content):
     lexer = lex.lex()
     parser = yacc.yacc()
 
-    out = str(parser.parse(content, lexer=lexer))
-    while "\n\n" in out: out = out.replace("\n\n", "\n")
-    print(out)
+    return parser.parse(content, lexer=lexer)
+    #while "\n\n" in out: out = out.replace("\n\n", "\n")
+    #print(out)
 
