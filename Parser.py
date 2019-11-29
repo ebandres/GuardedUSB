@@ -296,7 +296,7 @@ def p_array(p):
         p[0].sp = tmp
     else: 
         # Caso array fun
-        p[0] = Node("ARRFUN" , p[1], p[2], p[2].sp)
+        p[0] = Node("ARRFUN", p[1], p[2], p[2].sp)
 
 def p_arrayfn(p):
     '''arrayfun : TkOpenPar expression TkTwoPoints expression TkClosePar arrayfunhelper arrayfun
@@ -311,6 +311,7 @@ def p_arrayfn(p):
         exit(1)
 
     # Revisamos que el indice este en el rango
+    # Posiblemente tenga que quitarlo de aqui y revisar en Eval
     try:
         found_id.search(p[2].sp.value)
     except IndexError:
@@ -335,8 +336,8 @@ def p_iarray(p):
         print("Error: TypeError in line %d" % p.lineno(2))
         exit(1)
     # Creamos simbolos con los numeros dados
-    if len(p) == 4: p[0] = Node(p[1], p[3], None)
-    else: p[0] = Node(p[1], None, None)
+    if len(p) == 4: p[0] = Node("INARRAY", p[1], p[3])
+    else: p[0] = Node("INARRAY", p[1], None)
 
 def p_expression_bin(p):
     '''expression : expression TkPlus expression

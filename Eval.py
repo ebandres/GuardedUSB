@@ -65,7 +65,17 @@ def switch(arg):
         'START': eval_start,
         'BODY': eval_body,
         'SENTENCE': eval_sentence,
-        'ASIG': eval_asig
+        'ASIG': eval_asig,
+        'ASIGARR': eval_asigarr,
+        'NUM': eval_num,
+        'PLUS': eval_exp_bin,
+        'MINUS': eval_exp_bin,
+        'MULT': eval_exp_bin,
+        'DIV': eval_exp_bin,
+        'MOD': eval_exp_bin,
+        'NOT': eval_not,
+        'TRUE': eval_bool_single,
+        'FALSE': eval_bool_single
     }
     return switcher.get(arg, lambda: "Invalid")
 
@@ -76,8 +86,14 @@ def eval_ast(ast):
 
 	# Usamos un switch para buscar que funcion usar
 	func = switch(ast.p)
+	print("NEXT - ", ast.p)
+
 	# Evaluamos la funcion
-	func(ast)
+	try:
+		return func(ast)
+	except:
+		print("EXCEPT ",ast.p)
+		exit(1)
 
 def eval_block(node):
 	# BLOCK siempre tiene Nodo en lc, dict en rc
@@ -85,12 +101,12 @@ def eval_block(node):
 	# Comenzamos un nuevo bloque - agregamos el dict a la lista
 	ids_list.append(node.rc)
 	#print(node.lc)
-	eval_ast(node.lc)
+	return eval_ast(node.lc)
 
 def eval_start(node):
 	# START siempre tiene DECLARE en lc, BODY en rc
 	# Ignoramos el DECLARE
-	eval_ast(node.rc)
+	return eval_ast(node.rc)
 
 def eval_body(node):
 	'''
@@ -101,15 +117,118 @@ def eval_body(node):
 	SENTCOND y TERMINAL son if, for y do
 	'''
 	# Evaluamos lc
-	eval_ast(node.lc)
-	#eval_ast(node.lc)
+	#print(node.rc)
+	func = switch(node.lc.p)
+	func(node.lc)
+	print(ids_list)
+	print("---")
+	# Revisamos si se tiene BODY
+	if node.rc is not None:
+		return eval_body(node.rc)
+		#print(node.rc)
 
 def eval_sentence(node):
 	# Usaremos esta funcion para todos los nodos donde simplemente tengamos que recorrer a node.lc
-	eval_ast(node.lc)
+	return eval_ast(node.lc)
 
 def eval_asig(node):
 	# ASIG (expression) siempre tiene ID en lc y un tipo de EXP en rc
-	print(node)
-	print(inIdsList(ids_list, node.lc))
+	# Buscamos la id en la tabla (ya se comprobo que esta declarada)
+	found_id = inIdsList(ids_list, node.lc)
+	
+	# Evaluamos la expresion
+	exp = eval_ast(node.rc)
+	# Actualizamos la tabla
+	setIdsList(ids_list, node.lc, exp)
+
+def eval_asigarr(node):
+	# ASIGARR siempre tiene ID en lc y ARRAY/ARRFUN en rc
+	# Buscamos la id
+	found_id = inIdsList(ids_list, node.lc)
+
+	# Evaluamos rc
+	# Caso ARRAY
+	if node.rc.p == 'ARRAY':
+		arr = eval_array(node.rc)
+		setIdsList(ids_list, node.lc, Symbol('array', arr, found_id.n, found_id.m))
+	# Caso ARRFUN
+	elif node.rc.p == 'ARRFUN':
+		arr = eval_arrfun(node.rc)
+
+def eval_array(node, l = None):
+	# ARRAY siempre tiene EXP en lc e INARRAY en rc
+	# Calcularemos INARRAY con esta misma funcion recursivamente
+
+	if l is None: l = []
+
+	# Calculamos la expresion en lc
+	exp = eval_ast(node.lc)
+	l.append(exp)
+
+	# Revisamos si rc es None y evaluamos
+	if node.rc is not None:	eval_array(node.rc, l)
+	# Retornamos el arreglo
+	return l
+
+def eval_arrfun(node, found_id = None):
+	'''
+	ARRFUN es un poco mas complicado
+	Al principio el nodo contendra ID en lc y Node en rc
+	Luego se pasa la el Symbol de la ID como parametro para mantenerla en la recursion
+	'''
+	if found_id is None:
+		# Primera vez que se entra a la funcion, buscamos la id
+		# Ya la verificacion que fue declarada se hizo en el parser
+		found_id = inIdsList(ids_list, node.lc)
+		return eval_arrfun(node.rc, found_id)
+
+	# Segunda+ vez que se entra
+	# Ahora tenemos EXP en p, EXP en lc y ARRFUN/None en rc
+	
+	# Evaluamos la exp del indice
+	index = eval_ast(node.p)
+	new = eval_ast(node.lc)
+	print(index)
+	print(new)
+	try:
+		found_id.set_at(index.value, new)
+	except IndexError:
+		# No se como encontrar la linea sin tener que modificar todo lo que he hecho
+		print("Error: array index out of bounds")
+		exit(1)
+
+	# Ahora revisamos si se hacen mas ARRFUN
+	if node.rc is not None: return eval_arrfun(node.rc, found_id)
+
+def eval_num(node):
+	# Un nodo NUM tiene al Symbol en sp, lo retornamos
+	return node.sp
+
+def eval_exp_bin(node):
+	# EXP BIN siempre tiene EXP en lc y EXP en rc
+	# Evaluamos las EXP
+	exp1 = eval_ast(node.lc)
+	exp2 = eval_ast(node.rc)
+
+	# Retornamos el Symbol resultante
+	if node.p == 'PLUS': return exp1 + exp2
+	elif node.p == 'MINUS': return exp1 - exp2
+	elif node.p == 'MULT': return exp1 * exp2
+	elif node.p == 'DIV': return exp1 / exp2
+	elif node.p == 'MOD': return exp1 % exp2
+
+def eval_not(node):
+	# NOT siempre tiene una EXP BOOL en lc
+	# Buscamos la funcion
+	func = switch(node.lc.p)
+	# Evaluamos
+	exp = func(node.lc)
+	# Cambiamos
+	exp.value = not exp.value
+	return exp
+
+def eval_bool_single(node):
+	# TRUE/FALSE ya tienen el Symbol en sp
+	return node.sp
+
 
