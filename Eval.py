@@ -1,3 +1,4 @@
+import sys
 from tree import Node
 from Symbols import Symbol
 from Parser import inIdsList, setIdsList
@@ -57,6 +58,7 @@ from Parser import inIdsList, setIdsList
 # READ: id (lc) =>
 ## buscar Symbol de id, hacer input() dependiendo del tipo
 
+# Diccionario de funciones
 # Implementacion de un switch con un diccionario
 # Si no necesitamos hacer nada en la funcion simplemente la usamos para recorrer el arbol
 def switch(arg):
@@ -65,17 +67,36 @@ def switch(arg):
         'START': eval_start,
         'BODY': eval_body,
         'SENTENCE': eval_sentence,
+        'SENTCOND': eval_sentence,
         'ASIG': eval_asig,
         'ASIGARR': eval_asigarr,
+        'ARREV': eval_arrev,
         'NUM': eval_num,
-        'PLUS': eval_exp_bin,
-        'MINUS': eval_exp_bin,
-        'MULT': eval_exp_bin,
-        'DIV': eval_exp_bin,
-        'MOD': eval_exp_bin,
+        'UMINUS': eval_uminus,
+        'GROUP': eval_group,
+        'PLUS': eval_exp_plus,
+        'MINUS': eval_exp_minus,
+        'MULT': eval_exp_mult,
+        'DIV': eval_exp_div,
+        'MOD': eval_exp_mod,
         'NOT': eval_not,
         'TRUE': eval_bool_single,
-        'FALSE': eval_bool_single
+        'FALSE': eval_bool_single,
+        'SIZE': eval_exp_size,
+        'MIN': eval_exp_min,
+        'MAX': eval_exp_max,
+        'ATOI': eval_exp_atoi,
+        'ALT': eval_bexp_less,
+        'ALQ': eval_bexp_leq,
+        'AGT': eval_bexp_great,
+        'AGQ': eval_bexp_geq,
+        'AEQ': eval_bexp_eq,
+        'ANE': eval_bexp_neq,
+        'BOR': eval_bexp_or,
+        'BAND': eval_bexp_and,
+        'BEQ': eval_bexp_beq,
+        'BNE': eval_bexp_bneq,
+        'FOR': eval_cycle_for
     }
     return switcher.get(arg, lambda: "Invalid")
 
@@ -91,9 +112,11 @@ def eval_ast(ast):
 	# Evaluamos la funcion
 	try:
 		return func(ast)
+	except IndexError as e:
+		raise e
 	except:
 		print("EXCEPT ",ast.p)
-		exit(1)
+		sys.exit(1)
 
 def eval_block(node):
 	# BLOCK siempre tiene Nodo en lc, dict en rc
@@ -124,6 +147,9 @@ def eval_body(node):
 	print("---")
 	# Revisamos si se tiene BODY
 	if node.rc is not None:
+		print("VAMOS PAL BODY")
+		print(node.rc.lc.p)
+		print("END BODY")
 		return eval_body(node.rc)
 		#print(node.rc)
 
@@ -184,38 +210,62 @@ def eval_arrfun(node, found_id = None):
 
 	# Segunda+ vez que se entra
 	# Ahora tenemos EXP en p, EXP en lc y ARRFUN/None en rc
-	
+
 	# Evaluamos la exp del indice
 	index = eval_ast(node.p)
 	new = eval_ast(node.lc)
 	print(index)
 	print(new)
-	try:
-		found_id.set_at(index.value, new)
-	except IndexError:
-		# No se como encontrar la linea sin tener que modificar todo lo que he hecho
-		print("Error: array index out of bounds")
-		exit(1)
+
+	found_id.set_at(index.value, new)
 
 	# Ahora revisamos si se hacen mas ARRFUN
 	if node.rc is not None: return eval_arrfun(node.rc, found_id)
+
+def eval_arrev(node):
+	# ARREV siempre tiene ID en lc y EXP en rc
+	# Buscamos la ID
+	found_id = inIdsList(ids_list, node.lc)
+	# Evaluamos EXP
+	exp = eval_ast(node.rc)
+
+	return found_id.search(exp.value)
 
 def eval_num(node):
 	# Un nodo NUM tiene al Symbol en sp, lo retornamos
 	return node.sp
 
-def eval_exp_bin(node):
-	# EXP BIN siempre tiene EXP en lc y EXP en rc
-	# Evaluamos las EXP
-	exp1 = eval_ast(node.lc)
-	exp2 = eval_ast(node.rc)
+def eval_uminus(node):
+	# UMINUS siempre tendra solamente EXP en lc
+	# Evaluamos EXP
+	exp = eval_ast(node.lc)
+	return -exp
 
+def eval_group(node):
+	# En GROUP solo tenemos que evaluar la EXP en lc
+	return eval_ast(node.lc)
+
+# EXP BIN 
+# PLUS, MINUS, MULT, DIV y MOD siempre tienen EXP en lc y EXP en rc
+def eval_exp_plus(node):
 	# Retornamos el Symbol resultante
-	if node.p == 'PLUS': return exp1 + exp2
-	elif node.p == 'MINUS': return exp1 - exp2
-	elif node.p == 'MULT': return exp1 * exp2
-	elif node.p == 'DIV': return exp1 / exp2
-	elif node.p == 'MOD': return exp1 % exp2
+	return eval_ast(node.lc) + eval_ast(node.rc)
+
+def eval_exp_minus(node):
+	# Retornamos el Symbol resultante
+	return eval_ast(node.lc) - eval_ast(node.rc)
+
+def eval_exp_mult(node):
+	# Retornamos el Symbol resultante
+	return eval_ast(node.lc) * eval_ast(node.rc)
+
+def eval_exp_div(node):
+	# Retornamos el Symbol resultante
+	return eval_ast(node.lc) / eval_ast(node.rc)
+
+def eval_exp_mod(node):
+	# Retornamos el Symbol resultante
+	return eval_ast(node.lc) % eval_ast(node.rc)
 
 def eval_not(node):
 	# NOT siempre tiene una EXP BOOL en lc
@@ -231,4 +281,61 @@ def eval_bool_single(node):
 	# TRUE/FALSE ya tienen el Symbol en sp
 	return node.sp
 
+# Nodos de funciones SIZE, MAX, MIN y ATOI siempre tendran ID en lc
+def eval_exp_size(node):
+	# Buscamos la ID, ya sabemos que es de tipo array
+	found_id = inIdsList(ids_list, node.lc)
+	return Symbol('int', len(found_id.value))
 
+def eval_exp_max(node):
+	found_id = inIdsList(ids_list, node.lc)
+	return max(found_id.value)
+
+def eval_exp_min(node):
+	found_id = inIdsList(ids_list, node.lc)
+	return min(found_id.value)
+
+def eval_exp_atoi(node):
+	found_id = inIdsList(ids_list, node.lc)
+	return found_id.value[0]
+
+##### COMPARES #####
+# ARITH COMP siempre tienen EXP en lc y EXP en rc
+
+def eval_bexp_less(node):
+	return Symbol('bool', eval_ast(node.lc) < eval_ast(node.rc))
+
+def eval_bexp_leq(node):
+	return Symbol('bool', eval_ast(node.lc) <= eval_ast(node.rc))
+	
+def eval_bexp_great(node):
+	return Symbol('bool', eval_ast(node.lc) > eval_ast(node.rc))
+	
+def eval_bexp_geq(node):
+	return Symbol('bool', eval_ast(node.lc) >= eval_ast(node.rc))
+	
+def eval_bexp_eq(node):
+	return Symbol('bool', eval_ast(node.lc) == eval_ast(node.rc))
+	
+def eval_bexp_neq(node):
+	return Symbol('bool', eval_ast(node.lc) != eval_ast(node.rc))
+	
+# BOOL COMP siempre tienen EXP en lc y EXP en rc
+
+def eval_bexp_or(node):
+	return Symbol('bool', eval_ast(node.lc).value or eval_ast(node.rc).value)
+
+def eval_bexp_and(node):
+	return Symbol('bool', eval_ast(node.lc).value and eval_ast(node.rc).value)
+
+def eval_bexp_beq(node):
+	return Symbol('bool', eval_ast(node.lc).value == eval_ast(node.rc).value)
+
+def eval_bexp_bneq(node):
+	return Symbol('bool', eval_ast(node.lc).value != eval_ast(node.rc).value)
+
+#### CYCLES ####
+
+def eval_cycle_for(node):
+	print("COMENZAMOS FOR")
+	print(node.rc.rc)

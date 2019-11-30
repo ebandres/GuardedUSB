@@ -21,4 +21,8 @@ if __name__ == '__main__':
     #test = str(ast)
     #while "\n\n" in test: test = test.replace("\n\n", "\n")
     #print(test)
-    Eval.eval_ast(ast)
+    try:
+        Eval.eval_ast(ast)
+    except IndexError:
+        print("Error: index out of bounds")
+        sys.exit(1)

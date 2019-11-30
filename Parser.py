@@ -128,7 +128,7 @@ def p_declaration(p):
     try:
         p[0] = ids_list[len(ids_list) - 1][p[1]]
         print("Error: Variable %s already declared" % p[1])
-        exit(1)
+        sys.exit(1)
     except LookupError:
         pass
 
@@ -171,7 +171,7 @@ def p_declaration(p):
         # Si el numero no es igual damos error
         if type_n.depth_lc() != type_n.depth_rc(): 
             print("Syntax error: number of variables and types in declaration don't match")
-            exit(1)
+            sys.exit(1)
 
         # Obtenemos la lista de ids como en el caso anterior
         tmp1 = str(p[3])
@@ -190,7 +190,7 @@ def p_listid(p):
     try:
         p[0] = ids_list[len(ids_list) - 1][p[1]]
         print("Error: Variable %s already declared" % p[1])
-        exit(1)
+        sys.exit(1)
     except LookupError:
         pass
     
@@ -214,7 +214,7 @@ def p_tipo_array(p):
     # Verificamos que el segundo numero de la declaracion del array sea mayor al primero
     if p[3] > p[5]: 
         print("Error in array declaration: %s < %s" % (p[5], p[3]))
-        exit(1)
+        sys.exit(1)
     tmp = []
     # CAMBIAR a no inicializado
     for i in range(p[3], p[5] + 1):
@@ -234,10 +234,10 @@ def p_assign_expr(p):
     found_id = inIdsList(ids_list, p[1])
     if found_id is None:
         print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
-        exit(1)
+        sys.exit(1)
     elif found_id.restricted:
         print("Error: control variable %s is being modified in line %s" % (p[1], p.lineno(2)))
-        exit(1)
+        sys.exit(1)
 
     # Revisamos que el tipo de p[1] sea igual al tipo de p[3]
     # ARREGLAR DESPUES si no lo necesitamos
@@ -247,7 +247,7 @@ def p_assign_expr(p):
         pass
     else:
         print("Error: TypeError in line %s" % p.lineno(1))
-        exit(1)
+        sys.exit(1)
 
     # LUEGO en la funcion de eval crear los symbols en p[3], asig sp a p[1] en dic
     p[0] = Node("ASIG", p[1], p[3])
@@ -259,21 +259,21 @@ def p_assign_arr(p):
     found_id = inIdsList(ids_list, p[1])
     if found_id is None:
         print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
-        exit(1)
+        sys.exit(1)
     # Si existe, revisamos el tipo
     elif found_id.var_type == 'array' and p[3].sp.var_type == 'array':
         # Asignamos un array a otro array
         if len(found_id.value) != len(p[3].sp.value):
             # Si los tamanos de arreglos no son iguales damos error
             print("Error: array length mismatch in line %s" % p.lineno(2))
-            exit(1)
+            sys.exit(1)
         # Actualizamos la tabla
         #setIdsList(ids_list, p[1], p[3].sp)
 
         p[0] = Node("ASIGARR", p[1], p[3])
     else:
         print("Error: TypeError in line %s" % p.lineno(1))
-        exit(1)
+        sys.exit(1)
 
 def p_array(p):
     '''array : expression TkComma inarray
@@ -281,7 +281,7 @@ def p_array(p):
     if len(p) == 4: 
         if p[1].sp.var_type != 'int':
             print("Error: TypeError in line %d" % p.lineno(2))
-            exit(1)
+            sys.exit(1)
         # Caso lista de numeros
         #p[0] = Node(Symbol('int', p[1].sp.value), p[3], None)
         p[0] = Node("ARRAY", p[1], p[3])
@@ -304,11 +304,11 @@ def p_arrayfn(p):
     found_id = inIdsList(ids_list, p[-1])
     if found_id is None:
         print("Error: Undefined id %s in line %d" % (p[-1], p.lineno(-1)))
-        exit(1)
+        sys.exit(1)
     # Revisamos que las expresiones sean enteros
     if p[2].sp.var_type != 'int' or p[4].sp.var_type != 'int':
         print("Error: TypeError in line %d" % p.lineno(1))
-        exit(1)
+        sys.exit(1)
 
     # Revisamos que el indice este en el rango
     # Posiblemente tenga que quitarlo de aqui y revisar en Eval
@@ -316,7 +316,7 @@ def p_arrayfn(p):
         found_id.search(p[2].sp.value)
     except IndexError:
         print("Error: array index out of bounds in line %d" % p.lineno(1))
-        exit(1)
+        sys.exit(1)
 
     # Como en esta entrega no nos importa el resultado solo creamos el arbol con el Symbol original
     if len(p) == 8: 
@@ -334,7 +334,7 @@ def p_iarray(p):
     # Revisamos el tipo de la expression
     if p[1].sp.var_type != 'int':
         print("Error: TypeError in line %d" % p.lineno(2))
-        exit(1)
+        sys.exit(1)
     # Creamos simbolos con los numeros dados
     if len(p) == 4: p[0] = Node("INARRAY", p[1], p[3])
     else: p[0] = Node("INARRAY", p[1], None)
@@ -349,7 +349,7 @@ def p_expression_bin(p):
     # Revisamos que el tipo de las expresiones sea entero                                      
     if p[1].sp.var_type != 'int' or p[3].sp.var_type != 'int':
         print("Error: TypeError in line %s" % p.lineno(2))
-        exit(1)
+        sys.exit(1)
 
     # Creamos el arbol - el symbol resultado lo crearemos en Eval
     if p[2] == '+'   : p[0] = Node("PLUS", p[1], p[3], Symbol('int', 0))
@@ -358,7 +358,7 @@ def p_expression_bin(p):
     elif p[2] == '/' : 
         if p[3].sp.value == 0:
             print("Error: Divide by zero in line %d" % p.lineno(2))
-            exit(1)
+            sys.exit(1)
         p[0] = Node("DIV", p[1], p[3], Symbol('int', 0))
     elif p[2] == '%' : p[0] = Node("MOD", p[1], p[3], Symbol('int', 0))
 
@@ -380,7 +380,7 @@ def p_expression_fun(p):
     found_id = inIdsList(ids_list, p[3])
     if found_id is None:
         print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
-        exit(1)
+        sys.exit(1)
     elif found_id.var_type == 'array':
         # Si la variable a la que se le aplica la funcion es un arreglo vemos cual fun usamos
         if p[1] == 'size':
@@ -399,11 +399,11 @@ def p_expression_fun(p):
             # Calcular en Eval por si se hace un cambio de los valores del arreglo
             if len(found_id.value) > 1:
                 print("Error: atoi recieves an array of length = 1. Array length mismatch in line %d" % p.lineno(1))
-                exit(1)
+                sys.exit(1)
             p[0] = Node("ATOI", p[3], None, Symbol('int', found_id.value[0]))
     else: 
         print("Error: TypeError in line %d" % p.lineno(1))
-        exit(1)
+        sys.exit(1)
 
 def p_expression_number(p):
     '''expression : TkNum
@@ -416,7 +416,7 @@ def p_expression_number(p):
         found_id = inIdsList(ids_list, p[1])
         if found_id is None:
             print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
-            exit(1)
+            sys.exit(1)
         elif found_id.var_type == 'array' and p[3].sp.var_type == 'int':
             # La variable es de tipo array y la expresion es int
             # REVISAR TRY - hacer en Eval?
@@ -425,7 +425,7 @@ def p_expression_number(p):
                 p[0] = Node("ARREV", p[1], p[3], Symbol('int', 0))
             except IndexError:
                 print("Error: Index out of bounds in line %s" % p.lineno(1))
-                exit(1)
+                sys.exit(1)
 
 def p_expression_id(p):
     'expression : TkId'
@@ -433,7 +433,7 @@ def p_expression_id(p):
     found_id = inIdsList(ids_list, p[1])
     if found_id is None:
         print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
-        exit(1)
+        sys.exit(1)
 
     p[0] = Node("ID", p[1], None, found_id)
 
@@ -450,12 +450,12 @@ def p_boolean_exp(p):
     # Revisamos que el tipo de las expresiones sea entero                                      
     if p[1].sp.var_type != p[3].sp.var_type:
         print("Error: TypeError in line %s" % p.lineno(2))
-        exit(1)
+        sys.exit(1)
 
     # Operaciones booleanas para los ints
     if p[1].sp.var_type == 'int':
         if p[2] == '<': 
-            p[0] = Node("ALE", p[1], p[3], Symbol('bool', p[1].sp.value < p[3].sp.value))
+            p[0] = Node("ALT", p[1], p[3], Symbol('bool', p[1].sp.value < p[3].sp.value))
         elif p[2] == '<=': 
             p[0] = Node("ALQ", p[1], p[3], Symbol('bool', p[1].sp.value <= p[3].sp.value))
         elif p[2] == '>=': 
@@ -491,14 +491,14 @@ def p_expression_not(p):
     'expression : TkNot expression'
     if p[2].sp.var_type != 'bool':
         print("Error: TypeError in line %d" % p.lineno(1))
-        exit(1)
+        sys.exit(1)
     p[0] = Node("NOT", p[2], None, Symbol('bool', not p[2].sp.value))
 
 def p_read(p):
     'read : TkRead TkId'
     if inIdsList(ids_list, p[2]) is None:
         print("Undefined id '%s' in line %s" % (p[2], p.lineno(2)))
-        exit(1)
+        sys.exit(1)
 
     p[0] = Node("READ", p[2], None)
         
@@ -508,7 +508,7 @@ def p_cycle_for(p):
 
     if p[4].sp.value > p[7].sp.value: 
         print("Error: Iteration range error in line %s" % p.lineno(1))
-        exit(1)
+        sys.exit(1)
     # Guardamos el rango en el sp - en Eval calcular p[4], p[7] luego crear range() y hacer for
     p[0] = Node("FOR", p[2], p[9], [p[4], p[7]])
 
@@ -604,7 +604,7 @@ def p_strprint_exp(p):
 
 def p_error(p):
     print("Syntax error at '%s' in line: %s" % (p.value, p.lineno))
-    exit(1)
+    sys.exit(1)
 
 def parsear(content):
     lexer = lex.lex()
