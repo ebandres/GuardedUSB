@@ -593,9 +593,6 @@ def p_strprint(p):
         #p[0].string = p[1].string + p[3].string
     else: 
         p[0] = Node("STRING", str(p[1])[1:-1], None)
-        # REVISAR SI NECESITO ESTO - estaba jurungando a ver como solucionar algo
-        # y se me olvido porque hice esto asi
-        #p[0].string = "%s" % p[1][1:-1]
 
 def p_strprint_exp(p):
     'strprint : expression'
