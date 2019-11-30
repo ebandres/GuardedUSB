@@ -22,12 +22,16 @@
       //println i || "Hola mundo! \n Esto es una comilla escapada \" y un backslash \\"
     ]|
   rof;
-  c := d
+  c := d;
 
-  //do 1 < 2 -->
-  //  a := 1
-  //od;
-//
+  a := 0;
+  do x < y -->
+    |[
+      a := a + x;
+      x := x + 1
+    ]|
+  od
+
   //if x == y -->
   //  x := 1 + 2
   //[] x != y -->
