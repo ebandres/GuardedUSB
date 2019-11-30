@@ -68,10 +68,13 @@ def switch(arg):
         'BODY': eval_body,
         'SENTENCE': eval_sentence,
         'SENTCOND': eval_sentence,
+        'UNIQUE': eval_sentence,
+        'TERMINAL': eval_sentence,
         'ASIG': eval_asig,
         'ASIGARR': eval_asigarr,
         'ARREV': eval_arrev,
         'NUM': eval_num,
+        'ID': eval_id,
         'UMINUS': eval_uminus,
         'GROUP': eval_group,
         'PLUS': eval_exp_plus,
@@ -140,7 +143,7 @@ def eval_body(node):
 	SENTCOND y TERMINAL son if, for y do
 	'''
 	# Evaluamos lc
-	#print(node.rc)
+	#print("BODY AYYY",node.lc.p)
 	func = switch(node.lc.p)
 	func(node.lc)
 	print(ids_list)
@@ -235,6 +238,10 @@ def eval_num(node):
 	# Un nodo NUM tiene al Symbol en sp, lo retornamos
 	return node.sp
 
+def eval_id(node):
+	# Un nodo ID tiene la ID en lc, la buscamos y retornamos
+	return inIdsList(ids_list, node.lc)
+
 def eval_uminus(node):
 	# UMINUS siempre tendra solamente EXP en lc
 	# Evaluamos EXP
@@ -300,7 +307,8 @@ def eval_exp_atoi(node):
 	return found_id.value[0]
 
 ##### COMPARES #####
-# ARITH COMP siempre tienen EXP en lc y EXP en rc
+# Siempre tienen EXP en lc y EXP en rc
+# ARITH COMP 
 
 def eval_bexp_less(node):
 	return Symbol('bool', eval_ast(node.lc) < eval_ast(node.rc))
@@ -320,7 +328,7 @@ def eval_bexp_eq(node):
 def eval_bexp_neq(node):
 	return Symbol('bool', eval_ast(node.lc) != eval_ast(node.rc))
 	
-# BOOL COMP siempre tienen EXP en lc y EXP en rc
+# BOOL COMP
 
 def eval_bexp_or(node):
 	return Symbol('bool', eval_ast(node.lc).value or eval_ast(node.rc).value)
@@ -334,8 +342,29 @@ def eval_bexp_beq(node):
 def eval_bexp_bneq(node):
 	return Symbol('bool', eval_ast(node.lc).value != eval_ast(node.rc).value)
 
-#### CYCLES ####
+#### CONTROL ####
 
 def eval_cycle_for(node):
-	print("COMENZAMOS FOR")
-	print(node.rc.rc)
+	# FOR siempre tiene ID en lc, BLOCK en rc y dos EXP en una lista en sp
+	# Tomamos el dict del bloque
+	block = node.rc
+	ids_list.append(block.rc)
+
+	# Obtenemos los extremos del rango
+	first = eval_ast(node.sp[0])
+	last = eval_ast(node.sp[1])
+	# Asignamos el primer valor a la ID
+	setIdsList(ids_list, node.lc, first)
+	found_id = inIdsList(ids_list, node.lc)
+	
+	# Comenzamos la iteracion
+	while found_id <= last:
+		# Evaluamos el bloque
+		eval_ast(block.lc)
+
+		# Incrementamos la variable de control
+		found_id += Symbol('int', 1)
+		setIdsList(ids_list, node.lc, found_id)
+
+	# Terminamos la iteracion, hacemos pop
+	ids_list.pop()
