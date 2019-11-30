@@ -376,17 +376,24 @@ def eval_cycle_for(node):
 
 def eval_cycle_do(node):
 	# DO siempre tiene EXP en lc y UNIQUE/BLOCK y GUARD en una lista en rc
-	# PLAN eval EXP 
-	## si TRUE => eval UNIQUE/BLOCK
-	## si no => eval GUARD if not None
-	### GUARD es igual a DO - recursion?
 	check = True
 	while check:
-		if eval_ast(node.lc):
-			# Caso EXP1 == TRUE
-			# Evaluamos el UNIQUE/BLOCK
-			eval_ast(node.rc[0])
-			
-			# Si se evaluo un BLOCK, hacemos pop
-			if node.rc[0].p == 'BLOCK': ids_list.pop()
-		break
+		# Evaluamos el DO como si fuese una GUARD
+		check = eval_guard(node)
+
+def eval_guard(node):
+	# GUARD siempre tiene EXP en lc y UNIQUE/BLOCK y GUARD en una lista en rc
+	# Si una de las guardias se evaluo TRUE retornamos True, si no retornamos false
+	# Evaluamos la EXP
+	if eval_ast(node.lc).value:
+		# Caso EXP1 == TRUE
+		# Evaluamos el UNIQUE/BLOCK
+		eval_ast(node.rc[0])
+		# Si se evaluo un BLOCK, hacemos pop
+		if node.rc[0].p == 'BLOCK': ids_list.pop()
+		return True
+	# Si no es TRUE, revisamos la siguiente GUARD
+	elif node.rc[1] is not None:
+		return eval_guard(node.rc[1])
+	return False
+
