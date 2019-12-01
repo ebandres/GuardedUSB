@@ -537,10 +537,13 @@ def p_expression_not(p):
 
 def p_read(p):
     'read : TkRead TkId'
-    if inIdsList(ids_list, p[2]) is None:
+    found_id = inIdsList(ids_list, p[2])
+    if found_id is None:
         print("Undefined id '%s' in line %s" % (p[2], p.lineno(2)))
         sys.exit(1)
-
+    elif found_id.var_type == 'bool':
+        print("Error: Can't read boolean type in line %s" % p.lineno(1))
+        sys.exit(1)
     p[0] = Node("READ", p[2], None)
     p[0].lineno = p.lineno(1)
         

@@ -10,9 +10,13 @@ class Symbol(object):
 
 	def __repr__(self):
 		if self.var_type == 'int':
-			return "int: " + str(self.value)
+			return str(self.value)
 		elif self.var_type == 'array':
-			return "array[%d..%d]: %s" % (self.n, self.m, str(self.value))
+			tmp = ""
+			for i in range(self.n, self.m):
+				tmp += "%s:%s, " % (i, self.search(i))
+			tmp += "%s:%s" % (self.m, self.search(self.m))
+			return tmp
 		elif self.var_type == 'bool':
 			return "bool: " + str(self.value)
 		return "SYMBOL " + str(self.value)
