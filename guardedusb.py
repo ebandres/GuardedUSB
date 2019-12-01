@@ -17,11 +17,11 @@ if __name__ == '__main__':
     with open(sys.argv[1], 'r') as file:
         content = file.read()
 
-    ast = Parser.parsear(content)
     #test = str(ast)
     #while "\n\n" in test: test = test.replace("\n\n", "\n")
     #print(test)
     try:
+        ast = Parser.parsear(content)
         Eval.eval_ast(ast)
     except IndexError as e:
         print("Error: index out of bounds in line", e)

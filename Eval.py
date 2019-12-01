@@ -26,6 +26,7 @@ def switch(arg):
         'ID'    : eval_id,
         'UMINUS': eval_uminus,
         'GROUP' : eval_group,
+        # EXP BIN
         'PLUS'  : eval_exp_plus,
         'MINUS' : eval_exp_minus,
         'MULT'  : eval_exp_mult,
@@ -74,23 +75,15 @@ def eval_ast(ast):
 
     # Usamos un switch para buscar que funcion usar
     func = switch(ast.p)
-    #print("NEXT - ", ast.p)
 
     # Evaluamos la funcion
-    #try:
     return func(ast)
-    #except IndexError:
-    #    raise IndexError
-    #except:
-    #    print("EXCEPT ",ast.p)
-    #    sys.exit(1)
 
 def eval_block(node):
     # BLOCK siempre tiene Nodo en lc, dict en rc
 
     # Comenzamos un nuevo bloque - agregamos el dict a la lista
     ids_list.append(node.rc)
-    #print(node.lc)
     return eval_ast(node.lc)
 
 def eval_start(node):
@@ -107,18 +100,12 @@ def eval_body(node):
     SENTCOND y TERMINAL son if, for y do
     '''
     # Evaluamos lc
-    #print("BODY AYYY",node.lc.p)
     func = switch(node.lc.p)
     func(node.lc)
-    #print(ids_list)
-    #print("---")
+
     # Revisamos si se tiene BODY
     if node.rc is not None:
-        #print("VAMOS PAL BODY")
-        #print(node.rc.lc.p)
-        #print("END BODY")
         return eval_body(node.rc)
-        #print(node.rc)
 
 def eval_sentence(node):
     # Usaremos esta funcion para todos los nodos donde simplemente tengamos que recorrer a node.lc
@@ -191,8 +178,6 @@ def eval_arrfun(node, found_id = None):
     # Evaluamos la exp del indice
     index = eval_ast(node.p)
     new = eval_ast(node.lc)
-    #print(index)
-    #print(new)
 
     found_id.set_at(index.value, new)
 
@@ -211,6 +196,8 @@ def eval_arrev(node):
         return found_id.search(exp.value)
     except IndexError:
         raise IndexError(node.lineno)
+
+#### EXP SINGLE ####
 
 def eval_num(node):
     # Un nodo NUM tiene al Symbol en sp, lo retornamos
@@ -233,8 +220,9 @@ def eval_group(node):
     # En GROUP solo tenemos que evaluar la EXP en lc
     return eval_ast(node.lc)
 
-# EXP BIN 
+#### EXP BIN ####
 # PLUS, MINUS, MULT, DIV y MOD siempre tienen EXP en lc y EXP en rc
+
 def eval_exp_plus(node):
     # Retornamos el Symbol resultante
     return eval_ast(node.lc) + eval_ast(node.rc)
@@ -258,8 +246,10 @@ def eval_exp_mod(node):
     # Retornamos el Symbol resultante
     return eval_ast(node.lc) % eval_ast(node.rc)
 
+#### EXP BOOL ####
+
 def eval_not(node):
-    # NOT siempre tiene una EXP BOOL en lc
+    # NOT siempre tiene una EXP que evalua a BOOL en lc
     # Buscamos la funcion
     func = switch(node.lc.p)
     # Evaluamos
@@ -272,7 +262,9 @@ def eval_bool_single(node):
     # TRUE/FALSE ya tienen el Symbol en sp
     return node.sp
 
-# Nodos de funciones SIZE, MAX, MIN y ATOI siempre tendran ID en lc
+#### FUNCTIONS ####
+# SIZE, MAX, MIN y ATOI siempre tendran ID en lc
+
 def eval_exp_size(node):
     # Buscamos la ID, ya sabemos que es de tipo array
     found_id = inIdsList(ids_list, node.lc)
@@ -377,21 +369,22 @@ def eval_guard(node):
         return eval_guard(node.rc[1])
     return False
 
+#### PRINTS ####
+# PRINT/PRINTLN siempre tienen STRPRINT en lc
+# STRPRINT puede ser CONCAT, STRING o STREXP
+
 def eval_print(node):
-    #print("IMPRESION !!!!!!!!!")
     tmp = r'%s' % eval_ast(node.lc)
     tmp = tmp.replace('\\n', '\n').replace('\\\\', '\\').replace('\\"', '\"')
     print(tmp)
 
 def eval_println(node):
-    #print("IMPRESION LINEA !!!")
     tmp = eval_ast(node.lc)
     tmp = tmp.replace('\\n', '\n').replace('\\\\', '\\').replace('\\\"', '\"')
     print(tmp)
 
 def eval_concat(node):
     # CONCAT siempre tiene STRPRINT en lc y rc
-    # STRPRINT puede ser otro CONCAT, una STRING o una STREXP
     return eval_ast(node.lc) + eval_ast(node.rc)
 
 def eval_string(node):
@@ -403,11 +396,14 @@ def eval_strexp(node):
     # Evaluamos y retornamos lc
     return str(eval_ast(node.lc))
 
+#### READ ####
+
 def eval_read(node):
     # READ siempre tiene ID en lc
     # Buscamos la ID
     found_id = inIdsList(ids_list, node.lc)
     # Tomamos el input
+    # Hacemos loop infinito hasta que se tenga un input valido como dice el enunciado
     while True:
         val = input()
         try:
@@ -427,6 +423,3 @@ def eval_read(node):
                 break
         except:
             pass
-
-
-
