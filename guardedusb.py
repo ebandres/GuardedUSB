@@ -24,6 +24,8 @@ if __name__ == '__main__':
     try:
         Eval.eval_ast(ast)
     except IndexError as e:
-        print(e)
-        print("Error: index out of bounds")
+        print("Error: index out of bounds in line", e)
+        sys.exit(1)
+    except ZeroDivisionError as e:
+        print("Error: Zero division in line", e)
         sys.exit(1)

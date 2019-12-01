@@ -384,11 +384,7 @@ def p_expression_bin(p):
     if p[2] == '+'   : p[0] = Node("PLUS", p[1], p[3], Symbol('int', 0))
     elif p[2] == '-' : p[0] = Node("MINUS", p[1], p[3], Symbol('int', 0))
     elif p[2] == '*' : p[0] = Node("MULT", p[1], p[3], Symbol('int', 0))
-    elif p[2] == '/' : 
-        if p[3].sp.value == 0:
-            print("Error: Divide by zero in line %d" % p.lineno(2))
-            sys.exit(1)
-        p[0] = Node("DIV", p[1], p[3], Symbol('int', 0))
+    elif p[2] == '/' : p[0] = Node("DIV", p[1], p[3], Symbol('int', 0))
     elif p[2] == '%' : p[0] = Node("MOD", p[1], p[3], Symbol('int', 0))
     p[0].lineno = p.lineno(2)
 

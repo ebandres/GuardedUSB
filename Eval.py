@@ -77,13 +77,13 @@ def eval_ast(ast):
     #print("NEXT - ", ast.p)
 
     # Evaluamos la funcion
-    try:
-        return func(ast)
-    except IndexError:
-        raise IndexError
-    except:
-        print("EXCEPT ",ast.p)
-        sys.exit(1)
+    #try:
+    return func(ast)
+    #except IndexError:
+    #    raise IndexError
+    #except:
+    #    print("EXCEPT ",ast.p)
+    #    sys.exit(1)
 
 def eval_block(node):
     # BLOCK siempre tiene Nodo en lc, dict en rc
@@ -146,7 +146,10 @@ def eval_asigarr(node):
         setIdsList(ids_list, node.lc, Symbol('array', arr, found_id.n, found_id.m))
     # Caso ARRFUN
     elif node.rc.p == 'ARRFUN':
-        arr = eval_arrfun(node.rc)
+        try:
+            arr = eval_arrfun(node.rc)
+        except IndexError:
+            raise IndexError(node.lineno)
 
 def eval_array(node, l = None):
     # ARRAY siempre tiene EXP en lc e INARRAY en rc
@@ -232,7 +235,10 @@ def eval_exp_mult(node):
 
 def eval_exp_div(node):
     # Retornamos el Symbol resultante
-    return eval_ast(node.lc) / eval_ast(node.rc)
+    denom = eval_ast(node.rc)
+    if denom.value == 0:
+        raise ZeroDivisionError(node.lineno)
+    return eval_ast(node.lc) / denom
 
 def eval_exp_mod(node):
     # Retornamos el Symbol resultante
@@ -260,11 +266,11 @@ def eval_exp_size(node):
 
 def eval_exp_max(node):
     found_id = inIdsList(ids_list, node.lc)
-    return max(found_id.value)
+    return found_id.m
 
 def eval_exp_min(node):
     found_id = inIdsList(ids_list, node.lc)
-    return min(found_id.value)
+    return found_id.n
 
 def eval_exp_atoi(node):
     found_id = inIdsList(ids_list, node.lc)
