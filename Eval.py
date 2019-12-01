@@ -131,6 +131,8 @@ def eval_asig(node):
     
     # Evaluamos la expresion
     exp = eval_ast(node.rc)
+    # Se definio la ID, quitamos el flag de undefined
+    exp.undefined = False
     # Actualizamos la tabla
     setIdsList(ids_list, node.lc, exp)
 
@@ -143,7 +145,9 @@ def eval_asigarr(node):
     # Caso ARRAY
     if node.rc.p == 'ARRAY':
         arr = eval_array(node.rc)
-        setIdsList(ids_list, node.lc, Symbol('array', arr, found_id.n, found_id.m))
+        found_id.value = arr
+        found_id.undefined = False
+        setIdsList(ids_list, node.lc, found_id)
     # Caso ARRFUN
     elif node.rc.p == 'ARRFUN':
         try:
@@ -171,11 +175,14 @@ def eval_arrfun(node, found_id = None):
     ARRFUN es un poco mas complicado
     Al principio el nodo contendra ID en lc y Node en rc
     Luego se pasa la el Symbol de la ID como parametro para mantenerla en la recursion
+    Se podria hacer con una funcion helper ...
     '''
     if found_id is None:
         # Primera vez que se entra a la funcion, buscamos la id
         # Ya la verificacion que fue declarada se hizo en el parser
         found_id = inIdsList(ids_list, node.lc)
+        if found_id.undefined:
+            raise Exception("Error in line %s: Variable '%s' has not been defined" % (node.lineno, node.lc))
         return eval_arrfun(node.rc, found_id)
 
     # Segunda+ vez que se entra
@@ -196,10 +203,14 @@ def eval_arrev(node):
     # ARREV siempre tiene ID en lc y EXP en rc
     # Buscamos la ID
     found_id = inIdsList(ids_list, node.lc)
+    if found_id.undefined:
+        raise Exception("Error in line %s: Variable '%s' has not been defined" % (node.lineno, node.lc))
     # Evaluamos EXP
     exp = eval_ast(node.rc)
-
-    return found_id.search(exp.value)
+    try:
+        return found_id.search(exp.value)
+    except IndexError:
+        raise IndexError(node.lineno)
 
 def eval_num(node):
     # Un nodo NUM tiene al Symbol en sp, lo retornamos
@@ -207,7 +218,10 @@ def eval_num(node):
 
 def eval_id(node):
     # Un nodo ID tiene la ID en lc, la buscamos y retornamos
-    return inIdsList(ids_list, node.lc)
+    found_id = inIdsList(ids_list, node.lc)
+    if found_id.undefined:
+        raise Exception("Error in line %s: Variable '%s' has not been defined" % (node.lineno, node.lc))
+    return found_id
 
 def eval_uminus(node):
     # UMINUS siempre tendra solamente EXP en lc
@@ -326,6 +340,7 @@ def eval_cycle_for(node):
     # Asignamos el primer valor a la ID
     setIdsList(ids_list, node.lc, first)
     found_id = inIdsList(ids_list, node.lc)
+    found_id.undefined = False
     
     # Comenzamos la iteracion
     while found_id <= last:

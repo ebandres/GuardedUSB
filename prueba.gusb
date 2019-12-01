@@ -5,13 +5,16 @@
 
   x := 1;
   y := 3 + 2;
-  p := !false;
+  p := false;
+  println p;
   z := 4, 3 - 1, 2, 1;
   z := z(3 * 2 - 4:5)(1:3)(-1:1);
   a := z[2];
-  //println size(z);
-  //read z;
-  println z;
+  println size(z);
+  //read b;
+  b := 1;
+  println "b : " || b;
+  //println b;
   b := - (3 + 1);
   c := size(z);
   println "min z: " || min(z);
@@ -24,7 +27,7 @@
     |[
       d := d + 1;
       //i := 2;
-      println i || " Hola mundo! \n Esto es una comilla escapada \" y un backslash \\"
+      println "i: " || i
     ]|
   rof;
   c := d;
@@ -46,14 +49,14 @@
       declare
         z : int;
         q : array[-1..3]
-      z := x;
-      z := max(q);
+      z := x % 3;
+      //z := max(q);
       println z
     ]|
   [] x == x -->
     |[
-      a := 2;
-      b := 1 + 2
+      a := 2
+      //b := 1 + 2
     ]|
   fi
   //a := 2

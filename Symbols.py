@@ -1,8 +1,9 @@
 class Symbol(object):
-	def __init__(self, var_type, value, n = None, m = None, restricted = False):
+	def __init__(self, var_type, value, n = None, m = None, restricted = False, undefined = True):
 		self.var_type = var_type
 		self.value = value
 		self.restricted = restricted
+		self.undefined = undefined
 		if self.var_type == 'array':
 			# Si es del tipo array guardamos sus indices
 			self.n = n
@@ -18,7 +19,7 @@ class Symbol(object):
 			tmp += "%s:%s" % (self.m, self.search(self.m))
 			return tmp
 		elif self.var_type == 'bool':
-			return "bool: " + str(self.value)
+			return "true" if self.value else "false"
 		return "SYMBOL " + str(self.value)
 
 	def __eq__(self, other):
@@ -40,22 +41,28 @@ class Symbol(object):
 		return self.value >= other.value
 
 	def __neg__(self):
-		return Symbol('int', self.value * (-1))
+		self.value *= -1
+		return self
 
 	def __add__(self, other):
-		return Symbol('int', self.value + other.value)
+		self.value += other.value
+		return self
 
 	def __sub__(self, other):
-		return Symbol('int', self.value - other.value)
+		self.value -= other.value
+		return self
 
 	def __mul__(self, other):
-		return Symbol('int', self.value * other.value)
+		self.value *= other.value
+		return self
 
 	def __div__(self, other):
-		return Symbol('int', self.value // other.value)
+		self.value //= other.value
+		return self
 
 	def __mod__(self, other):
-		return Symbol('int', self.value % other.value)
+		self.value %= other.value
+		return self
 
 	def search(self, i):
 		# Funcion que busca el indice i (en el rango declarado)

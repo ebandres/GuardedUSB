@@ -31,6 +31,7 @@ precedence = (
 ids_list = []
 
 # Funciones para la lista de tablas
+# get y set de diccionarios en python es en promedio O(1)
 
 # Busca una entrada en la lista y lo regresa
 def inIdsList(list, var):
@@ -252,10 +253,10 @@ def p_assign_expr(p):
     # Revisamos que la variable en p[1] haya sido declarada
     found_id = inIdsList(ids_list, p[1])
     if found_id is None:
-        print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
+        print("Error in line %s: Undeclared id '%s'" % (p.lineno(1), p[1]))
         sys.exit(1)
     elif found_id.restricted:
-        print("Error: control variable %s is being modified in line %s" % (p[1], p.lineno(2)))
+        print("Error in line %s: Control variable '%s' is being modified" % (p.lineno(1), p[1]))
         sys.exit(1)
 
     # Revisamos que el tipo de p[1] sea igual al tipo de p[3]
@@ -278,22 +279,20 @@ def p_assign_arr(p):
     # Buscamos la id en las tablas
     found_id = inIdsList(ids_list, p[1])
     if found_id is None:
-        print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
+        print("Error in line %s: Undeclared id '%s'" % (p.lineno(1), p[1]))
         sys.exit(1)
     # Si existe, revisamos el tipo
     elif found_id.var_type == 'array' and p[3].sp.var_type == 'array':
         # Asignamos un array a otro array
         if len(found_id.value) != len(p[3].sp.value):
             # Si los tamanos de arreglos no son iguales damos error
-            print("Error: array length mismatch in line %s" % p.lineno(2))
+            print("Error in line %s: array length mismatch" % p.lineno(2))
             sys.exit(1)
-        # Actualizamos la tabla
-        #setIdsList(ids_list, p[1], p[3].sp)
 
         p[0] = Node("ASIGARR", p[1], p[3])
         p[0].lineno = p.lineno(2)
     else:
-        print("Error: TypeError in line %s" % p.lineno(1))
+        print("Error in line %s: TypeError" % p.lineno(1))
         sys.exit(1)
 
 def p_array(p):
@@ -301,22 +300,20 @@ def p_array(p):
              | TkId arrayfun'''
     if len(p) == 4: 
         if p[1].sp.var_type != 'int':
-            print("Error: TypeError in line %d" % p.lineno(2))
+            print("Error in line %s: TypeError" % p.lineno(2))
             sys.exit(1)
         # Caso lista de numeros
         #p[0] = Node(Symbol('int', p[1].sp.value), p[3], None)
         p[0] = Node("ARRAY", p[1], p[3])
         p[0].lineno = p.lineno(2)
 
-        # PROBABLEMENTE INNECESARIO - REVISAR
-        # Ya el arbol tiene las expresiones, calcular con el eval los sp y asignar al arreglo
-
-        # Creamos un Symbol de tipo array con el arreglo nuevo
+        # Obtenemos la variable
         found_id = inIdsList(ids_list, p[-2])
-        tmp = Symbol('array', [p[0].p] + p[3].list_lc(), found_id.n, found_id.m)
-        # Se lo asignamos al nodo en el arbol
-        p[0].sp = tmp
-    else: 
+        #tmp = Symbol('array', [p[0].p] + p[3].list_lc(), found_id.n, found_id.m)
+        #print(tmp.undefined, tmp.value)
+        ## Se lo asignamos al nodo en el arbol
+        p[0].sp = found_id
+    else:         
         # Caso array fun
         p[0] = Node("ARRFUN", p[1], p[2], p[2].sp)
         p[0].lineno = p.lineno(1)
@@ -326,11 +323,11 @@ def p_arrayfn(p):
                 | TkOpenPar expression TkTwoPoints expression TkClosePar'''
     found_id = inIdsList(ids_list, p[-1])
     if found_id is None:
-        print("Error: Undefined id %s in line %d" % (p[-1], p.lineno(-1)))
+        print("Error in line %s: Undefined id '%s'" % (p.lineno(-1), p[-1]))
         sys.exit(1)
     # Revisamos que las expresiones sean enteros
     if p[2].sp.var_type != 'int' or p[4].sp.var_type != 'int':
-        print("Error: TypeError in line %d" % p.lineno(1))
+        print("Error in line %s: TypeError" % p.lineno(1))
         sys.exit(1)
 
     # Revisamos que el indice este en el rango
@@ -338,7 +335,7 @@ def p_arrayfn(p):
     try:
         found_id.search(p[2].sp.value)
     except IndexError:
-        print("Error: array index out of bounds in line %d" % p.lineno(1))
+        print("Error in line %s: array index out of bounds" % p.lineno(1))
         sys.exit(1)
 
     # Como en esta entrega no nos importa el resultado solo creamos el arbol con el Symbol original
@@ -358,7 +355,7 @@ def p_iarray(p):
                | expression'''
     # Revisamos el tipo de la expression
     if p[1].sp.var_type != 'int':
-        print("Error: TypeError in line %d" % p.lineno(2))
+        print("Error in line %s: TypeError" % p.lineno(2))
         sys.exit(1)
     # Creamos simbolos con los numeros dados
     if len(p) == 4: 
@@ -377,7 +374,7 @@ def p_expression_bin(p):
          
     # Revisamos que el tipo de las expresiones sea entero                                      
     if p[1].sp.var_type != 'int' or p[3].sp.var_type != 'int':
-        print("Error: TypeError in line %s" % p.lineno(2))
+        print("Error in line %s: TypeError" % p.lineno(2))
         sys.exit(1)
 
     # Creamos el arbol - el symbol resultado lo crearemos en Eval
@@ -407,7 +404,7 @@ def p_expression_fun(p):
                   | TkAtoi TkOpenPar TkId TkClosePar'''
     found_id = inIdsList(ids_list, p[3])
     if found_id is None:
-        print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
+        print("Error in line %s: Undeclared id '%s' in line %s" % (p.lineno(1), p[1]))
         sys.exit(1)
     elif found_id.var_type == 'array':
         # Si la variable a la que se le aplica la funcion es un arreglo vemos cual fun usamos
@@ -426,12 +423,12 @@ def p_expression_fun(p):
         elif p[1] == 'atoi':
             # Calcular en Eval por si se hace un cambio de los valores del arreglo
             if len(found_id.value) > 1:
-                print("Error: atoi recieves an array of length = 1. Array length mismatch in line %d" % p.lineno(1))
+                print("Error in line %s: atoi recieves an array of length = 1. Array length mismatch" % p.lineno(1))
                 sys.exit(1)
             p[0] = Node("ATOI", p[3], None, Symbol('int', found_id.value[0]))
         p[0].lineno = p.lineno(2)
     else: 
-        print("Error: TypeError in line %d" % p.lineno(1))
+        print("Error in line %s: TypeError" % p.lineno(1))
         sys.exit(1)
 
 def p_expression_number(p):
@@ -445,25 +442,21 @@ def p_expression_number(p):
         # Caso array[exp]
         found_id = inIdsList(ids_list, p[1])
         if found_id is None:
-            print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
+            print("Error in line %s: Undeclared id '%s' in line %s" % (p.lineno(1), p[1]))
             sys.exit(1)
         elif found_id.var_type == 'array' and p[3].sp.var_type == 'int':
             # La variable es de tipo array y la expresion es int
-            # REVISAR TRY - hacer en Eval?
-            try:
-                # Buscamos la expresion en el arreglo
-                p[0] = Node("ARREV", p[1], p[3], Symbol('int', 0))
-                p[0].lineno = p.lineno(2)
-            except IndexError:
-                print("Error: Index out of bounds in line %s" % p.lineno(1))
-                sys.exit(1)
+            # Buscamos la expresion en el arreglo
+            p[0] = Node("ARREV", p[1], p[3], Symbol('int', 0))
+            p[0].lineno = p.lineno(2)
+
 
 def p_expression_id(p):
     'expression : TkId'
     # Buscamos valor de la id para asignar
     found_id = inIdsList(ids_list, p[1])
     if found_id is None:
-        print("Undefined id '%s' in line %s" % (p[1], p.lineno(1)))
+        print("Error in line %s: Undeclared id '%s'" % (p.lineno(1), p[1]))
         sys.exit(1)
 
     p[0] = Node("ID", p[1], None, found_id)
@@ -481,7 +474,7 @@ def p_boolean_exp(p):
                   | expression TkNEqual expression'''
     # Revisamos que el tipo de las expresiones sea entero                                      
     if p[1].sp.var_type != p[3].sp.var_type:
-        print("Error: TypeError in line %s" % p.lineno(2))
+        print("Error in line %s: TypeError" % p.lineno(2))
         sys.exit(1)
 
     # Operaciones booleanas para los ints
@@ -526,7 +519,7 @@ def p_expression_false(p):
 def p_expression_not(p):
     'expression : TkNot expression'
     if p[2].sp.var_type != 'bool':
-        print("Error: TypeError in line %d" % p.lineno(1))
+        print("Error in line %s: TypeError" % p.lineno(1))
         sys.exit(1)
     p[0] = Node("NOT", p[2], None, Symbol('bool', not p[2].sp.value))
     p[0].lineno = p.lineno(1)
@@ -535,10 +528,10 @@ def p_read(p):
     'read : TkRead TkId'
     found_id = inIdsList(ids_list, p[2])
     if found_id is None:
-        print("Undefined id '%s' in line %s" % (p[2], p.lineno(2)))
+        print("Error in line %s: Undeclared id '%s'" % (p.lineno(2), p[2]))
         sys.exit(1)
     elif found_id.var_type == 'bool':
-        print("Error: Can't read boolean type in line %s" % p.lineno(1))
+        print("Error in line %s: Can't read boolean type" % p.lineno(1))
         sys.exit(1)
     p[0] = Node("READ", p[2], None)
     p[0].lineno = p.lineno(1)
@@ -548,7 +541,7 @@ def p_cycle_for(p):
     'gfor : TkFor TkId TkIn expression table2 TkTo expression TkArrow block TkRof'
 
     if p[4].sp.value > p[7].sp.value: 
-        print("Error: Iteration range error in line %s" % p.lineno(1))
+        print("Error in line %s: Iteration range error" % p.lineno(1))
         sys.exit(1)
     # Guardamos el rango en el sp - en Eval calcular p[4], p[7] luego crear range() y hacer for
     p[0] = Node("FOR", p[2], p[9], [p[4], p[7]])

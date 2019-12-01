@@ -29,3 +29,6 @@ if __name__ == '__main__':
     except ZeroDivisionError as e:
         print("Error: Zero division in line", e)
         sys.exit(1)
+    except Exception as e:
+        print(e)
+        sys.exit(1)
