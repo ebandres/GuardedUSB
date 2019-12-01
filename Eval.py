@@ -3,58 +3,6 @@ from tree import Node
 from Symbols import Symbol
 from Parser import inIdsList, setIdsList
 
-# EVAL
-# ARBOL/BLOQUE?, DIC -> DIC
-# Crear una funcion que reciba un arbol PONER DIC EN BLOQUE? y evalue los nodos
-# Tener lista de dics para encontrar vars y respetar alcance
-## Bloque nuevo => append dic del bloque en lista
-## Terminar do el bloque => hacer pop en la lista. Reemplazar en nodo del bloque?
-
-# ASIGARR: id (lc), nodo (rc) => ARRAY o ARRFUN
-## Asignar resultado de nodo en id
-
-# ARRAY: exp (lc), nodo (rc) =>
-## eval exp
-## Mientras nodo no sea None, eval nodo.p, reemp nodo por nodo.lc (INARRAY)
-
-# ARRFUN: id (lc), nodo (rc) => 
-## en nodo eval expr1 (p) y expr2 (lc) y asignar a id en dic
-## (usar funcion que cambie a rango del arreglo)
-### si es recursivo (revisar rc) mandar id y nodo2 (nodo.rc), repetir
-### (sabemos que es recursivo si nodo.rc no es None)
-
-# ARREV: id (lc), nodo (rc) =>
-## eval expr (nodo) luego usar found_id.search(expr.sp.value) y asignar
-
-# GROUP: exp (lc) =>
-## eval exp
-
-# NUM: num (lc) =>
-## crear Symbol con num
-
-# ID: id (lc) =>
-## buscar Symbol de id en lista
-
-# TRUE/FALSE: Symbol (sp) =>
-## return sp
-
-# NOT: exp (lc) =>
-## eval exp, cambiar y ret
-
-# FOR: id (lc), BLOQUE (rc), expr range (sp) =>
-## obtener dic del bloque, calcular expr en sp y crear range (revisar que 1<2)
-
-# DO: expbool (lc), unique/block (rc), guard prox (sp) =>
-## si expbool es true => eval unique/block hasta que expbool sea false (eval antes de cada iter)
-## si es false => ir a guardia (si no es None)
-### GUARD: expbool (lc), unique/block (rc), guard prox (sp) => same
-
-# IF: expbool (lc), unique/block (rc), guard prox (sp) => same pero 1 vez
-
-# PRINT/PRINTLN: strnode (lc) => 
-## juntar concat, manip strings (comment en parser)
-## anadir \n si es println? revisar como imprimir en misma linea para print normal?
-
 # READ: id (lc) =>
 ## buscar Symbol de id, hacer input() dependiendo del tipo
 
@@ -407,13 +355,13 @@ def eval_guard(node):
     return False
 
 def eval_print(node):
-    print("IMPRESION !!!!!!!!!")
+    #print("IMPRESION !!!!!!!!!")
     tmp = r'%s' % eval_ast(node.lc)
     tmp = tmp.replace('\\n', '\n').replace('\\\\', '\\').replace('\\"', '\"')
     print(tmp)
 
 def eval_println(node):
-    print("IMPRESION LINEA !!!")
+    #print("IMPRESION LINEA !!!")
     tmp = eval_ast(node.lc)
     tmp = tmp.replace('\\n', '\n').replace('\\\\', '\\').replace('\\\"', '\"')
     print(tmp)
