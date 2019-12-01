@@ -61,7 +61,9 @@ def switch(arg):
         'PRINTLN': eval_println,
         'CONCAT' : eval_concat,
         'STRING' : eval_string,
-        'STREXP' : eval_strexp
+        'STREXP' : eval_strexp,
+        # READ
+        'READ': eval_read
     }
     return switcher.get(arg, lambda: "Invalid")
 
@@ -77,8 +79,8 @@ def eval_ast(ast):
     # Evaluamos la funcion
     try:
         return func(ast)
-    except IndexError as e:
-        raise e
+    except IndexError:
+        raise IndexError
     except:
         print("EXCEPT ",ast.p)
         sys.exit(1)
@@ -379,3 +381,31 @@ def eval_strexp(node):
     # STREXP siempre tiene EXP en lc
     # Evaluamos y retornamos lc
     return str(eval_ast(node.lc))
+
+def eval_read(node):
+    # READ siempre tiene ID en lc
+    # Buscamos la ID
+    found_id = inIdsList(ids_list, node.lc)
+    # Tomamos el input
+    while True:
+        val = input()
+        try:
+            if found_id.var_type == 'int':
+                # Convertimos el input a int
+                val = int(val)
+                found_id.value = val
+                setIdsList(ids_list, node.lc, found_id)
+                break
+            elif found_id.var_type == 'array':
+                val = val.split(',')
+                if len(val) == len(found_id.value):
+                    for i in range(0, len(val)):
+                        val[i] = int(val[i])
+                    found_id.value = val
+                    setIdsList(ids_list, node.lc, found_id)
+                break
+        except:
+            pass
+
+
+

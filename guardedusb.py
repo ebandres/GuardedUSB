@@ -23,6 +23,7 @@ if __name__ == '__main__':
     #print(test)
     try:
         Eval.eval_ast(ast)
-    except IndexError:
+    except IndexError as e:
+        print(e)
         print("Error: index out of bounds")
         sys.exit(1)
