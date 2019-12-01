@@ -1,5 +1,5 @@
 class Node(object):
-	def __init__(self, p, lc, rc, sp = None, slc = None, src = None, string = None):
+	def __init__(self, p, lc, rc, sp = None, slc = None, src = None, string = None, lineno = None):
 		self.p = p 		# Parent
 		self.lc = lc	# Left Child
 		self.rc = rc	# Right Child
@@ -7,6 +7,7 @@ class Node(object):
 		self.slc = slc	# Symbol Left Child
 		self.src = src	# Symbol Right Child
 		self.string = string 
+		self.lineno = lineno
 
 	def __repr__(self):
 		ret = ""

@@ -85,6 +85,8 @@ def p_code(p):
         #        tmp += "    variable: %s | type: %s\n" % (key, symb.var_type)
         p[0] = Node("BLOCK", p[3], dic) # p[3]: arbol, tmp: symbols table
 
+    p[0].lineno = p.lineno(1)    
+
 def p_table(p):
     'table :'
     global create_table
@@ -102,12 +104,17 @@ def p_body(p):
             | sentcond body
             | unique
             | terminal'''
-    if len(p) == 3: p[0] = Node("BODY", p[1], p[2])
-    else: p[0] = Node("BODY", p[1], None)
+    if len(p) == 3: 
+        p[0] = Node("BODY", p[1], p[2])
+    else: 
+        p[0] = Node("BODY", p[1], None)
+    p[0].lineno = p.lineno(1)
+
 
 def p_start(p):
     '''start : secd body'''
     p[0] = Node("START", p[1], p[2])
+    p[0].lineno = p.lineno(1)
 
 def p_empty(p):
     'empty :'
@@ -117,8 +124,12 @@ def p_sec_declare(p):
     '''secd : declaration TkSemiColon secd
             | declaration'''
     # Ignoraremos estos en el Eval ya que ya fueron declaradas y estan en la tabla
-    if len(p) == 4: p[0] = Node("DECLARE", p[1], p[3])
-    else: p[0] = Node("DECLARE", p[1], None)
+    if len(p) == 4: 
+        p[0] = Node("DECLARE", p[1], p[3])
+        p[0].lineno = p.lineno(2)
+    else: 
+        p[0] = Node("DECLARE", p[1], None)
+        p[0].lineno = p.lineno(1)
 
 def p_declaration(p):
     '''declaration : TkId TkTwoPoints tipo 
@@ -195,8 +206,12 @@ def p_listid(p):
         pass
     
     # Creamos el arbol
-    if len(p) == 4: p[0] = Node(p[1], p[3], None)
-    else: p[0] = Node(p[1], None, None)
+    if len(p) == 4: 
+        p[0] = Node(p[1], p[3], None)
+        p[0].lineno = p.lineno(2)
+    else: 
+        p[0] = Node(p[1], None, None)
+        p[0].lineno = p.lineno(1)
 
 def p_tipo_int(p):
     'tipo : TkInt'
@@ -225,8 +240,12 @@ def p_listtipo(p):
     '''listatipo : tipo TkComma listatipo
                  | tipo'''
     # Creamos el arbol. Como p[1] lleva a tipo, p[1] es un Symbol
-    if len(p) == 4: p[0] = Node(p[1], None, p[3])
-    else: p[0] = Node(p[1], None, None)
+    if len(p) == 4: 
+        p[0] = Node(p[1], None, p[3])
+        p[0].lineno = p.lineno(2)
+    else: 
+        p[0] = Node(p[1], None, None)
+        p[0].lineno = p.lineno(1)
 
 def p_assign_expr(p):
     'assign : TkId TkAsig expression'
@@ -251,6 +270,7 @@ def p_assign_expr(p):
 
     # LUEGO en la funcion de eval crear los symbols en p[3], asig sp a p[1] en dic
     p[0] = Node("ASIG", p[1], p[3])
+    p[0].lineno = p.lineno(2)
 
 
 def p_assign_arr(p):
@@ -271,6 +291,7 @@ def p_assign_arr(p):
         #setIdsList(ids_list, p[1], p[3].sp)
 
         p[0] = Node("ASIGARR", p[1], p[3])
+        p[0].lineno = p.lineno(2)
     else:
         print("Error: TypeError in line %s" % p.lineno(1))
         sys.exit(1)
@@ -285,6 +306,7 @@ def p_array(p):
         # Caso lista de numeros
         #p[0] = Node(Symbol('int', p[1].sp.value), p[3], None)
         p[0] = Node("ARRAY", p[1], p[3])
+        p[0].lineno = p.lineno(2)
 
         # PROBABLEMENTE INNECESARIO - REVISAR
         # Ya el arbol tiene las expresiones, calcular con el eval los sp y asignar al arreglo
@@ -297,6 +319,7 @@ def p_array(p):
     else: 
         # Caso array fun
         p[0] = Node("ARRFUN", p[1], p[2], p[2].sp)
+        p[0].lineno = p.lineno(1)
 
 def p_arrayfn(p):
     '''arrayfun : TkOpenPar expression TkTwoPoints expression TkClosePar arrayfunhelper arrayfun
@@ -321,7 +344,9 @@ def p_arrayfn(p):
     # Como en esta entrega no nos importa el resultado solo creamos el arbol con el Symbol original
     if len(p) == 8: 
         p[0] = Node(p[2], p[4], p[7], found_id)
-    else: p[0] = Node(p[2], p[4], None, found_id)
+    else: 
+        p[0] = Node(p[2], p[4], None, found_id)
+    p[0].lineno = p.lineno(1)
 
 def p_arrayfnh(p):
     'arrayfunhelper :'
@@ -336,8 +361,12 @@ def p_iarray(p):
         print("Error: TypeError in line %d" % p.lineno(2))
         sys.exit(1)
     # Creamos simbolos con los numeros dados
-    if len(p) == 4: p[0] = Node("INARRAY", p[1], p[3])
-    else: p[0] = Node("INARRAY", p[1], None)
+    if len(p) == 4: 
+        p[0] = Node("INARRAY", p[1], p[3])
+        p[0].lineno = p.lineno(2)
+    else: 
+        p[0] = Node("INARRAY", p[1], None)
+        p[0].lineno = p.lineno(1)
 
 def p_expression_bin(p):
     '''expression : expression TkPlus expression
@@ -361,16 +390,19 @@ def p_expression_bin(p):
             sys.exit(1)
         p[0] = Node("DIV", p[1], p[3], Symbol('int', 0))
     elif p[2] == '%' : p[0] = Node("MOD", p[1], p[3], Symbol('int', 0))
+    p[0].lineno = p.lineno(2)
 
 def p_expression_umins(p):
     'expression : TkMinus expression'
     # El cambio de signo se lo asignaremos en Eval
     p[0] = Node("UMINUS", p[2], None, p[2].sp)
+    p[0].lineno = p.lineno(1)
 
 def p_expression_group(p):
     'expression : TkOpenPar expression TkClosePar'
     # Creamos el arbol con el valor del Symbol
     p[0] = Node("GROUP", p[2], None, p[2].sp)
+    p[0].lineno = p.lineno(1)
 
 def p_expression_fun(p):
     '''expression : TkSize TkOpenPar TkId TkClosePar
@@ -401,6 +433,7 @@ def p_expression_fun(p):
                 print("Error: atoi recieves an array of length = 1. Array length mismatch in line %d" % p.lineno(1))
                 sys.exit(1)
             p[0] = Node("ATOI", p[3], None, Symbol('int', found_id.value[0]))
+        p[0].lineno = p.lineno(2)
     else: 
         print("Error: TypeError in line %d" % p.lineno(1))
         sys.exit(1)
@@ -411,6 +444,7 @@ def p_expression_number(p):
     if len(p) == 2: 
         # Caso 1 Creamos el arbol con el Symbol del int
         p[0] = Node("NUM", p[1], None, Symbol('int', p[1]))
+        p[0].lineno = p.lineno(1)
     else: 
         # Caso array[exp]
         found_id = inIdsList(ids_list, p[1])
@@ -423,6 +457,7 @@ def p_expression_number(p):
             try:
                 # Buscamos la expresion en el arreglo
                 p[0] = Node("ARREV", p[1], p[3], Symbol('int', 0))
+                p[0].lineno = p.lineno(2)
             except IndexError:
                 print("Error: Index out of bounds in line %s" % p.lineno(1))
                 sys.exit(1)
@@ -436,6 +471,7 @@ def p_expression_id(p):
         sys.exit(1)
 
     p[0] = Node("ID", p[1], None, found_id)
+    p[0].lineno = p.lineno(1)
 
 
 def p_boolean_exp(p):
@@ -477,15 +513,19 @@ def p_boolean_exp(p):
         elif p[2] == '!=': 
             p[0] = Node("BNE", p[1], p[3], Symbol('bool', p[1].sp.value != p[3].sp.value))
 
+    p[0].lineno = p.lineno(2)
+
 def p_expression_true(p):
     'expression : TkTrue'
     # Creamos el arbol y un Symbol con True
     p[0] = Node("TRUE", None, None, Symbol('bool', True))
+    p[0].lineno = p.lineno(1)
 
 def p_expression_false(p):
     'expression : TkFalse'
     # Creamos el arbol y un Symbol con False
     p[0] = Node("FALSE", None, None, Symbol('bool', False))
+    p[0].lineno = p.lineno(1)
 
 def p_expression_not(p):
     'expression : TkNot expression'
@@ -493,6 +533,7 @@ def p_expression_not(p):
         print("Error: TypeError in line %d" % p.lineno(1))
         sys.exit(1)
     p[0] = Node("NOT", p[2], None, Symbol('bool', not p[2].sp.value))
+    p[0].lineno = p.lineno(1)
 
 def p_read(p):
     'read : TkRead TkId'
@@ -501,6 +542,7 @@ def p_read(p):
         sys.exit(1)
 
     p[0] = Node("READ", p[2], None)
+    p[0].lineno = p.lineno(1)
         
 
 def p_cycle_for(p):
@@ -511,6 +553,7 @@ def p_cycle_for(p):
         sys.exit(1)
     # Guardamos el rango en el sp - en Eval calcular p[4], p[7] luego crear range() y hacer for
     p[0] = Node("FOR", p[2], p[9], [p[4], p[7]])
+    p[0].lineno = p.lineno(1)
 
 def p_table_for(p):
     'table2 :'
@@ -528,11 +571,13 @@ def p_cycle_do(p):
     '''gdo : TkDo expression TkArrow unique guard TkOd
            | TkDo expression TkArrow block guard TkOd'''
     p[0] = Node("DO", p[2], [p[4], p[5]])
+    p[0].lineno = p.lineno(1)
 
 def p_if(p):
     '''gif : TkIf expression TkArrow unique guard TkFi  
            | TkIf expression TkArrow block guard TkFi '''
     p[0] = Node("IF", p[2], [p[4], p[5]])
+    p[0].lineno = p.lineno(1)
 
 def p_sentence(p):
     '''sentence : assign TkSemiColon
@@ -540,18 +585,21 @@ def p_sentence(p):
                 | gprintln TkSemiColon
                 | read TkSemiColon''' 
     p[0] = Node("SENTENCE", p[1], None)
+    p[0].lineno = p.lineno(2)
 
 def p_sentence_cond(p):
     '''sentcond : gif TkSemiColon
                 | gdo TkSemiColon
                 | gfor TkSemiColon'''
     p[0] = Node("SENTCOND", p[1], None)
+    p[0].lineno = p.lineno(2)
 
 def p_terminal(p):
     '''terminal : gif
                 | gdo
                 | gfor'''
     p[0] = Node("TERMINAL", p[1], None)
+    p[0].lineno = p.lineno(1)
 
 def p_unique(p):
     '''unique : assign
@@ -559,6 +607,7 @@ def p_unique(p):
               | gprintln
               | read'''
     p[0] = Node("UNIQUE", p[1], None)
+    p[0].lineno = p.lineno(1)
 
 def p_guard(p):
     '''guard : TkGuard expression TkArrow unique guard
@@ -566,10 +615,12 @@ def p_guard(p):
              | empty'''
     if len(p) == 6: 
         p[0] = Node("GUARD", p[2], [p[4], p[5]])
+        p[0].lineno = p.lineno(1)
 
 def p_print(p):
     'gprint : TkPrint strprint'
     p[0] = Node("PRINT", p[2], None)
+    p[0].lineno = p.lineno(1)
     # HACER ESTO EN EVAL
     #print("PRINT")
     #print(p[2].string)
@@ -578,6 +629,7 @@ def p_print(p):
 def p_println(p):
     'gprintln : TkPrintln strprint'
     p[0] = Node("PRINTLN", p[2], None)
+    p[0].lineno = p.lineno(1)
     # HACER ESTO EN EVAL
     #print("PRINTLN")
     #tmp = r'%s' % p[2].string
@@ -590,13 +642,18 @@ def p_strprint(p):
                 | TkString'''
     if len(p) == 4: 
         p[0] = Node("CONCAT", p[1], p[3])
+        p[0].lineno = p.lineno(2)
         #p[0].string = p[1].string + p[3].string
     else: 
         p[0] = Node("STRING", str(p[1])[1:-1], None)
+        p[0].lineno = p.lineno(1)
+
+
 
 def p_strprint_exp(p):
     'strprint : expression'
     p[0] = Node("STREXP", p[1], None)
+    p[0].lineno = p.lineno(1)
     #p[0].string = str(p[1].sp.value)
 
 def p_error(p):
