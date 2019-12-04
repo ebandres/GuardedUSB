@@ -70,11 +70,17 @@ class Symbol(object):
 		if i < self.n or i > self.m:
 			raise IndexError
 		# Convertimos el indice al rango usado por python 
+		elif len(self.value) == 1:
+			return self.value[0]
+			
 		i += abs(self.n)
 		return self.value[i]
 
 	def set_at(self, i, new):
 		if i < self.n or i > self.m:
 			raise IndexError
-		i += abs(self.n)
-		self.value[i] = new
+		elif len(self.value) == 1:
+			self.value[0] = new
+		else:
+			i += abs(self.n)
+			self.value[i] = new

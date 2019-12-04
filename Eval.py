@@ -121,7 +121,12 @@ def eval_asig(node):
     # Se definio la ID, quitamos el flag de undefined
     exp.undefined = False
     # Actualizamos la tabla
-    setIdsList(ids_list, node.lc, exp)
+    if found_id.var_type == 'array' and exp.var_type == 'int':
+        found_id.value = [exp]
+        found_id.undefined = False
+        setIdsList(ids_list, node.lc, found_id)
+    else:
+        setIdsList(ids_list, node.lc, exp)
 
 def eval_asigarr(node):
     # ASIGARR siempre tiene ID en lc y ARRAY/ARRFUN en rc
@@ -376,7 +381,7 @@ def eval_guard(node):
 def eval_print(node):
     tmp = r'%s' % eval_ast(node.lc)
     tmp = tmp.replace('\\n', '\n').replace('\\\\', '\\').replace('\\"', '\"')
-    print(tmp)
+    print(tmp, end = "")
 
 def eval_println(node):
     tmp = eval_ast(node.lc)

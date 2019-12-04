@@ -236,13 +236,14 @@ def p_assign_expr(p):
         raise Exception("Error in line %s: Control variable '%s' is being modified" % (p.lineno(1), p[1]))
 
     # Revisamos que el tipo de p[1] sea igual al tipo de p[3]
-    if found_id.var_type != p[3].sp.var_type:
+    if found_id.var_type == 'array' and len(found_id.value) == 1 and p[3].sp.var_type == 'int':
+        
+        pass
+    elif found_id.var_type != p[3].sp.var_type:
         raise Exception("Error: TypeError in line %s" % p.lineno(1))
-
     # LUEGO en la funcion de eval crear los symbols en p[3], asig sp a p[1] en dic
     p[0] = Node("ASIG", p[1], p[3])
     p[0].lineno = p.lineno(2)
-
 
 def p_assign_arr(p):
     'assign : TkId TkAsig array'
@@ -293,10 +294,11 @@ def p_arrayfn(p):
 
     # Revisamos que el indice este en el rango
     # Posiblemente tenga que quitarlo de aqui y revisar en Eval
-    try:
-        found_id.search(p[2].sp.value)
-    except IndexError:
-        raise Exception("Error in line %s: array index out of bounds" % p.lineno(1))
+    #try:
+    #    print(p[2].sp.value)
+    #    found_id.search(p[2].sp.value)
+    #except IndexError:
+    #    raise Exception("Error in line %s: array index out of bounds" % p.lineno(1))
 
     # Como en esta entrega no nos importa el resultado solo creamos el arbol con el Symbol original
     if len(p) == 8: 
